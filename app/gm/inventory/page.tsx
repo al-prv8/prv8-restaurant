@@ -10,6 +10,7 @@ type Tab = "all" | "atRisk" | "healthy";
 export default function GmInventoryPage() {
  const { state, derived: d, dispatch } = usePrive();
  const [activeTab, setActiveTab] = useState<Tab>("all");
+ const [buffer, setBuffer] = useState(15);
  const [currentPageRisk, setCurrentPageRisk] = useState(1);
  const [currentPageHealthy, setCurrentPageHealthy] = useState(1);
  const pageSize = 10;
@@ -47,6 +48,39 @@ export default function GmInventoryPage() {
     action={d.potato.shortage > 0 ? () => dispatch({ type: "increasePotatoOrder", lbs: Math.max(20, Math.ceil(d.potato.shortage)) }) : undefined}
     actionLabel={d.potato.shortage > 0 ? `Order +${Math.ceil(d.potato.shortage)} lbs Russet Potatoes` : undefined}
    />
+
+   {/* Interactive Reorder Threshold Drag Slider */}
+   <div className="mb-6 rounded-2xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] p-5">
+    <div className="flex items-center justify-between border-b border-[#E7E5E0] pb-3 mb-4">
+     <div>
+      <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#881337]">Inventory Par Engine</div>
+      <div className="text-base font-black text-[#1C1917]">Interactive Par Buffer Slider</div>
+     </div>
+     <Pill tone="teal">Buffer Capped</Pill>
+    </div>
+
+    <div className="space-y-3">
+     <div className="flex items-center justify-between text-xs font-bold text-[#1C1917]">
+      <span>Safety Par Buffer: +{buffer}%</span>
+      <span className="text-[#78716C]">Triggers Reorder at {Math.round(40 * (1 + buffer / 100))} lbs</span>
+     </div>
+
+     <input
+      type="range"
+      min="5"
+      max="40"
+      value={buffer}
+      onChange={(e) => setBuffer(Number(e.target.value))}
+      className="w-full h-2 bg-[#E7E5E0] rounded-lg appearance-none cursor-pointer accent-[#881337]"
+     />
+
+     <div className="flex justify-between text-[10px] font-bold uppercase text-[#A8A29E]">
+      <span>5% (Lean Par)</span>
+      <span>20% (Standard)</span>
+      <span>40% (Peak Weekend Buffer)</span>
+     </div>
+    </div>
+   </div>
 
    <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">

@@ -138,7 +138,7 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
                 </div>
               ) : null}
 
-              {t.a.actionLabel && t.a.actionType ? (
+              {t.a.action && t.a.actionType ? (
                 <div className="pt-2">
                   {t.actionDone ? (
                     <div className="flex items-center gap-2 rounded-xl bg-[#15803D]/10 p-3 text-[12px] font-bold text-[#15803D]">
@@ -151,7 +151,7 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
                       onClick={() => handleActionClick(i, t)}
                       className="w-full bg-[#881337] text-white hover:bg-[#6B0F2A] font-bold text-xs py-2.5 rounded-xl border-none shadow-sm"
                     >
-                      {t.a.actionLabel}
+                      {t.a.action}
                       <ArrowRight className="size-3.5 ml-1.5" />
                     </Button>
                   )}
