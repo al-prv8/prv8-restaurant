@@ -49,6 +49,83 @@ export default function GmFacilityPage() {
         </div>
       </div>
 
+      {/* 5-Zone Interactive Facility Radar Heatmap */}
+      <div className="mb-8 rounded-2xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] p-6 relative overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/90 to-transparent pointer-events-none" />
+        
+        <div className="flex items-center justify-between border-b border-[#E7E5E0] pb-4 mb-6">
+          <div>
+            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] flex items-center gap-1.5 mb-1">
+              <span className="size-2 rounded-full bg-[#15803D] animate-ping" /> Live Facility Telemetry
+            </div>
+            <h3 className="text-xl font-black tracking-tight text-[#1C1917]">5-Zone Facility Heatmap</h3>
+          </div>
+          <Pill tone="teal">Radar Sweep Active</Pill>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 p-4 shadow-sm flex flex-col justify-between hover:bg-white/80 transition-all">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#78716C]">Kitchen Line</span>
+              <span className="size-2 rounded-full bg-[#15803D]" />
+            </div>
+            <div className="text-3xl font-black tabular-nums text-[#15803D] my-2">{d.facility.detail.kitchen}%</div>
+            <div className="w-full bg-[#15803D]/20 h-1.5 rounded-full overflow-hidden">
+              <div className="bg-[#15803D] h-full" style={{ width: `${d.facility.detail.kitchen}%` }} />
+            </div>
+            <div className="text-[10px] font-semibold text-[#78716C] mt-2">Zone 1 · Optimal</div>
+          </div>
+
+          <div className="rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 p-4 shadow-sm flex flex-col justify-between hover:bg-white/80 transition-all">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#78716C]">Dining Room</span>
+              <span className="size-2 rounded-full bg-[#15803D]" />
+            </div>
+            <div className="text-3xl font-black tabular-nums text-[#15803D] my-2">{d.facility.detail.dining}%</div>
+            <div className="w-full bg-[#15803D]/20 h-1.5 rounded-full overflow-hidden">
+              <div className="bg-[#15803D] h-full" style={{ width: `${d.facility.detail.dining}%` }} />
+            </div>
+            <div className="text-[10px] font-semibold text-[#78716C] mt-2">Zone 2 · Optimal</div>
+          </div>
+
+          <div className="rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 p-4 shadow-sm flex flex-col justify-between hover:bg-white/80 transition-all">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#78716C]">Back of House</span>
+              <span className="size-2 rounded-full bg-[#15803D]" />
+            </div>
+            <div className="text-3xl font-black tabular-nums text-[#15803D] my-2">{d.facility.detail.boh}%</div>
+            <div className="w-full bg-[#15803D]/20 h-1.5 rounded-full overflow-hidden">
+              <div className="bg-[#15803D] h-full" style={{ width: `${d.facility.detail.boh}%` }} />
+            </div>
+            <div className="text-[10px] font-semibold text-[#78716C] mt-2">Zone 3 · Optimal</div>
+          </div>
+
+          <div className="rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 p-4 shadow-sm flex flex-col justify-between hover:bg-white/80 transition-all">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#78716C]">Restrooms</span>
+              <span className="size-2 rounded-full bg-[#B45309] animate-pulse" />
+            </div>
+            <div className="text-3xl font-black tabular-nums text-[#B45309] my-2">{d.facility.detail.restrooms}%</div>
+            <div className="w-full bg-[#B45309]/20 h-1.5 rounded-full overflow-hidden">
+              <div className="bg-[#B45309] h-full" style={{ width: `${d.facility.detail.restrooms}%` }} />
+            </div>
+            <div className="text-[10px] font-semibold text-[#B45309] mt-2">Zone 4 · Check Due</div>
+          </div>
+
+          <div className="rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 p-4 shadow-sm flex flex-col justify-between hover:bg-white/80 transition-all">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#78716C]">Exterior / Patio</span>
+              <span className="size-2 rounded-full bg-[#15803D]" />
+            </div>
+            <div className="text-3xl font-black tabular-nums text-[#15803D] my-2">{d.facility.detail.exterior}%</div>
+            <div className="w-full bg-[#15803D]/20 h-1.5 rounded-full overflow-hidden">
+              <div className="bg-[#15803D] h-full" style={{ width: `${d.facility.detail.exterior}%` }} />
+            </div>
+            <div className="text-[10px] font-semibold text-[#78716C] mt-2">Zone 5 · Optimal</div>
+          </div>
+        </div>
+      </div>
+
       <div className="grid gap-6 lg:grid-cols-12">
         <div className="lg:col-span-6 space-y-6">
           <Card>
