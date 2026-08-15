@@ -26,12 +26,6 @@ export function Row({ children, right }: { children: ReactNode; right?: ReactNod
 // ─── AlertCard ───────────────────────────────────────────────────────────────
 export function AlertCard({ a, onDismiss }: { a: OpAlert; onDismiss: () => void }) {
   const tone = alertTone[a.type] ?? "neutral";
-  const borderColor =
-    tone === "red" ? "border-l-[#B91C1C]" :
-    tone === "amber" ? "border-l-[#B45309]" :
-    tone === "indigo" ? "border-l-[#881337]" :
-    tone === "teal" ? "border-l-[#15803D]" :
-    "border-l-[#E7E5E0]";
 
   return (
     <div className={`rounded-xl bg-white/60 backdrop-blur-md shadow-md ring-1 ring-black/[0.04] px-4 py-3`}>
