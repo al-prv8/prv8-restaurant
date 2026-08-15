@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, CheckCircle, Loader2, MessageSquare, X } from "lucide-react";
+import { ArrowRight, CheckCircle, Loader2, MessageSquare, X, Sparkles, Send } from "lucide-react";
 import { SUGGESTIONS, askPrive, type PriveAnswer } from "@/lib/prive/askPrive";
 import { usePrive, type Persona } from "@/lib/prive/store";
 import { Button, ConfidenceTag, Pill, Skeleton } from "./ui";
@@ -70,7 +70,7 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
         {turns.length === 0 && !thinking ? (
           <div className="relative overflow-hidden rounded-2xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/90 before:to-transparent p-5">
             <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.15em] text-[#881337] mb-2">
-              <span>✦</span> Privé Intelligence Console
+              <Sparkles className="size-3.5" /> Privé Intelligence Console
             </div>
             <p className="text-[13px] font-medium text-[#78716C] leading-relaxed">
               Ask Privé anything about POS sales, inventory velocity, staffing coverage, guest complaints, training, or financial margins.
@@ -138,43 +138,25 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
                 </div>
               ) : null}
 
-              {t.a.recommendation ? (
-                <div className="rounded-lg border border-[#881337]/20 bg-[#881337]/8 p-3 text-[12px] text-[#881337]">
-                  <span className="font-bold uppercase tracking-wider text-[10px]">Recommendation · </span>
-                  <span className="font-semibold">{t.a.recommendation}</span>
+              {t.a.actionLabel && t.a.actionType ? (
+                <div className="pt-2">
+                  {t.actionDone ? (
+                    <div className="flex items-center gap-2 rounded-xl bg-[#15803D]/10 p-3 text-[12px] font-bold text-[#15803D]">
+                      <CheckCircle className="size-4 shrink-0" />
+                      Action executed & recorded in audit ledger
+                    </div>
+                  ) : (
+                    <Button
+                      variant="primary"
+                      onClick={() => handleActionClick(i, t)}
+                      className="w-full bg-[#881337] text-white hover:bg-[#6B0F2A] font-bold text-xs py-2.5 rounded-xl border-none shadow-sm"
+                    >
+                      {t.a.actionLabel}
+                      <ArrowRight className="size-3.5 ml-1.5" />
+                    </Button>
+                  )}
                 </div>
               ) : null}
-
-              {/* 1-Click Action Button */}
-              {t.a.action ? (
-                <div className="pt-1">
-                  <button
-                    type="button"
-                    onClick={() => handleActionClick(i, t)}
-                    disabled={t.actionDone}
-                    className={`w-full flex items-center justify-between rounded-xl px-4 py-2.5 text-[13px] font-bold transition-all ${
-                      t.actionDone
-                        ? "bg-[#15803D]/8 border border-[#15803D]/25 text-[#15803D] cursor-default"
-                        : "bg-[#881337] text-white hover:bg-[#6B0F2A] shadow-md active:scale-[0.98]"
-                    }`}
-                  >
-                    <span className="flex items-center gap-2">
-                      {t.actionDone ? <CheckCircle className="size-4" /> : <ArrowRight className="size-4" />}
-                      {t.actionDone ? "Executed Successfully" : t.a.action}
-                    </span>
-                    {!t.actionDone ? <ArrowRight className="size-4 opacity-60" /> : null}
-                  </button>
-                </div>
-              ) : null}
-
-              <div className="flex flex-wrap items-center gap-1.5 border-t border-[#E7E5E0] pt-2.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#A8A29E]">
-                  Data Feeds
-                </span>
-                {t.a.sources.map((s) => (
-                  <Pill key={s}>{s}</Pill>
-                ))}
-              </div>
             </div>
           </div>
         ))}
@@ -187,8 +169,8 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
             </div>
             <div className="relative overflow-hidden rounded-2xl rounded-bl-sm bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] p-4 space-y-3">
               <div className="flex items-center gap-2.5 text-[12px] font-semibold text-[#881337]">
-                <Loader2 className="size-4 animate-spin" />
-                Privé is analysing live POS, inventory & scheduling data…
+                <Loader2 className="size-4 animate-spin text-[#881337]" />
+                Privé is analyzing live POS, inventory & scheduling data…
               </div>
               <div className="space-y-2 pt-1">
                 <Skeleton className="h-4 w-5/6" />
@@ -210,10 +192,10 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask Privé anything (e.g. 'Can we handle tomorrow?')…"
+          placeholder="Ask Privé anything (e.g. 'Can we handle tomorrow?')..."
           className="w-full rounded-xl bg-white/70 backdrop-blur-md border border-white/80 px-3.5 py-2.5 text-[13px] font-medium text-[#1C1917] placeholder-[#A8A29E] outline-none focus:border-[#881337] focus:ring-2 focus:ring-[#881337]/15 shadow-sm transition-all"
         />
-        <Button type="submit" variant="primary" disabled={thinking} className="rounded-xl px-5 shrink-0 shadow-md">
+        <Button type="submit" variant="primary" disabled={thinking} className="rounded-xl px-5 shrink-0 shadow-md bg-[#881337] text-white hover:bg-[#6B0F2A] border-none font-bold">
           Ask
         </Button>
       </form>
@@ -235,27 +217,27 @@ export function AskPriveDrawer({ persona }: { persona: Persona }) {
 
   return (
     <>
-      {/* FAB */}
+      {/* Floating Action Button */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-full px-5 py-3 text-[13px] font-bold text-white shadow-2xl backdrop-blur-xl ring-2 ring-white/40 transition-all hover:scale-105 active:scale-95"
+        className="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2.5 rounded-full px-6 py-3.5 text-[13px] font-black text-white shadow-2xl backdrop-blur-xl ring-2 ring-white/40 transition-all hover:scale-105 active:scale-95"
         style={{ backgroundColor: "#881337" }}
       >
         <MessageSquare className="size-4" />
         Ask Privé
       </button>
 
-      {/* Drawer */}
+      {/* Drawer Overlay & Panel */}
       {open ? (
         <div
-          className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-md animate-in fade-in duration-200"
           onClick={() => setOpen(false)}
         >
           <div
-            className="relative overflow-hidden flex h-full w-full max-w-md flex-col bg-white/75 backdrop-blur-3xl border-l border-white/80 p-5 shadow-2xl ring-1 ring-black/10 before:absolute before:inset-y-0 before:left-0 before:w-[1px] before:bg-gradient-to-b before:from-transparent before:via-white/90 before:to-transparent"
+            className="relative overflow-hidden flex h-full w-full max-w-md flex-col bg-[#F4EFEA]/90 backdrop-blur-3xl border-l border-white/80 p-6 shadow-2xl ring-1 ring-black/10 before:absolute before:inset-y-0 before:left-0 before:w-[1px] before:bg-gradient-to-b before:from-transparent before:via-white/90 before:to-transparent"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Drawer header */}
+            {/* Drawer header card */}
             <div className="mb-4 flex items-center justify-between border-b border-[#E7E5E0] pb-3">
               <div>
                 <div className="flex items-center gap-2">
@@ -280,4 +262,3 @@ export function AskPriveDrawer({ persona }: { persona: Persona }) {
     </>
   );
 }
-
