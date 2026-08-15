@@ -474,7 +474,7 @@ export function PageTabs<T extends string>({
   onChange: (id: T) => void;
 }) {
   return (
-    <div className="mb-6 flex items-center gap-0 overflow-x-auto no-scrollbar whitespace-nowrap border-b border-[#E7E5E0]">
+    <div className="relative overflow-hidden mb-6 rounded-2xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] p-2 flex items-center gap-2 overflow-x-auto no-scrollbar whitespace-nowrap before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/90 before:to-transparent">
       {tabs.map((tab) => {
         const isActive = tab.id === active;
         return (
@@ -482,17 +482,17 @@ export function PageTabs<T extends string>({
             key={tab.id}
             type="button"
             onClick={() => onChange(tab.id)}
-            className={`flex items-center gap-2 border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-all shrink-0 ${
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-[12.5px] font-bold transition-all duration-200 shrink-0 ${
               isActive
-                ? "border-[#881337] text-[#881337]"
-                : "border-transparent text-[#78716C] hover:text-[#1C1917] hover:border-[#A8A29E]"
+                ? "bg-[#881337] text-white shadow-md ring-1 ring-[#881337]/30 scale-[1.01]"
+                : "bg-white/40 backdrop-blur-md border border-white/60 text-[#78716C] hover:bg-white/80 hover:text-[#1C1917] hover:-translate-y-0.5 shadow-xs"
             }`}
           >
             <span>{tab.label}</span>
             {tab.badge !== undefined && tab.badge !== 0 ? (
               <span
-                className={`rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums ${
-                  isActive ? "bg-[#881337] text-white" : "bg-[#1C1917]/8 text-[#78716C]"
+                className={`rounded-full px-2 py-0.5 text-[10px] font-black tabular-nums transition-all ${
+                  isActive ? "bg-white text-[#881337]" : "bg-[#881337]/10 text-[#881337]"
                 }`}
               >
                 {tab.badge}
