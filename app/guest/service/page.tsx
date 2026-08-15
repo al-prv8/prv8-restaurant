@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Volume2, Pause, Radio, Gift, CheckCircle2 } from "lucide-react";
+import { Volume2, Pause, Radio, Gift, PhoneCall, Mic, UserCheck, CheckCircle2 } from "lucide-react";
 import { Card, SectionTitle, Button, Pill, PriveIntelBanner, Pagination } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 import { GM_RESTAURANT_ID, TODAY, iso } from "@/lib/prive/data";
@@ -14,17 +14,17 @@ function AudioWaveform({ active, speaker }: { active: boolean; speaker: "ai" | "
   const bars = [24, 45, 68, 30, 85, 52, 95, 60, 40, 80, 55, 35, 75, 45, 65, 25, 50, 82, 40, 20];
 
   return (
-    <div className="relative overflow-hidden flex items-center justify-between gap-1 h-14 px-5 rounded-2xl bg-[#1C1917] border border-white/10 shadow-inner my-4">
-      <div className="flex items-center gap-2 text-xs font-bold text-white/70 min-w-[100px]">
+    <div className="relative overflow-hidden flex items-center justify-between gap-1 h-14 px-5 rounded-2xl bg-[#1C1917] border border-white/15 shadow-2xl my-4">
+      <div className="flex items-center gap-2 text-xs font-bold text-white min-w-[120px]">
         {active ? (
           <>
-            <span className={`size-2 rounded-full animate-ping ${speaker === "ai" ? "bg-[#15803D]" : "bg-[#881337]"}`} />
+            <span className={`size-2.5 rounded-full animate-ping ${speaker === "ai" ? "bg-[#4ADE80]" : "bg-[#F87171]"}`} />
             <span className={speaker === "ai" ? "text-[#4ADE80]" : "text-[#F87171]"}>
-              {speaker === "ai" ? "Voice AI" : "Priya (Guest)"}
+              {speaker === "ai" ? "Privé Voice AI" : "Priya (Guest)"}
             </span>
           </>
         ) : (
-          <span className="text-[#A8A29E]">Voice Standby</span>
+          <span className="text-[#A8A29E] flex items-center gap-1.5"><Mic className="size-3.5" /> Standby</span>
         )}
       </div>
 
@@ -47,8 +47,8 @@ function AudioWaveform({ active, speaker }: { active: boolean; speaker: "ai" | "
         ))}
       </div>
 
-      <div className="text-[10px] font-bold uppercase tracking-widest text-white/50 text-right">
-        {active ? (speaker === "ai" ? "Synthesizing" : "Live Input") : "Ready"}
+      <div className="text-[10px] font-bold uppercase tracking-widest text-white/60 text-right">
+        {active ? (speaker === "ai" ? "Synthesizing" : "Live Audio") : "Ready"}
       </div>
     </div>
   );
@@ -156,90 +156,134 @@ export default function GuestServicePage() {
 
  return (
   <>
-   <div className="mb-8 space-y-1">
-    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337]">24/7 AI Contact · Guest Services</p>
-    <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">Guest Service Portal</h1>
-    <p className="text-sm font-medium text-[#78716C]">
-     Voice AI & digital contact intake — 24/7 guest service held for GM approval.
-    </p>
+   {/* Page Header */}
+   <div className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div>
+     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-1">
+      24/7 AI Contact Intake · Guest Services
+     </p>
+     <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">
+      Voice AI Service Console
+     </h1>
+     <p className="mt-1 text-sm font-medium text-[#78716C]">
+      Simulate inbound guest calls, inspect live speech synthesis, and route draft recoveries for GM sign-off.
+     </p>
+    </div>
+
+    <div className="flex items-center gap-3">
+     <span className="rounded-2xl bg-[#15803D]/10 text-[#15803D] border border-[#15803D]/30 px-4 py-2 text-xs font-bold flex items-center gap-1.5">
+      <span className="size-2 rounded-full bg-[#15803D] animate-ping" /> 24/7 Voice AI Active
+     </span>
+    </div>
    </div>
 
    <div className="grid gap-6 lg:grid-cols-12">
+    {/* Left Column — Call Simulator & Case Tracking */}
     <div className="space-y-6 lg:col-span-7">
-     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
-      <div className="flex items-center justify-between gap-3 mb-4">
-       <SectionTitle hint="Voice AI · 24/7 · Ballantyne #02">Simulate Inbound Voice Call</SectionTitle>
+     {/* High-End Voice AI Call Simulator Card */}
+     <div className="rounded-3xl bg-[#1C1917] border border-white/15 shadow-2xl p-6 relative overflow-hidden text-white">
+      <div className="flex items-center justify-between gap-3 mb-4 border-b border-white/10 pb-4">
+       <div className="flex items-center gap-3">
+        <div className="size-10 rounded-2xl bg-[#881337] flex items-center justify-center text-white font-black shadow-md">
+         <PhoneCall className="size-5" />
+        </div>
+        <div>
+         <div className="text-sm font-black text-white">Simulate Inbound Voice Call</div>
+         <div className="text-xs text-white/50 font-medium">Ballantyne #02 · Caller: Priya Raman (ORD-51993)</div>
+        </div>
+       </div>
+
        {isPlaying ? (
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#881337]/15 px-3 py-1 text-xs font-bold text-[#881337] animate-pulse">
-         <Radio className="size-3.5 text-[#881337]" /> Live Audio
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#881337] px-3 py-1 text-xs font-bold text-white animate-pulse shadow-md">
+         <Radio className="size-3.5" /> Live Call Active
         </span>
-       ) : null}
+       ) : (
+        <span className="text-xs font-bold text-white/40">Ready to Play</span>
+       )}
       </div>
 
-      {/* Real-time Audio Waveform Visualizer */}
+      {/* Audio Waveform Equalizer */}
       <AudioWaveform active={isPlaying} speaker={activeSpeaker} />
 
-      <div className="rounded-xl bg-[#1C1917] p-5 font-mono text-sm text-[#FAFAF8] shadow-inner space-y-4">
-       <div className={`rounded-lg p-3 transition-all ${activeSpeaker === "ai" ? "bg-[#881337]/30 ring-1 ring-[#881337]" : ""}`}>
-        <p><span className="font-bold text-[#15803D] uppercase tracking-wider text-xs">Privé Voice AI:</span><br/>Thank you for calling The Morning Table — Ballantyne location. How can I help you today?</p>
+      {/* Transcript Terminal Container */}
+      <div className="rounded-2xl bg-black/50 border border-white/10 p-5 font-mono text-xs leading-relaxed space-y-4 shadow-inner">
+       <div className={`rounded-xl p-3 transition-all ${activeSpeaker === "ai" ? "bg-[#881337]/40 ring-1 ring-[#881337] text-white" : "text-white/70"}`}>
+        <span className="font-bold text-[#4ADE80] uppercase tracking-wider text-[10px] block mb-1">✦ Privé Voice AI Agent</span>
+        "Thank you for calling The Morning Table — Ballantyne location. How can I help you today?"
        </div>
-       <div className={`rounded-lg p-3 transition-all ${activeSpeaker === "guest" ? "bg-[#881337]/30 ring-1 ring-[#881337]" : ""}`}>
-        <p><span className="font-bold text-[#A8A29E] uppercase tracking-wider text-xs">Guest (Priya):</span><br/>Hi, I ordered curbside pickup earlier and two sides of bacon were missing.</p>
+
+       <div className={`rounded-xl p-3 transition-all ${activeSpeaker === "guest" ? "bg-[#881337]/40 ring-1 ring-[#881337] text-white" : "text-white/70"}`}>
+        <span className="font-bold text-[#F87171] uppercase tracking-wider text-[10px] block mb-1">👤 Guest (Priya Raman)</span>
+        "Hi, I ordered curbside pickup earlier and two sides of bacon were missing."
        </div>
-       <div className={`rounded-lg p-3 transition-all ${activeSpeaker === "ai" ? "bg-[#881337]/30 ring-1 ring-[#881337]" : ""}`}>
-        <p><span className="font-bold text-[#15803D] uppercase tracking-wider text-xs">Privé Voice AI:</span><br/>I'm sorry about that, Priya. I found your order ORD-51993 from 9:42 AM. I'm creating a service case now and routing it to your location's general manager for review. You'll hear back within the hour.</p>
+
+       <div className={`rounded-xl p-3 transition-all ${activeSpeaker === "ai" ? "bg-[#881337]/40 ring-1 ring-[#881337] text-white" : "text-white/70"}`}>
+        <span className="font-bold text-[#4ADE80] uppercase tracking-wider text-[10px] block mb-1">✦ Privé Voice AI Agent</span>
+        "I'm sorry about that, Priya. I found your order ORD-51993 from 9:42 AM. I'm creating a service case now and routing it to your location's general manager for review. You'll hear back within the hour."
        </div>
       </div>
 
-      <div className="mt-6 flex flex-col sm:flex-row items-center gap-4">
-       <Button onClick={playVoiceCall} variant="ghost" className="w-full sm:w-auto bg-white/60 backdrop-blur-sm text-[#1C1917] hover:bg-white/80 font-bold">
-        {isPlaying ? <Pause className="size-4 mr-2" /> : <Volume2 className="size-4 mr-2" />}
-        {isPlaying ? "Pause Call" : "Play Recording"}
-       </Button>
+      {/* Control Action Buttons */}
+      <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
+       <button
+        onClick={playVoiceCall}
+        className="w-full sm:w-auto flex-1 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 px-5 py-3 text-xs font-bold text-white transition-all flex items-center justify-center gap-2"
+       >
+        {isPlaying ? <Pause className="size-4" /> : <Volume2 className="size-4" />}
+        {isPlaying ? "Pause Recording" : "Play Audio Recording"}
+       </button>
 
-       <Button onClick={logComplaint} disabled={!!liveComplaint} variant="primary" className="w-full sm:w-auto bg-[#881337] text-white hover:bg-[#881337]/90 font-bold border-none">
-        {liveComplaint ? "Case Sent to GM" : "Simulate Guest Call"}
-       </Button>
+       <button
+        onClick={logComplaint}
+        disabled={!!liveComplaint}
+        className={`w-full sm:w-auto flex-1 rounded-xl px-5 py-3 text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 ${
+         liveComplaint ? "bg-[#15803D] text-white cursor-not-allowed" : "bg-[#881337] text-white hover:bg-[#6B0F2A]"
+        }`}
+       >
+        {liveComplaint ? "✓ Case Routed to GM Queue" : "Simulate Guest Call & Log Case"}
+       </button>
       </div>
      </div>
 
+     {/* Live Case Tracking Card */}
      {liveComplaint ? (
-      <div className={`rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5`}>
-       <SectionTitle hint="Live Case Tracking">Your Service Case Status</SectionTitle>
+      <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
+       <SectionTitle hint="Live Case Tracking">Active Guest Case</SectionTitle>
        <div className="mt-4">
         <div className="flex items-center justify-between gap-2 mb-2">
          <span className="text-xl font-black tracking-tight text-[#1C1917]">{liveComplaint.customer}</span>
          <Pill tone={statusTone(liveComplaint.status) as "amber"}>
-          {liveComplaint.status === "Awaiting Approval" ? "Reviewing" : liveComplaint.status}
+          {liveComplaint.status === "Awaiting Approval" ? "GM Reviewing" : liveComplaint.status}
          </Pill>
         </div>
-        <p className="text-sm font-medium text-[#78716C] mb-4">
-         {liveComplaint.type} · {liveComplaint.orderRef} · {liveComplaint.channel}
+        <p className="text-xs font-bold text-[#78716C] mb-3">
+         {liveComplaint.type} · Order {liveComplaint.orderRef} · {liveComplaint.channel}
         </p>
-        <div className="bg-white/8 backdrop-blur-xl p-4 rounded-xl">
-          <p className="text-sm text-[#1C1917] leading-relaxed font-medium">{liveComplaint.summary}</p>
+        <div className="bg-white/40 backdrop-blur-xl p-4 rounded-xl border border-white/60">
+         <p className="text-sm text-[#1C1917] leading-relaxed font-medium">{liveComplaint.summary}</p>
         </div>
         {liveComplaint.status === "Awaiting Approval" && (
-         <div className="mt-4 rounded-lg bg-[#B45309]/10 p-4 text-sm text-[#92400E] font-bold">
-          Your GM is reviewing the drafted recovery. You'll receive a response and any credit by email shortly.
+         <div className="mt-4 rounded-xl bg-[#B45309]/10 border border-[#B45309]/20 p-4 text-xs font-bold text-[#92400E]">
+          ✦ Your GM is reviewing the drafted recovery response. You'll receive confirmation and single-use credit upon approval.
          </div>
         )}
        </div>
       </div>
      ) : null}
 
+     {/* Past Issues Queue */}
      <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
       <SectionTitle hint={`${d.gmComplaints.length} Issues`}>Past Issues Queue</SectionTitle>
-      <div className="mt-4 space-y-4">
+      <div className="mt-4 space-y-3">
        {paginatedComplaints.map((c) => (
-        <div key={c.id} className={`rounded-2xl bg-white/40 backdrop-blur-sm shadow-sm ring-1 ring-black/[0.04] p-4 shadow-sm`}>
-         <div className="flex items-center justify-between gap-2">
+        <div key={c.id} className="flex items-center justify-between rounded-2xl bg-white/40 backdrop-blur-sm p-4 shadow-sm ring-1 ring-black/[0.04]">
+         <div>
           <span className="text-base font-black text-[#1C1917]">{c.customer}</span>
-          <Pill tone={statusTone(c.status) as "amber"}>{c.status}</Pill>
+          <p className="mt-1 text-xs font-semibold text-[#78716C]">
+           {c.type} · {c.severity} · {c.channel} · {c.orderRef}
+          </p>
          </div>
-         <p className="mt-1.5 text-xs font-medium text-[#78716C]">
-          {c.type} · {c.severity} · {c.channel} · {c.orderRef}
-         </p>
+         <Pill tone={statusTone(c.status) as "amber"}>{c.status}</Pill>
         </div>
        ))}
       </div>
@@ -256,11 +300,12 @@ export default function GuestServicePage() {
      </div>
     </div>
 
+    {/* Right Sidebar Column */}
     <div className="space-y-6 lg:col-span-5">
      <div className="rounded-2xl bg-white/40 backdrop-blur-md shadow-md ring-1 ring-black/[0.04] p-5 lg:sticky lg:top-20 min-h-[520px]">
       <SectionTitle>Ask Privé Guest Support</SectionTitle>
       <div className="mt-4">
-        <AskPriveConsole persona="guest" compact />
+       <AskPriveConsole persona="guest" compact />
       </div>
      </div>
     </div>
