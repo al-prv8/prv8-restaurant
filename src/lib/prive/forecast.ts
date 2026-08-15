@@ -216,7 +216,12 @@ export interface Readiness {
   risks: Array<{ label: string; probability: number; detail: string }>;
 }
 
-/** Composite "can we handle tomorrow?" readiness. */
+/** Composite "can we handle tomorrow?" readiness.
+ * Calibrated so the demo's initial state (35 lb shortage, 2-person staffing
+ * gap, 3 open complaints, 1 expiring cert, 3 overdue training) yields ≈ 61 %,
+ * and after all GM actions are taken (every input = 0) yields ≈ 88 %.
+ * The 12-point baseline penalty represents systemic operational friction that
+ * always exists — even a perfect store is not 100 % certain. */
 export function computeReadiness(input: {
   inventoryShortage: number;
   staffingGap: number;
@@ -229,7 +234,9 @@ export function computeReadiness(input: {
   const svcProb = Math.min(90, Math.round(input.staffingGap * 21 + input.openComplaints * 6 + input.inventoryShortage * 0.5));
   const compProb = Math.min(80, input.expiringCerts * 26 + input.overdueTraining * 9);
 
-  const penalty = invProb * 0.28 + staffProb * 0.3 + svcProb * 0.22 + compProb * 0.14;
+  // Baseline systemic overhead — caps perfect-state ceiling at 88 %
+  const baselinePenalty = 12;
+  const penalty = invProb * 0.12 + staffProb * 0.13 + svcProb * 0.09 + compProb * 0.06 + baselinePenalty;
   const score = Math.max(5, Math.min(99, Math.round(100 - penalty)));
 
   const risks = [

@@ -378,7 +378,7 @@ export const recipes: Recipe[] = [
 
 /* ---------------------------- Complaints ---------------------------- */
 const COMPLAINT_SEED: Array<[string, string, Complaint["channel"], string, string, number, Complaint["severity"]]> = [
-  ["Dana Whitfield", GM_RESTAURANT_ID, "Voice", "Missing item", "Order took 35 minutes and one entrée was missing.", 20, "High"],
+  ["Dana Whitfield", GM_RESTAURANT_ID, "Voice", "Missing item", "Order took 35 minutes and one entrée was missing.", 15, "High"],
   ["Peter Alvarez", GM_RESTAURANT_ID, "Email", "Service time", "Waited 22 minutes for coffee refills on a Saturday.", 15, "Medium"],
   ["Renée Osei", GM_RESTAURANT_ID, "Web Form", "Food quality", "Benedict arrived cold; hollandaise separated.", 18, "Medium"],
   ["Cal Jennings", TROUBLED_RESTAURANT_ID, "Review Site", "Cleanliness", "Restroom was not stocked and floor was wet.", 10, "High"],

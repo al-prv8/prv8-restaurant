@@ -10,15 +10,18 @@ export interface PriveAnswer {
   confidence?: "High" | "Medium" | "Low";
   sources: string[];
   action?: string | undefined;
+  actionType?: "potatoOrderIncrease" | "approveStaffing" | "askPriveTrigger" | "rejectComplaint" | "openRoute" | undefined;
+  actionPayload?: string | undefined;
 }
 
 const has = (q: string, ...terms: string[]) => terms.some((t) => q.includes(t));
 
 export function askPrive(question: string, persona: Persona, d: Derived): PriveAnswer {
-  const q = question.toLowerCase();
+  const q = question.toLowerCase().trim();
 
+  /* -------------------------- EMPLOYEE PERSONA -------------------------- */
   if (persona === "employee") {
-    const hit = knowledge.find((k) => q.includes(k.q));
+    const hit = knowledge.find((k) => q.includes(k.q) || k.q.split(" ").some((w) => w.length > 4 && q.includes(w)));
     if (hit) {
       return {
         answer: hit.a,
@@ -26,180 +29,247 @@ export function askPrive(question: string, persona: Persona, d: Derived): PriveA
         sources: [hit.source],
       };
     }
-    if (has(q, "schedule", "shift", "working")) {
+    if (has(q, "schedule", "shift", "working", "hours", "when")) {
       return {
-        answer: "Your next shift is today, 10:00 AM–4:00 PM at Ballantyne #02, section 3. There's also an open Saturday 4:00–8:00 PM shift you can express interest in from your Home screen.",
+        answer: "Your next shift is today, 10:00 AM–4:00 PM at Ballantyne #02, section 3. There is also an open Saturday 4:00–8:00 PM peak shift available for pickup.",
+        evidence: ["Scheduled hours this week: 28.5 / 32.0 hrs", "Open shift: Saturday 4:00 PM–8:00 PM"],
+        recommendation: "Express interest in the Saturday 4–8 PM shift on your Schedule tab to earn 4.0 extra hours.",
         confidence: "High",
         sources: ["7shifts (Scheduling)", "Privé Workforce"],
+        action: "Express Interest in Saturday Shift",
+        actionType: "openRoute",
+        actionPayload: "/employee/schedule",
+      };
+    }
+    if (has(q, "training", "certif", "servsafe", "allergen", "due")) {
+      return {
+        answer: d.overdueTraining > 0
+          ? `You have ${d.overdueTraining} training module(s) due: Allergen Awareness (5 min) and ServSafe Food Handler certification renewal.`
+          : "All your assigned training modules and food handler certifications are 100% up to date!",
+        evidence: ["Allergen Awareness: 5 min remaining", "ServSafe Certification: 14 days to expiration"],
+        recommendation: "Complete the 5-minute Allergen Awareness module before your shift starts.",
+        confidence: "High",
+        sources: ["Privé Learning Management", "ServSafe Portal"],
+        action: "Start Training Module",
+        actionType: "openRoute",
+        actionPayload: "/employee/training",
       };
     }
     return {
-      answer: "I can help with your schedule, shift details, assigned training, policies and store procedures. Try asking about time off, allergens, closing procedure, or the fryer temperature SOP.",
+      answer: `I analyzed your employee records for Ballantyne #02. Your shift is today 10:00 AM–4:00 PM (Section 3). You are scheduled for 28.5 hours this week with 1 training module due.`,
+      evidence: ["Next Shift: Today 10:00 AM - 4:00 PM", "Open Saturday shift available for pickup"],
+      recommendation: "Check your Training & Certification tab or Ask Privé about specific store procedures like gluten safety or closing checklists.",
       confidence: "High",
-      sources: ["Privé Knowledge Base"],
+      sources: ["7shifts", "Privé Employee Portal"],
     };
   }
 
-  if (has(q, "handle tomorrow", "can we handle", "ready for tomorrow", "readiness")) {
+  /* -------------------------- GM / REGIONAL / EXEC / GUEST -------------------------- */
+
+  // 1. Store Readiness & Tomorrow Handling
+  if (has(q, "handle tomorrow", "can we handle", "ready for tomorrow", "readiness", "tomorrow readiness")) {
     const r = d.readiness;
+    const allClear = r.score >= 85;
     return {
-      answer:
-        r.score >= 85
-          ? `Yes — Ballantyne #02 is at ${r.score}% readiness for tomorrow at current inventory and staffing levels.`
-          : `Not at current staffing and inventory levels. Ballantyne #02 is at ${r.score}% readiness for tomorrow.`,
-      evidence: r.risks.map((x) => `${x.label}: ${x.probability}% probability — ${x.detail}`),
-      forecast: `Forecast sales ${money(d.tomorrow.sales)} on ${d.tomorrow.transactions.toLocaleString()} transactions (${d.tomorrow.vsTypicalPct > 0 ? "+" : ""}${d.tomorrow.vsTypicalPct}% vs typical).`,
-      recommendation:
-        r.score >= 85
-          ? "Hold current plan. Re-check inventory velocity at 2:00 PM."
-          : `Increase potato inventory by ${Math.ceil(d.potato.shortage)} lbs, add ${d.staffing.gap} team member(s) 4–8 PM, resolve ${d.openComplaints} outstanding guest issue(s), and close the expiring certification.`,
+      answer: allClear
+        ? `Yes — Ballantyne #02 is operating at a peak ${r.score}% readiness score for tomorrow. All key drivers are within acceptable operating windows.`
+        : `Not yet — Current store readiness is ${r.score}%. After completing the pending approvals below, readiness is calculated to reach ~88%.`,
+      evidence: r.risks.map((x) => `${x.label}: ${x.probability}% risk — ${x.detail}`),
+      forecast: `Forecast revenue ${money(d.tomorrow.sales)} across ${d.tomorrow.transactions.toLocaleString()} transactions (${d.tomorrow.vsTypicalPct > 0 ? "+" : ""}${d.tomorrow.vsTypicalPct}% vs typical).`,
+      recommendation: allClear
+        ? "Hold current execution plan. Privé will re-check inventory velocity at 2:00 PM."
+        : `To hit 88% readiness: (1) Order +${Math.ceil(d.potato.shortage)} lbs Russet Potatoes. (2) Approve Saturday 4-8 PM staffing gap. (3) Resolve ${d.openComplaints} guest complaint(s).`,
       confidence: d.tomorrow.confidence,
-      sources: ["Toast POS", "Restaurant365", "7shifts", "Privé Forecast Engine"],
-      action: r.score >= 85 ? undefined : "Open readiness actions",
+      sources: ["Toast POS", "Restaurant365", "7shifts", "Privé Cognitive Engine"],
+      action: allClear ? undefined : "Approve Potato Supplier Order",
+      actionType: allClear ? undefined : "potatoOrderIncrease",
     };
   }
 
-  if (has(q, "worry", "focus", "attention today", "most important")) {
+  // 2. Immediate Attention & Daily Signals
+  if (has(q, "worry", "focus", "attention today", "most important", "signals", "priority")) {
     return {
-      answer: `Five items need your attention at Ballantyne #02 today.`,
+      answer: `There are ${d.brief.length} operational signals requiring your attention at Ballantyne #02 today:`,
       evidence: [
-        `Traffic tomorrow is forecast ${d.tomorrow.vsTypicalPct > 0 ? "+" : ""}${d.tomorrow.vsTypicalPct}% above normal.`,
-        d.potato.depletionTime
-          ? `Russet Potatoes projected to fall below minimum at ${d.potato.depletionTime} (${d.potato.shortage} lbs short).`
-          : "Inventory is projected to cover forecast demand.",
-        `${d.overdueTraining} employee(s) have incomplete training.`,
-        `${d.openComplaints} guest complaint(s) await your approval.`,
-        d.expiringCerts ? "One certification expires within 14 days." : "No certifications expiring.",
+        `Tomorrow's sales forecast is ${d.tomorrow.vsTypicalPct > 0 ? "+" : ""}${d.tomorrow.vsTypicalPct}% above typical volume.`,
+        d.potato.shortage > 0
+          ? `Russet Potatoes short by ${d.potato.shortage} lbs (depletion at ${d.potato.depletionTime ?? "close"}).`
+          : "Russet Potato inventory is 100% covered.",
+        `${d.staffing.gap} staffing gap(s) during Saturday 4:00–8:00 PM peak.`,
+        `${d.openComplaints} guest complaint(s) awaiting approval.`,
+        d.expiringCerts ? "ServSafe certification expiring in 14 days." : "Certifications compliant.",
       ],
-      recommendation: "Work the readiness checklist on your command center — it is ordered by financial and guest impact.",
+      recommendation: "Execute pending approvals in your Action Queue — it is prioritized by financial margin and guest impact.",
       confidence: "High",
       sources: ["Toast POS", "Restaurant365", "Paycor", "Guest Feedback CRM"],
+      action: "Approve Open Staffing",
+      actionType: "approveStaffing",
     };
   }
 
-  if (has(q, "labor high", "why is labor", "labor yesterday", "overtime")) {
+  // 3. Labor & Overtime
+  if (has(q, "labor", "overtime", "paycor", "7shifts", "hours", "staffing cost")) {
     const s = d.staffing;
+    const isHigh = s.projectedLaborPct > s.targetLaborPct;
     return {
-      answer: `Labor is projected at ${s.projectedLaborPct}% against a ${s.targetLaborPct}% target — ${Math.round((s.projectedLaborPct - s.targetLaborPct) * 10) / 10} points above plan.`,
+      answer: `Labor is currently projected at ${s.projectedLaborPct}% of sales against a ${s.targetLaborPct}% target (${isHigh ? "+" : ""}${round(s.projectedLaborPct - s.targetLaborPct, 1)} pts). Projected labor cost: ${money(s.projectedLaborCost)}.`,
       evidence: [
-        `${s.laborHoursNeeded} labor hours required against forecast peak volume.`,
-        `Projected labor cost ${money(s.projectedLaborCost)} on ${money(d.tomorrow.sales)} forecast revenue.`,
-        "14 overtime hours attributed to late clock-outs beyond scheduled shift end.",
+        `${s.laborHoursNeeded} labor hours required for ${d.tomorrow.transactions.toLocaleString()} forecast transactions.`,
+        `Scheduled staff: ${s.scheduledStaff} vs recommended ${s.recommendedStaff} (${s.gap > 0 ? `${s.gap} gap` : "Full coverage"}).`,
+        "14 overtime hours recorded from late clock-outs after dinner peak.",
       ],
-      recommendation: "Review closing staffing and overtime assignment; shift two closers to a staggered out-time.",
+      recommendation: s.gap > 0
+        ? "Approve the Saturday 4–8 PM staffing addition to prevent service delays while staggering closer out-times to eliminate overtime."
+        : "Labor coverage is balanced; enforce strict clock-out times at 10:00 PM.",
       confidence: "High",
-      sources: ["Paycor", "7shifts", "Toast POS"],
+      sources: ["Paycor Payroll", "7shifts Scheduling", "Toast POS"],
+      action: s.gap > 0 ? "Approve Staffing Adjustment" : undefined,
+      actionType: s.gap > 0 ? "approveStaffing" : undefined,
     };
   }
 
-  if (has(q, "inventory", "potato", "shortage", "run out")) {
+  // 4. Inventory & Suppliers
+  if (has(q, "inventory", "potato", "avocado", "shortage", "stockout", "supplier", "order")) {
     return {
       answer: d.potato.shortage > 0
-        ? `Russet Potatoes are projected to run short by ${d.potato.shortage} lbs tomorrow, depleting around ${d.potato.depletionTime ?? "close"}.`
-        : `Russet Potatoes now cover forecast demand — ${d.potato.onHand} lbs on hand against ${d.potato.projectedUsage} lbs projected usage.`,
+        ? `Russet Potatoes are projected to run short by ${d.potato.shortage} lbs tomorrow, depleting at ${d.potato.depletionTime ?? "close"}.`
+        : `Russet Potatoes are fully stocked at ${d.potato.onHand} lbs on-hand against ${d.potato.projectedUsage} lbs projected usage.`,
       evidence: [
-        `Forecast transactions ${d.tomorrow.transactions.toLocaleString()} × 0.30 lbs per transaction = ${d.potato.projectedUsage} lbs required.`,
-        `Current on-hand: ${d.potato.onHand} lbs. Par level: ${d.potato.parLevel} lbs.`,
-        `${d.atRisk.length} SKU(s) currently flagged at risk across the location.`,
+        `Forecast demand: ${d.tomorrow.transactions.toLocaleString()} tx × 0.30 lbs = ${d.potato.projectedUsage} lbs required.`,
+        `On-hand: ${d.potato.onHand} lbs. Par level: ${d.potato.parLevel} lbs.`,
+        `Carolina Produce supplier cutoff: Today 5:00 PM.`,
       ],
       recommendation: d.potato.shortage > 0
-        ? `Increase tomorrow's Carolina Produce order by ${Math.ceil(d.potato.shortage)} lbs, or transfer from Charlotte #01 (11 miles).`
-        : "No action required — monitor consumption velocity at 2:00 PM.",
+        ? `Order +${Math.ceil(d.potato.shortage)} lbs Russet Potatoes from Carolina Produce before 5:00 PM, or initiate a 11-mile transfer from Charlotte #01.`
+        : "Inventory is inside safety buffers. Re-check depletion velocity at 2:00 PM.",
       confidence: d.tomorrow.confidence,
-      sources: ["Restaurant365", "Toast POS item mix", "Privé Forecast Engine"],
-      action: d.potato.shortage > 0 ? "Increase order" : undefined,
+      sources: ["Restaurant365", "Toast POS Item Mix", "Carolina Produce API"],
+      action: d.potato.shortage > 0 ? "Order +35 lbs Russet Potatoes" : undefined,
+      actionType: d.potato.shortage > 0 ? "potatoOrderIncrease" : undefined,
     };
   }
 
-  if (has(q, "which locations", "need attention", "deteriorat", "why is this restaurant")) {
+  // 5. Guest Complaints & AI Recovery Credits
+  if (has(q, "complaint", "guest", "recovery", "refund", "credit", "satisfaction", "sentiment")) {
+    return {
+      answer: `${d.openComplaints} guest complaint(s) require GM approval at Ballantyne #02. Privé has drafted AI recovery messages and calculated single-use credit amounts.`,
+      evidence: d.gmComplaints.map((c) => `${c.customer} (${c.type}): ${c.severity} severity — ${c.status}`),
+      forecast: `Tomorrow's volume projects ${d.complaintForecast.expected} expected new complaint(s) (${d.complaintForecast.ratePer1000} per 1k transactions).`,
+      recommendation: "Review and approve drafted guest recovery responses to protect store reputation and prevent negative online reviews.",
+      confidence: d.complaintForecast.confidence,
+      sources: ["Guest Feedback CRM", "Voice AI Intake", "Toast POS"],
+      action: "Review Guest Complaints",
+      actionType: "openRoute",
+      actionPayload: "/gm/guests",
+    };
+  }
+
+  // 6. Regional Portfolio & Troubled Locations
+  if (has(q, "location", "regional", "portfolio", "store", "charlotte", "deteriorat", "troubled")) {
     const t = restaurantById(TROUBLED_RESTAURANT_ID);
     const h = d.health.find((x) => x.restaurant.id === TROUBLED_RESTAURANT_ID)!;
     const counts = d.health.reduce<Record<string, number>>((a, x) => ({ ...a, [x.state]: (a[x.state] ?? 0) + 1 }), {});
     return {
-      answer: `${counts["Healthy"] ?? 0} healthy, ${counts["Watch"] ?? 0} on watch, ${(counts["Action Required"] ?? 0) + (counts["Critical"] ?? 0)} requiring action. ${t.name} is the clearest outlier at a health score of ${h.score}.`,
+      answer: `Across the 12 Carolinas locations: ${counts["Healthy"] ?? 0} are Healthy, ${counts["Watch"] ?? 0} on Watch, and ${(counts["Action Required"] ?? 0) + (counts["Critical"] ?? 0)} require action. ${t.name} is the primary outlier with a Health Score of ${h.score}.`,
       evidence: [
-        `Turnover +${t.turnoverDelta}% versus region.`,
-        `Complaints +${t.complaintDelta}%.`,
-        `Labor +${t.laborDelta} points.`,
-        `Training completion ${t.trainingDelta}%.`,
+        `${t.name}: Staff turnover +${t.turnoverDelta}% vs regional benchmark.`,
+        `Complaints +${t.complaintDelta}% vs average.`,
+        `Labor variance +${t.laborDelta} points above budget.`,
       ],
-      forecast: "Sales trend has declined for six consecutive weeks and is forecast to continue absent intervention.",
-      recommendation: "Deterioration correlates with staffing instability beginning roughly six weeks ago. Assign a GM performance review and a retention plan before the summer LTO launch.",
+      forecast: "Sales trend at Charlotte #03 has dropped for 6 consecutive weeks due to staffing instability.",
+      recommendation: "Assign a GM performance review and initiate retention bonuses for key kitchen staff.",
       confidence: "Medium",
-      sources: ["Toast POS", "Paycor", "Guest Feedback CRM", "Privé Health Model"],
-      action: "Assign GM review",
+      sources: ["Privé Health Engine", "Toast POS", "Paycor"],
+      action: "View Regional Portfolio",
+      actionType: "openRoute",
+      actionPayload: "/regional/portfolio",
     };
   }
 
-  if (has(q, "margin", "ebitda", "profit", "losing")) {
+  // 7. Executive Margin, EBITDA & Financial Performance
+  if (has(q, "margin", "ebitda", "profit", "revenue", "financial", "sales", "executive")) {
     const e = d.enterprise;
     return {
-      answer: `Margin is forecast 1.2 points below target this month while revenue runs ahead of plan at ${money(e.monthRevenue)}.`,
+      answer: `MTD Enterprise Revenue is running strong at ${money(e.monthRevenue)}, but EBITDA Margin is 1.2 points below target due to elevated labor and protein costs.`,
       evidence: [
-        `Enterprise labor at ${e.laborPct}% against a 25.6% target.`,
-        "Protein cost increases of 6.2% announced by Southern Meats.",
-        `${e.turnoverRiskStores} locations carrying elevated turnover.`,
-        `Service-recovery spend of ${money(e.recoverySpend)} issued this period.`,
+        `Enterprise Labor: ${e.laborPct}% vs 25.6% target.`,
+        `Same-store sales growth: ${e.sameStoreSalesPct > 0 ? "+" : ""}${e.sameStoreSalesPct}%.`,
+        `Service recovery spend MTD: ${money(e.recoverySpend)}.`,
+        `Food cost: ${e.foodCostPct}% of sales.`,
       ],
-      forecast: "Holding current labor models, margin variance widens a further 0.4 points next month.",
-      recommendation: "Adjust weekend labor models in the three highest-variance locations, renegotiate protein commitments, and fund retention actions where turnover exceeds 8%.",
-      confidence: "Medium",
-      sources: ["Toast POS", "Paycor", "Restaurant365", "Privé Forecast Engine"],
-    };
-  }
-
-  if (has(q, "what if", "increase", "10%", "scenario", "traffic")) {
-    return {
-      answer: "Use the What-If panel — I recalculate revenue, transactions, staffing requirement, labor percentage and inventory exposure from the same historical series, not from a stored answer.",
-      recommendation: "Set the traffic slider and compare readiness before and after.",
+      forecast: "Without labor optimization, margin variance will widen by an additional 0.4 points next month.",
+      recommendation: "Adjust weekend labor models in top 3 high-variance stores and renegotiate bulk protein commitments with Southern Meats.",
       confidence: "High",
-      sources: ["Privé Scenario Engine"],
-      action: "Open scenario engine",
+      sources: ["Restaurant365 GL", "Toast POS Enterprise", "Paycor"],
+      action: "Open Scenario Engine",
+      actionType: "openRoute",
+      actionPayload: "/executive/scenario",
     };
   }
 
-  if (has(q, "complaint", "guest", "recovery", "refund")) {
+  // 8. What-If Scenario Simulation
+  if (has(q, "what if", "scenario", "traffic", "slider", "increase", "boost", "uplift")) {
     return {
-      answer: `${d.openComplaints} guest issue(s) are unresolved at Ballantyne #02 and ${d.gmComplaints.filter((c) => c.status === "Awaiting Approval").length} are drafted and awaiting your approval.`,
-      evidence: d.gmComplaints.slice(0, 3).map((c) => `${c.customer} · ${c.type} · ${c.severity} severity · ${c.status}`),
-      forecast: `Tomorrow's volume implies ${d.complaintForecast.expected} expected new complaints at ${d.complaintForecast.ratePer1000} per 1,000 transactions.`,
-      recommendation: "Approve or edit the drafted recoveries — unresolved issues raise tomorrow's service-time risk.",
-      confidence: d.complaintForecast.confidence,
-      sources: ["Guest Feedback CRM", "Voice AI", "Toast POS"],
-      action: "Open complaint center",
-    };
-  }
-
-  if (has(q, "staffing", "schedule", "coverage", "shift")) {
-    const s = d.staffing;
-    return {
-      answer: s.gap > 0
-        ? `You are ${s.gap} team member(s) short of the recommended coverage for tomorrow's peak block.`
-        : "Coverage now meets the recommended level for tomorrow's peak block.",
+      answer: `Running What-If Scenario at +${d.scenario.upliftPct}% traffic uplift: Revenue increases by +${money(d.scenario.revenueDelta)} (total ${money(d.scenario.revenueTotal)}), requiring +${d.scenario.laborHoursDelta} additional labor hours and ${d.scenario.extraStaffNeeded} extra staff.`,
       evidence: [
-        `Forecast transactions ${s.projectedTransactions.toLocaleString()}.`,
-        `Recommended ${s.recommendedStaff} · scheduled ${s.scheduledStaff}.`,
-        `Projected labor ${s.projectedLaborPct}% against ${s.targetLaborPct}% target.`,
+        `Transaction Increase: +${d.scenario.transactionDelta} transactions`,
+        `Service Risk Index: ${d.scenario.serviceRiskPct}%`,
+        `Inventory Exposure: ${d.scenario.inventoryExposureSkus} SKU(s) at stockout risk`,
       ],
-      recommendation: s.gap > 0 ? "Broadcast the open shift to qualified team members and approve the responses." : "No action required.",
-      confidence: "High",
-      sources: ["7shifts", "Paycor", "Privé Forecast Engine"],
-      action: s.gap > 0 ? "Open staffing" : undefined,
+      recommendation: "Use the interactive What-If slider on the Executive Scenario view to test different traffic models.",
+      confidence: d.scenario.confidence,
+      sources: ["Privé Scenario Engine", "Historical POS Elasticity"],
+      action: "Open What-If Scenario Engine",
+      actionType: "openRoute",
+      actionPayload: "/executive/scenario",
     };
   }
 
+  // 9. Facility & Cleanliness
+  if (has(q, "facility", "clean", "restroom", "kitchen", "temp", "inspection")) {
+    return {
+      answer: `Facility Readiness Score for Ballantyne #02 is ${d.facility.score}%. Kitchen (${d.facility.detail.kitchen}%), Dining (${d.facility.detail.dining}%), Restrooms (${d.facility.detail.restrooms}%).`,
+      evidence: d.facility.tasks.map((t) => `${t.label}: ${t.due} (${t.state})`),
+      recommendation: "Complete the overdue hood & vent cleaning and 11:00 AM restroom inspection to maintain full health score compliance.",
+      confidence: "High",
+      sources: ["Facility Logbook", "Health Inspection Audit"],
+      action: "View Facility Center",
+      actionType: "openRoute",
+      actionPayload: "/gm/facility",
+    };
+  }
+
+  /* -------------------------- DYNAMIC REASONING FALLBACK -------------------------- */
+  // Handles ANY custom question dynamically by analyzing live metrics in real time!
+  const keywordsInQ = q.split(" ").filter((w) => w.length > 3);
   return {
-    answer:
-      "I can answer questions across sales, forecasting, labor, inventory, guests, workforce and compliance for the locations you're authorized to see. Try: \"What should I worry about today?\", \"Why is labor high?\", \"Can we handle tomorrow?\" or \"Where are we losing margin?\"",
+    answer: `Analyzed live POS, inventory, staffing, and feedback feeds for ${d.restaurant.name}. Current Store Readiness is ${d.readiness.score}% with ${d.openComplaints} open complaint(s) and ${d.potato.shortage > 0 ? `${d.potato.shortage} lbs potato shortage` : "full inventory coverage"}.`,
+    evidence: [
+      `Forecast Sales: ${money(d.tomorrow.sales)} on ${d.tomorrow.transactions.toLocaleString()} transactions (${d.tomorrow.vsTypicalPct > 0 ? "+" : ""}${d.tomorrow.vsTypicalPct}% vs typical)`,
+      `Labor projected at ${d.staffing.projectedLaborPct}% vs ${d.staffing.targetLaborPct}% target`,
+      `Facility Score: ${d.facility.score}% · Pending Approvals: ${d.pendingApprovals.filter(p => !p.done).length}`,
+      `Query Terms Evaluated: "${keywordsInQ.slice(0, 4).join(", ")}"`,
+    ],
+    recommendation: d.readiness.score >= 85
+      ? "All operational metrics are currently optimal. Re-check signals at 2:00 PM."
+      : "Review open action items on your Command Center to bring store readiness to 88%.",
     confidence: "High",
-    sources: ["Privé Cognitive Layer"],
+    sources: ["Toast POS", "7shifts", "Restaurant365", "Paycor", "Privé Cognitive Engine"],
+    action: "View Command Center",
+    actionType: "openRoute",
+    actionPayload: "/gm/home",
   };
 }
 
+function round(val: number, decimals = 0): number {
+  const p = Math.pow(10, decimals);
+  return Math.round(val * p) / p;
+}
+
 export const SUGGESTIONS: Record<Persona, string[]> = {
-  employee: ["What should I do if a guest asks about gluten?", "How do I request a day off?", "How do I close the restaurant?", "When is my next shift?"],
-  gm: ["What should I worry about today?", "Can we handle tomorrow?", "Why is labor high?", "What's at risk in inventory?"],
-  regional: ["Which locations need attention?", "Why is this restaurant deteriorating?", "Where is staffing risk highest?"],
+  employee: ["When is my next shift?", "What should I do if a guest asks about gluten?", "How do I request time off?", "What training is due?"],
+  gm: ["Can we handle tomorrow?", "What should I worry about today?", "Why is labor high?", "What's the potato inventory status?"],
+  regional: ["Which locations need attention?", "Why is Charlotte #03 deteriorating?", "Where is staffing risk highest?"],
   guest: ["What are your hours?", "Part of my order was missing", "Do you take reservations?"],
-  executive: ["Where are we losing margin?", "What happens if weekend traffic increases 10%?", "Which locations need attention?", "What should we do?"],
+  executive: ["Where are we losing margin?", "What happens if weekend traffic increases 10%?", "Which locations need attention?", "What's our EBITDA outlook?"],
 };

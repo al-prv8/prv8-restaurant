@@ -16,6 +16,31 @@ import { Route as GmRouteImport } from './routes/gm'
 import { Route as GuestRouteImport } from './routes/guest'
 import { Route as IntegrationsRouteImport } from './routes/integrations'
 import { Route as RegionalRouteImport } from './routes/regional'
+import { Route as EmployeeIndexRouteImport } from './routes/employee/index'
+import { Route as EmployeeAnnouncementsRouteImport } from './routes/employee/announcements'
+import { Route as EmployeeHomeRouteImport } from './routes/employee/home'
+import { Route as EmployeeScheduleRouteImport } from './routes/employee/schedule'
+import { Route as EmployeeTrainingRouteImport } from './routes/employee/training'
+import { Route as ExecutiveIndexRouteImport } from './routes/executive/index'
+import { Route as ExecutivePortfolioRouteImport } from './routes/executive/portfolio'
+import { Route as ExecutivePulseRouteImport } from './routes/executive/pulse'
+import { Route as ExecutiveScenarioRouteImport } from './routes/executive/scenario'
+import { Route as GmIndexRouteImport } from './routes/gm/index'
+import { Route as GmApprovalsRouteImport } from './routes/gm/approvals'
+import { Route as GmCommunicationsRouteImport } from './routes/gm/communications'
+import { Route as GmFacilityRouteImport } from './routes/gm/facility'
+import { Route as GmGuestsRouteImport } from './routes/gm/guests'
+import { Route as GmHomeRouteImport } from './routes/gm/home'
+import { Route as GmInventoryRouteImport } from './routes/gm/inventory'
+import { Route as GmStaffingRouteImport } from './routes/gm/staffing'
+import { Route as GmWorkforceRouteImport } from './routes/gm/workforce'
+import { Route as GuestIndexRouteImport } from './routes/guest/index'
+import { Route as GuestCreditsRouteImport } from './routes/guest/credits'
+import { Route as GuestServiceRouteImport } from './routes/guest/service'
+import { Route as RegionalIndexRouteImport } from './routes/regional/index'
+import { Route as RegionalIntelligenceRouteImport } from './routes/regional/intelligence'
+import { Route as RegionalPortfolioRouteImport } from './routes/regional/portfolio'
+import { Route as RegionalSupplyChainRouteImport } from './routes/regional/supply-chain'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -52,34 +77,229 @@ const RegionalRoute = RegionalRouteImport.update({
   path: '/regional',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmployeeIndexRoute = EmployeeIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const EmployeeAnnouncementsRoute = EmployeeAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const EmployeeHomeRoute = EmployeeHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const EmployeeScheduleRoute = EmployeeScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const EmployeeTrainingRoute = EmployeeTrainingRouteImport.update({
+  id: '/training',
+  path: '/training',
+  getParentRoute: () => EmployeeRoute,
+} as any)
+const ExecutiveIndexRoute = ExecutiveIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ExecutiveRoute,
+} as any)
+const ExecutivePortfolioRoute = ExecutivePortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => ExecutiveRoute,
+} as any)
+const ExecutivePulseRoute = ExecutivePulseRouteImport.update({
+  id: '/pulse',
+  path: '/pulse',
+  getParentRoute: () => ExecutiveRoute,
+} as any)
+const ExecutiveScenarioRoute = ExecutiveScenarioRouteImport.update({
+  id: '/scenario',
+  path: '/scenario',
+  getParentRoute: () => ExecutiveRoute,
+} as any)
+const GmIndexRoute = GmIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => GmRoute,
+} as any)
+const GmApprovalsRoute = GmApprovalsRouteImport.update({
+  id: '/approvals',
+  path: '/approvals',
+  getParentRoute: () => GmRoute,
+} as any)
+const GmCommunicationsRoute = GmCommunicationsRouteImport.update({
+  id: '/communications',
+  path: '/communications',
+  getParentRoute: () => GmRoute,
+} as any)
+const GmFacilityRoute = GmFacilityRouteImport.update({
+  id: '/facility',
+  path: '/facility',
+  getParentRoute: () => GmRoute,
+} as any)
+const GmGuestsRoute = GmGuestsRouteImport.update({
+  id: '/guests',
+  path: '/guests',
+  getParentRoute: () => GmRoute,
+} as any)
+const GmHomeRoute = GmHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => GmRoute,
+} as any)
+const GmInventoryRoute = GmInventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => GmRoute,
+} as any)
+const GmStaffingRoute = GmStaffingRouteImport.update({
+  id: '/staffing',
+  path: '/staffing',
+  getParentRoute: () => GmRoute,
+} as any)
+const GmWorkforceRoute = GmWorkforceRouteImport.update({
+  id: '/workforce',
+  path: '/workforce',
+  getParentRoute: () => GmRoute,
+} as any)
+const GuestIndexRoute = GuestIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => GuestRoute,
+} as any)
+const GuestCreditsRoute = GuestCreditsRouteImport.update({
+  id: '/credits',
+  path: '/credits',
+  getParentRoute: () => GuestRoute,
+} as any)
+const GuestServiceRoute = GuestServiceRouteImport.update({
+  id: '/service',
+  path: '/service',
+  getParentRoute: () => GuestRoute,
+} as any)
+const RegionalIndexRoute = RegionalIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RegionalRoute,
+} as any)
+const RegionalIntelligenceRoute = RegionalIntelligenceRouteImport.update({
+  id: '/intelligence',
+  path: '/intelligence',
+  getParentRoute: () => RegionalRoute,
+} as any)
+const RegionalPortfolioRoute = RegionalPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => RegionalRoute,
+} as any)
+const RegionalSupplyChainRoute = RegionalSupplyChainRouteImport.update({
+  id: '/supply-chain',
+  path: '/supply-chain',
+  getParentRoute: () => RegionalRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/employee': typeof EmployeeRoute
-  '/executive': typeof ExecutiveRoute
-  '/gm': typeof GmRoute
-  '/guest': typeof GuestRoute
+  '/employee': typeof EmployeeRouteWithChildren
+  '/executive': typeof ExecutiveRouteWithChildren
+  '/gm': typeof GmRouteWithChildren
+  '/guest': typeof GuestRouteWithChildren
   '/integrations': typeof IntegrationsRoute
-  '/regional': typeof RegionalRoute
+  '/regional': typeof RegionalRouteWithChildren
+  '/employee/announcements': typeof EmployeeAnnouncementsRoute
+  '/employee/home': typeof EmployeeHomeRoute
+  '/employee/schedule': typeof EmployeeScheduleRoute
+  '/employee/training': typeof EmployeeTrainingRoute
+  '/executive/portfolio': typeof ExecutivePortfolioRoute
+  '/executive/pulse': typeof ExecutivePulseRoute
+  '/executive/scenario': typeof ExecutiveScenarioRoute
+  '/gm/approvals': typeof GmApprovalsRoute
+  '/gm/communications': typeof GmCommunicationsRoute
+  '/gm/facility': typeof GmFacilityRoute
+  '/gm/guests': typeof GmGuestsRoute
+  '/gm/home': typeof GmHomeRoute
+  '/gm/inventory': typeof GmInventoryRoute
+  '/gm/staffing': typeof GmStaffingRoute
+  '/gm/workforce': typeof GmWorkforceRoute
+  '/guest/credits': typeof GuestCreditsRoute
+  '/guest/service': typeof GuestServiceRoute
+  '/regional/intelligence': typeof RegionalIntelligenceRoute
+  '/regional/portfolio': typeof RegionalPortfolioRoute
+  '/regional/supply-chain': typeof RegionalSupplyChainRoute
+  '/employee/': typeof EmployeeIndexRoute
+  '/executive/': typeof ExecutiveIndexRoute
+  '/gm/': typeof GmIndexRoute
+  '/guest/': typeof GuestIndexRoute
+  '/regional/': typeof RegionalIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/employee': typeof EmployeeRoute
-  '/executive': typeof ExecutiveRoute
-  '/gm': typeof GmRoute
-  '/guest': typeof GuestRoute
   '/integrations': typeof IntegrationsRoute
-  '/regional': typeof RegionalRoute
+  '/employee/announcements': typeof EmployeeAnnouncementsRoute
+  '/employee/home': typeof EmployeeHomeRoute
+  '/employee/schedule': typeof EmployeeScheduleRoute
+  '/employee/training': typeof EmployeeTrainingRoute
+  '/executive/portfolio': typeof ExecutivePortfolioRoute
+  '/executive/pulse': typeof ExecutivePulseRoute
+  '/executive/scenario': typeof ExecutiveScenarioRoute
+  '/gm/approvals': typeof GmApprovalsRoute
+  '/gm/communications': typeof GmCommunicationsRoute
+  '/gm/facility': typeof GmFacilityRoute
+  '/gm/guests': typeof GmGuestsRoute
+  '/gm/home': typeof GmHomeRoute
+  '/gm/inventory': typeof GmInventoryRoute
+  '/gm/staffing': typeof GmStaffingRoute
+  '/gm/workforce': typeof GmWorkforceRoute
+  '/guest/credits': typeof GuestCreditsRoute
+  '/guest/service': typeof GuestServiceRoute
+  '/regional/intelligence': typeof RegionalIntelligenceRoute
+  '/regional/portfolio': typeof RegionalPortfolioRoute
+  '/regional/supply-chain': typeof RegionalSupplyChainRoute
+  '/employee': typeof EmployeeIndexRoute
+  '/executive': typeof ExecutiveIndexRoute
+  '/gm': typeof GmIndexRoute
+  '/guest': typeof GuestIndexRoute
+  '/regional': typeof RegionalIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/employee': typeof EmployeeRoute
-  '/executive': typeof ExecutiveRoute
-  '/gm': typeof GmRoute
-  '/guest': typeof GuestRoute
+  '/employee': typeof EmployeeRouteWithChildren
+  '/executive': typeof ExecutiveRouteWithChildren
+  '/gm': typeof GmRouteWithChildren
+  '/guest': typeof GuestRouteWithChildren
   '/integrations': typeof IntegrationsRoute
-  '/regional': typeof RegionalRoute
+  '/regional': typeof RegionalRouteWithChildren
+  '/employee/announcements': typeof EmployeeAnnouncementsRoute
+  '/employee/home': typeof EmployeeHomeRoute
+  '/employee/schedule': typeof EmployeeScheduleRoute
+  '/employee/training': typeof EmployeeTrainingRoute
+  '/executive/portfolio': typeof ExecutivePortfolioRoute
+  '/executive/pulse': typeof ExecutivePulseRoute
+  '/executive/scenario': typeof ExecutiveScenarioRoute
+  '/gm/approvals': typeof GmApprovalsRoute
+  '/gm/communications': typeof GmCommunicationsRoute
+  '/gm/facility': typeof GmFacilityRoute
+  '/gm/guests': typeof GmGuestsRoute
+  '/gm/home': typeof GmHomeRoute
+  '/gm/inventory': typeof GmInventoryRoute
+  '/gm/staffing': typeof GmStaffingRoute
+  '/gm/workforce': typeof GmWorkforceRoute
+  '/guest/credits': typeof GuestCreditsRoute
+  '/guest/service': typeof GuestServiceRoute
+  '/regional/intelligence': typeof RegionalIntelligenceRoute
+  '/regional/portfolio': typeof RegionalPortfolioRoute
+  '/regional/supply-chain': typeof RegionalSupplyChainRoute
+  '/employee/': typeof EmployeeIndexRoute
+  '/executive/': typeof ExecutiveIndexRoute
+  '/gm/': typeof GmIndexRoute
+  '/guest/': typeof GuestIndexRoute
+  '/regional/': typeof RegionalIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,14 +311,59 @@ export interface FileRouteTypes {
     | '/guest'
     | '/integrations'
     | '/regional'
+    | '/employee/announcements'
+    | '/employee/home'
+    | '/employee/schedule'
+    | '/employee/training'
+    | '/executive/portfolio'
+    | '/executive/pulse'
+    | '/executive/scenario'
+    | '/gm/approvals'
+    | '/gm/communications'
+    | '/gm/facility'
+    | '/gm/guests'
+    | '/gm/home'
+    | '/gm/inventory'
+    | '/gm/staffing'
+    | '/gm/workforce'
+    | '/guest/credits'
+    | '/guest/service'
+    | '/regional/intelligence'
+    | '/regional/portfolio'
+    | '/regional/supply-chain'
+    | '/employee/'
+    | '/executive/'
+    | '/gm/'
+    | '/guest/'
+    | '/regional/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/integrations'
+    | '/employee/announcements'
+    | '/employee/home'
+    | '/employee/schedule'
+    | '/employee/training'
+    | '/executive/portfolio'
+    | '/executive/pulse'
+    | '/executive/scenario'
+    | '/gm/approvals'
+    | '/gm/communications'
+    | '/gm/facility'
+    | '/gm/guests'
+    | '/gm/home'
+    | '/gm/inventory'
+    | '/gm/staffing'
+    | '/gm/workforce'
+    | '/guest/credits'
+    | '/guest/service'
+    | '/regional/intelligence'
+    | '/regional/portfolio'
+    | '/regional/supply-chain'
     | '/employee'
     | '/executive'
     | '/gm'
     | '/guest'
-    | '/integrations'
     | '/regional'
   id:
     | '__root__'
@@ -109,16 +374,41 @@ export interface FileRouteTypes {
     | '/guest'
     | '/integrations'
     | '/regional'
+    | '/employee/announcements'
+    | '/employee/home'
+    | '/employee/schedule'
+    | '/employee/training'
+    | '/executive/portfolio'
+    | '/executive/pulse'
+    | '/executive/scenario'
+    | '/gm/approvals'
+    | '/gm/communications'
+    | '/gm/facility'
+    | '/gm/guests'
+    | '/gm/home'
+    | '/gm/inventory'
+    | '/gm/staffing'
+    | '/gm/workforce'
+    | '/guest/credits'
+    | '/guest/service'
+    | '/regional/intelligence'
+    | '/regional/portfolio'
+    | '/regional/supply-chain'
+    | '/employee/'
+    | '/executive/'
+    | '/gm/'
+    | '/guest/'
+    | '/regional/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  EmployeeRoute: typeof EmployeeRoute
-  ExecutiveRoute: typeof ExecutiveRoute
-  GmRoute: typeof GmRoute
-  GuestRoute: typeof GuestRoute
+  EmployeeRoute: typeof EmployeeRouteWithChildren
+  ExecutiveRoute: typeof ExecutiveRouteWithChildren
+  GmRoute: typeof GmRouteWithChildren
+  GuestRoute: typeof GuestRouteWithChildren
   IntegrationsRoute: typeof IntegrationsRoute
-  RegionalRoute: typeof RegionalRoute
+  RegionalRoute: typeof RegionalRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -172,17 +462,288 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegionalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/employee/': {
+      id: '/employee/'
+      path: '/'
+      fullPath: '/employee/'
+      preLoaderRoute: typeof EmployeeIndexRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/employee/announcements': {
+      id: '/employee/announcements'
+      path: '/announcements'
+      fullPath: '/employee/announcements'
+      preLoaderRoute: typeof EmployeeAnnouncementsRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/employee/home': {
+      id: '/employee/home'
+      path: '/home'
+      fullPath: '/employee/home'
+      preLoaderRoute: typeof EmployeeHomeRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/employee/schedule': {
+      id: '/employee/schedule'
+      path: '/schedule'
+      fullPath: '/employee/schedule'
+      preLoaderRoute: typeof EmployeeScheduleRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/employee/training': {
+      id: '/employee/training'
+      path: '/training'
+      fullPath: '/employee/training'
+      preLoaderRoute: typeof EmployeeTrainingRouteImport
+      parentRoute: typeof EmployeeRoute
+    }
+    '/executive/': {
+      id: '/executive/'
+      path: '/'
+      fullPath: '/executive/'
+      preLoaderRoute: typeof ExecutiveIndexRouteImport
+      parentRoute: typeof ExecutiveRoute
+    }
+    '/executive/portfolio': {
+      id: '/executive/portfolio'
+      path: '/portfolio'
+      fullPath: '/executive/portfolio'
+      preLoaderRoute: typeof ExecutivePortfolioRouteImport
+      parentRoute: typeof ExecutiveRoute
+    }
+    '/executive/pulse': {
+      id: '/executive/pulse'
+      path: '/pulse'
+      fullPath: '/executive/pulse'
+      preLoaderRoute: typeof ExecutivePulseRouteImport
+      parentRoute: typeof ExecutiveRoute
+    }
+    '/executive/scenario': {
+      id: '/executive/scenario'
+      path: '/scenario'
+      fullPath: '/executive/scenario'
+      preLoaderRoute: typeof ExecutiveScenarioRouteImport
+      parentRoute: typeof ExecutiveRoute
+    }
+    '/gm/': {
+      id: '/gm/'
+      path: '/'
+      fullPath: '/gm/'
+      preLoaderRoute: typeof GmIndexRouteImport
+      parentRoute: typeof GmRoute
+    }
+    '/gm/approvals': {
+      id: '/gm/approvals'
+      path: '/approvals'
+      fullPath: '/gm/approvals'
+      preLoaderRoute: typeof GmApprovalsRouteImport
+      parentRoute: typeof GmRoute
+    }
+    '/gm/communications': {
+      id: '/gm/communications'
+      path: '/communications'
+      fullPath: '/gm/communications'
+      preLoaderRoute: typeof GmCommunicationsRouteImport
+      parentRoute: typeof GmRoute
+    }
+    '/gm/facility': {
+      id: '/gm/facility'
+      path: '/facility'
+      fullPath: '/gm/facility'
+      preLoaderRoute: typeof GmFacilityRouteImport
+      parentRoute: typeof GmRoute
+    }
+    '/gm/guests': {
+      id: '/gm/guests'
+      path: '/guests'
+      fullPath: '/gm/guests'
+      preLoaderRoute: typeof GmGuestsRouteImport
+      parentRoute: typeof GmRoute
+    }
+    '/gm/home': {
+      id: '/gm/home'
+      path: '/home'
+      fullPath: '/gm/home'
+      preLoaderRoute: typeof GmHomeRouteImport
+      parentRoute: typeof GmRoute
+    }
+    '/gm/inventory': {
+      id: '/gm/inventory'
+      path: '/inventory'
+      fullPath: '/gm/inventory'
+      preLoaderRoute: typeof GmInventoryRouteImport
+      parentRoute: typeof GmRoute
+    }
+    '/gm/staffing': {
+      id: '/gm/staffing'
+      path: '/staffing'
+      fullPath: '/gm/staffing'
+      preLoaderRoute: typeof GmStaffingRouteImport
+      parentRoute: typeof GmRoute
+    }
+    '/gm/workforce': {
+      id: '/gm/workforce'
+      path: '/workforce'
+      fullPath: '/gm/workforce'
+      preLoaderRoute: typeof GmWorkforceRouteImport
+      parentRoute: typeof GmRoute
+    }
+    '/guest/': {
+      id: '/guest/'
+      path: '/'
+      fullPath: '/guest/'
+      preLoaderRoute: typeof GuestIndexRouteImport
+      parentRoute: typeof GuestRoute
+    }
+    '/guest/credits': {
+      id: '/guest/credits'
+      path: '/credits'
+      fullPath: '/guest/credits'
+      preLoaderRoute: typeof GuestCreditsRouteImport
+      parentRoute: typeof GuestRoute
+    }
+    '/guest/service': {
+      id: '/guest/service'
+      path: '/service'
+      fullPath: '/guest/service'
+      preLoaderRoute: typeof GuestServiceRouteImport
+      parentRoute: typeof GuestRoute
+    }
+    '/regional/': {
+      id: '/regional/'
+      path: '/'
+      fullPath: '/regional/'
+      preLoaderRoute: typeof RegionalIndexRouteImport
+      parentRoute: typeof RegionalRoute
+    }
+    '/regional/intelligence': {
+      id: '/regional/intelligence'
+      path: '/intelligence'
+      fullPath: '/regional/intelligence'
+      preLoaderRoute: typeof RegionalIntelligenceRouteImport
+      parentRoute: typeof RegionalRoute
+    }
+    '/regional/portfolio': {
+      id: '/regional/portfolio'
+      path: '/portfolio'
+      fullPath: '/regional/portfolio'
+      preLoaderRoute: typeof RegionalPortfolioRouteImport
+      parentRoute: typeof RegionalRoute
+    }
+    '/regional/supply-chain': {
+      id: '/regional/supply-chain'
+      path: '/supply-chain'
+      fullPath: '/regional/supply-chain'
+      preLoaderRoute: typeof RegionalSupplyChainRouteImport
+      parentRoute: typeof RegionalRoute
+    }
   }
 }
 
+interface EmployeeRouteChildren {
+  EmployeeAnnouncementsRoute: typeof EmployeeAnnouncementsRoute
+  EmployeeHomeRoute: typeof EmployeeHomeRoute
+  EmployeeScheduleRoute: typeof EmployeeScheduleRoute
+  EmployeeTrainingRoute: typeof EmployeeTrainingRoute
+  EmployeeIndexRoute: typeof EmployeeIndexRoute
+}
+
+const EmployeeRouteChildren: EmployeeRouteChildren = {
+  EmployeeAnnouncementsRoute: EmployeeAnnouncementsRoute,
+  EmployeeHomeRoute: EmployeeHomeRoute,
+  EmployeeScheduleRoute: EmployeeScheduleRoute,
+  EmployeeTrainingRoute: EmployeeTrainingRoute,
+  EmployeeIndexRoute: EmployeeIndexRoute,
+}
+
+const EmployeeRouteWithChildren = EmployeeRoute._addFileChildren(
+  EmployeeRouteChildren,
+)
+
+interface ExecutiveRouteChildren {
+  ExecutivePortfolioRoute: typeof ExecutivePortfolioRoute
+  ExecutivePulseRoute: typeof ExecutivePulseRoute
+  ExecutiveScenarioRoute: typeof ExecutiveScenarioRoute
+  ExecutiveIndexRoute: typeof ExecutiveIndexRoute
+}
+
+const ExecutiveRouteChildren: ExecutiveRouteChildren = {
+  ExecutivePortfolioRoute: ExecutivePortfolioRoute,
+  ExecutivePulseRoute: ExecutivePulseRoute,
+  ExecutiveScenarioRoute: ExecutiveScenarioRoute,
+  ExecutiveIndexRoute: ExecutiveIndexRoute,
+}
+
+const ExecutiveRouteWithChildren = ExecutiveRoute._addFileChildren(
+  ExecutiveRouteChildren,
+)
+
+interface GmRouteChildren {
+  GmApprovalsRoute: typeof GmApprovalsRoute
+  GmCommunicationsRoute: typeof GmCommunicationsRoute
+  GmFacilityRoute: typeof GmFacilityRoute
+  GmGuestsRoute: typeof GmGuestsRoute
+  GmHomeRoute: typeof GmHomeRoute
+  GmInventoryRoute: typeof GmInventoryRoute
+  GmStaffingRoute: typeof GmStaffingRoute
+  GmWorkforceRoute: typeof GmWorkforceRoute
+  GmIndexRoute: typeof GmIndexRoute
+}
+
+const GmRouteChildren: GmRouteChildren = {
+  GmApprovalsRoute: GmApprovalsRoute,
+  GmCommunicationsRoute: GmCommunicationsRoute,
+  GmFacilityRoute: GmFacilityRoute,
+  GmGuestsRoute: GmGuestsRoute,
+  GmHomeRoute: GmHomeRoute,
+  GmInventoryRoute: GmInventoryRoute,
+  GmStaffingRoute: GmStaffingRoute,
+  GmWorkforceRoute: GmWorkforceRoute,
+  GmIndexRoute: GmIndexRoute,
+}
+
+const GmRouteWithChildren = GmRoute._addFileChildren(GmRouteChildren)
+
+interface GuestRouteChildren {
+  GuestCreditsRoute: typeof GuestCreditsRoute
+  GuestServiceRoute: typeof GuestServiceRoute
+  GuestIndexRoute: typeof GuestIndexRoute
+}
+
+const GuestRouteChildren: GuestRouteChildren = {
+  GuestCreditsRoute: GuestCreditsRoute,
+  GuestServiceRoute: GuestServiceRoute,
+  GuestIndexRoute: GuestIndexRoute,
+}
+
+const GuestRouteWithChildren = GuestRoute._addFileChildren(GuestRouteChildren)
+
+interface RegionalRouteChildren {
+  RegionalIntelligenceRoute: typeof RegionalIntelligenceRoute
+  RegionalPortfolioRoute: typeof RegionalPortfolioRoute
+  RegionalSupplyChainRoute: typeof RegionalSupplyChainRoute
+  RegionalIndexRoute: typeof RegionalIndexRoute
+}
+
+const RegionalRouteChildren: RegionalRouteChildren = {
+  RegionalIntelligenceRoute: RegionalIntelligenceRoute,
+  RegionalPortfolioRoute: RegionalPortfolioRoute,
+  RegionalSupplyChainRoute: RegionalSupplyChainRoute,
+  RegionalIndexRoute: RegionalIndexRoute,
+}
+
+const RegionalRouteWithChildren = RegionalRoute._addFileChildren(
+  RegionalRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  EmployeeRoute: EmployeeRoute,
-  ExecutiveRoute: ExecutiveRoute,
-  GmRoute: GmRoute,
-  GuestRoute: GuestRoute,
+  EmployeeRoute: EmployeeRouteWithChildren,
+  ExecutiveRoute: ExecutiveRouteWithChildren,
+  GmRoute: GmRouteWithChildren,
+  GuestRoute: GuestRouteWithChildren,
   IntegrationsRoute: IntegrationsRoute,
-  RegionalRoute: RegionalRoute,
+  RegionalRoute: RegionalRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

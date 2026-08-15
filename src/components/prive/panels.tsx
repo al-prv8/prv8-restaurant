@@ -49,6 +49,12 @@ export function MorningBrief() {
   return (
     <Card tone="intel">
       <SectionTitle hint="Generated 6:04 AM">Morning intelligence brief</SectionTitle>
+      <p className="mb-3 text-sm font-medium text-[#101828]/80">
+        Good morning, Jordan.{" "}
+        <span className="font-normal text-[#101828]/60">
+          {d.brief.filter(Boolean).length} item{d.brief.filter(Boolean).length !== 1 ? "s" : ""} require your attention today.
+        </span>
+      </p>
       <ol className="space-y-2">
         {d.brief.map((line, i) => (
           <li key={i} className="flex gap-2.5 text-sm text-[#101828]/80">
@@ -67,7 +73,7 @@ export function MorningBrief() {
 }
 
 export function ReadinessCard() {
-  const { derived: d } = usePrive();
+  const { derived: d, dispatch } = usePrive();
   const ready = d.readiness.score >= 85;
   return (
     <Card tone={ready ? "default" : "alert"}>
@@ -95,6 +101,15 @@ export function ReadinessCard() {
           </li>
         ) : null}
       </ul>
+      {/* The §50 WOW moment — GM asks "Can we handle tomorrow?" and Privé calculates the answer */}
+      <button
+        type="button"
+        onClick={() => dispatch({ type: "askPriveTrigger", question: "Can we handle tomorrow?" })}
+        className="mt-4 flex w-full items-center gap-2 rounded-lg border border-[#7C3AED]/25 bg-[#7C3AED]/[0.05] px-3 py-2.5 text-left text-sm font-medium text-[#7C3AED] transition-colors hover:bg-[#7C3AED]/10"
+      >
+        <span className="text-[#7C3AED] opacity-70">✦</span>
+        Ask Privé: &ldquo;Can we handle tomorrow?&rdquo;
+      </button>
     </Card>
   );
 }

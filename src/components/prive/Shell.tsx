@@ -1,207 +1,317 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, Suspense, type ReactNode } from "react";
 import {
   Activity,
-  BarChart3,
+  Bell,
+  Brain,
   Building2,
+  CalendarDays,
   ChevronLeft,
   ChevronRight,
+  ClipboardList,
+  Gift,
+  GraduationCap,
+  Home,
+  LayoutGrid,
+  MapPin,
   MessageSquareHeart,
+  Package,
   PanelLeft,
+  Phone,
   Plug,
+  Search,
+  SlidersHorizontal,
   Store,
+  TrendingUp,
+  Truck,
+  UserCheck,
   UserRound,
+  Users,
+  Wrench,
 } from "lucide-react";
 import { BRAND, TODAY, fmtDate } from "@/lib/prive/data";
 import { usePrive, type Persona } from "@/lib/prive/store";
 import { AskPriveDrawer } from "./AskPrive";
+import { CommandPalette } from "./CommandPalette";
 
-interface NavItem {
-  id: Persona | "integrations";
+interface NavItemType {
+  id?: string;
   label: string;
-  to: string;
-  who: string;
+  who?: string;
+  href: string;
   icon: typeof UserRound;
+  badge?: number | string | ReactNode;
+  items?: NavItemType[];
 }
 
-const WORKSPACES: NavItem[] = [
-  { id: "employee", label: "Employee", to: "/employee", who: "Maya Robinson · Server", icon: UserRound },
-  { id: "gm", label: "General Manager", to: "/gm", who: "Jordan Ellis · Ballantyne #02", icon: Store },
-  { id: "regional", label: "Regional", to: "/regional", who: "Dana Whitmore · Carolinas", icon: Building2 },
-  { id: "guest", label: "Guest", to: "/guest", who: "Voice & digital service", icon: MessageSquareHeart },
-  { id: "executive", label: "Executive", to: "/executive", who: "Ellis Rourke · COO", icon: BarChart3 },
-];
-
-const SYSTEM: NavItem[] = [
-  { id: "integrations", label: "Integrations & audit", to: "/integrations", who: "Data sources", icon: Plug },
-];
-
-function NavLink({ item, collapsed, active }: { item: NavItem; collapsed: boolean; active: boolean }) {
-  const Icon = item.icon;
-  return (
-    <Link
-      to={item.to}
-      title={item.label}
-      className={`flex items-center gap-3 rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors ${
-        active ? "bg-[#5146E5] text-white" : "text-white/60 hover:bg-white/10 hover:text-white"
-      }`}
-    >
-      <Icon className="size-4 shrink-0" aria-hidden />
-      {!collapsed ? <span className="truncate">{item.label}</span> : null}
-    </Link>
-  );
-}
+import { SidebarNavigationSimple } from "./SidebarSimple";
+import { FeaturedCardProgressBar } from "./FeaturedCardProgressBar";
+import { BadgeWithDot, PageSkeleton } from "./ui";
 
 export function PriveShell({
   persona,
-  title,
-  subtitle,
   children,
 }: {
   persona: Persona;
-  title: string;
-  subtitle: string;
   children: ReactNode;
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isLoading = useRouterState({ select: (s) => s.status === "pending" });
   const { derived: d, dispatch } = usePrive();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const active = WORKSPACES.find((p) => p.id === persona);
+  const [commandOpen, setCommandOpen] = useState(false);
 
-  const sidebar = (
-    <div className="flex h-full flex-col gap-6 bg-[#101828] px-3 py-4 text-white">
-      <div className="flex items-center gap-2.5 px-1.5">
-        <Link to="/" className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#5146E5] text-sm font-bold">
-          P
-        </Link>
-        {!collapsed ? (
-          <Link to="/" className="min-w-0">
-            <div className="text-[14px] font-semibold leading-tight tracking-tight">PRIVÉ</div>
-            <div className="truncate text-[11px] text-white/45">Restaurant Intelligence</div>
-          </Link>
-        ) : null}
-      </div>
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
-      <nav className="flex-1 space-y-6 overflow-y-auto">
-        <div className="space-y-1">
-          {!collapsed ? (
-            <p className="px-2.5 pb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/30">Workspaces</p>
-          ) : null}
-          {WORKSPACES.map((p) => (
-            <NavLink key={p.id} item={p} collapsed={collapsed} active={pathname === p.to} />
-          ))}
-        </div>
-        <div className="space-y-1">
-          {!collapsed ? (
-            <p className="px-2.5 pb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/30">System</p>
-          ) : null}
-          {SYSTEM.map((p) => (
-            <NavLink key={p.id} item={p} collapsed={collapsed} active={pathname === p.to} />
-          ))}
-        </div>
+  const navItemsSimple: NavItemType[] = [
+    {
+      id: "gm",
+      label: "General Manager",
+      who: "Jordan Ellis · Ballantyne #02",
+      href: "/gm/home",
+      icon: Store,
+      badge: d.alerts.length > 0 ? d.alerts.length : undefined,
+      items: [
+        { label: "Command Brief", href: "/gm/home", icon: Home },
+        { label: "Staffing & Labor", href: "/gm/staffing", icon: Users },
+        { label: "Inventory Risk", href: "/gm/inventory", icon: Package },
+        { label: "Guest Complaints", href: "/gm/guests", icon: MessageSquareHeart },
+        { label: "Workforce", href: "/gm/workforce", icon: UserCheck },
+        { label: "Facility Score", href: "/gm/facility", icon: Wrench },
+        { label: "Communications", href: "/gm/communications", icon: Bell },
+        { label: "Approvals Queue", href: "/gm/approvals", icon: ClipboardList },
+      ],
+    },
+    {
+      id: "employee",
+      label: "Employee Portal",
+      who: "Maya Robinson · Server",
+      href: "/employee/home",
+      icon: UserRound,
+      items: [
+        { label: "Today's Shift", href: "/employee/home", icon: Home },
+        { label: "Training", href: "/employee/training", icon: GraduationCap },
+        { label: "Schedule Pickup", href: "/employee/schedule", icon: CalendarDays },
+        { label: "Policy & Comms", href: "/employee/announcements", icon: Bell },
+      ],
+    },
+    {
+      id: "regional",
+      label: "Regional Director",
+      who: "Dana Whitmore · Carolinas",
+      href: "/regional/portfolio",
+      icon: Building2,
+      items: [
+        { label: "Portfolio Health", href: "/regional/portfolio", icon: MapPin },
+        { label: "Intelligence", href: "/regional/intelligence", icon: Brain },
+        { label: "Supply Chain", href: "/regional/supply-chain", icon: Truck },
+      ],
+    },
+    {
+      id: "executive",
+      label: "C-Suite Executive",
+      who: "Ellis Rourke · COO",
+      href: "/executive/pulse",
+      icon: TrendingUp,
+      items: [
+        { label: "Enterprise Pulse", href: "/executive/pulse", icon: TrendingUp },
+        { label: "Scenario Engine", href: "/executive/scenario", icon: SlidersHorizontal },
+        { label: "Portfolio Table", href: "/executive/portfolio", icon: LayoutGrid },
+      ],
+    },
+    {
+      id: "guest",
+      label: "Guest Service",
+      who: "Voice & Digital Contact",
+      href: "/guest/service",
+      icon: MessageSquareHeart,
+      badge: d.openComplaints > 0 ? d.openComplaints : undefined,
+      items: [
+        { label: "Voice AI Intake", href: "/guest/service", icon: Phone },
+        { label: "Recovery Credits", href: "/guest/credits", icon: Gift },
+      ],
+    },
+    {
+      id: "integrations",
+      label: "Integrations & Audit",
+      who: "Data Feeds & Event Audit",
+      href: "/integrations",
+      icon: Plug,
+    },
+  ];
 
-        {!collapsed ? (
-          <div className="space-y-2 rounded-xl border border-white/10 bg-white/[0.04] p-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">Live signal</p>
-            <div className="flex items-center justify-between text-[12px]">
-              <span className="text-white/55">Readiness</span>
-              <span className="font-semibold tabular-nums">{d.readiness.score}%</span>
-            </div>
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-              <div
-                className="h-full rounded-full transition-[width] duration-700"
-                style={{ width: `${d.readiness.score}%`, background: d.readiness.score >= 85 ? "#0F9D8A" : "#F59E0B" }}
-              />
-            </div>
-            <div className="flex items-center justify-between text-[12px]">
-              <span className="text-white/55">Open alerts</span>
-              <span className="font-semibold tabular-nums">{d.alerts.length}</span>
-            </div>
-            <div className="flex items-center justify-between text-[12px]">
-              <span className="text-white/55">Awaiting you</span>
-              <span className="font-semibold tabular-nums">{d.pendingApprovals.filter((p) => !p.done).length}</span>
-            </div>
-          </div>
-        ) : null}
-      </nav>
+  const ROLE_PILLS = [
+    { id: "gm", label: "GM", href: "/gm/home" },
+    { id: "employee", label: "Employee", href: "/employee/home" },
+    { id: "regional", label: "Regional", href: "/regional/portfolio" },
+    { id: "executive", label: "Executive", href: "/executive/pulse" },
+    { id: "guest", label: "Guest", href: "/guest/service" },
+  ];
 
-      {!collapsed ? (
-        <button
-          type="button"
-          onClick={() => dispatch({ type: "resetDemo" })}
-          className="rounded-lg border border-white/10 px-2.5 py-2 text-[12px] font-medium text-white/50 hover:bg-white/10 hover:text-white"
-        >
-          Reset demo state
-        </button>
-      ) : null}
+  const activeWorkspace = navItemsSimple.find((p) => p.id === persona);
+  const allSubItems = navItemsSimple.flatMap((n) => n.items ?? []);
+  const currentModule = allSubItems.find((m) => m.href === pathname);
 
-      <button
-        type="button"
-        onClick={() => setCollapsed((c) => !c)}
-        className="hidden items-center gap-2 rounded-lg px-2.5 py-2 text-[12px] font-medium text-white/45 hover:bg-white/10 hover:text-white lg:flex"
-      >
-        {collapsed ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
-        {!collapsed ? "Collapse" : null}
-      </button>
-    </div>
+  const sidebarElement = (
+    <SidebarNavigationSimple
+      items={navItemsSimple}
+      collapsed={collapsed}
+      onToggleCollapse={() => setCollapsed((c) => !c)}
+      onResetDemo={() => dispatch({ type: "resetDemo" })}
+      footerItems={[
+        {
+          label: "Privé Live Signal",
+          href: "/integrations",
+          icon: Activity,
+          badge: (
+            <BadgeWithDot color="success">
+              Online
+            </BadgeWithDot>
+          ),
+        },
+      ]}
+      featureCard={
+        <FeaturedCardProgressBar
+          title="Store Readiness"
+          description={
+            d.readiness.score >= 85
+              ? "All operational risks resolved."
+              : `${d.pendingApprovals.filter((p) => !p.done).length} action(s) pending approval.`
+          }
+          confirmLabel="View Readiness"
+          progress={d.readiness.score}
+          className="hidden md:block"
+          onConfirm={() => {}}
+        />
+      }
+    />
   );
 
   return (
     <div className="min-h-screen bg-[#F7F6F2] text-[#101828]">
+      {/* Desktop sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 hidden shrink-0 border-r border-white/10 transition-[width] duration-200 lg:block ${
-          collapsed ? "w-[68px]" : "w-[248px]"
+        className={`fixed inset-y-0 left-0 z-40 hidden shrink-0 border-r border-[#101828]/10 transition-[width] duration-200 lg:block ${
+          collapsed ? "w-[64px]" : "w-[260px]"
         }`}
       >
-        {sidebar}
+        {sidebarElement}
       </aside>
 
+      {/* Mobile sidebar overlay */}
       {mobileOpen ? (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <button type="button" aria-label="Close navigation" className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
-          <div className="absolute inset-y-0 left-0 w-[248px]">{sidebar}</div>
+          <button
+            type="button"
+            aria-label="Close navigation"
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setMobileOpen(false)}
+          />
+          <div className="absolute inset-y-0 left-0 w-[260px]">{sidebarElement}</div>
         </div>
       ) : null}
 
-      <div className={`transition-[padding] duration-200 ${collapsed ? "lg:pl-[68px]" : "lg:pl-[248px]"}`}>
-        <header className="sticky top-0 z-30 border-b border-[#101828]/8 bg-[#F7F6F2]/85 backdrop-blur">
-          <div className="flex items-center gap-3 px-4 py-3 sm:px-6">
-            <button
-              type="button"
-              aria-label="Open navigation"
-              onClick={() => setMobileOpen(true)}
-              className="rounded-lg border border-[#101828]/12 p-2 lg:hidden"
-            >
-              <PanelLeft className="size-4" />
-            </button>
-            <div className="min-w-0">
-              <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-[#101828]/40">
-                <span>{fmtDate(TODAY)}</span>
-                <span aria-hidden>·</span>
-                <span className="truncate">{active?.label ?? "Privé"}</span>
+      {/* Main content */}
+      <div
+        className={`transition-[padding] duration-200 ${
+          collapsed ? "lg:pl-[64px]" : "lg:pl-[260px]"
+        }`}
+      >
+        {/* Top header */}
+        <header className="sticky top-0 z-30 h-16 min-h-[64px] max-h-[64px] shrink-0 border-b border-[#101828]/10 bg-[#F7F6F2]/90 backdrop-blur-md">
+          <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 overflow-hidden flex-nowrap">
+            <div className="flex items-center gap-3 min-w-0 shrink">
+              <button
+                type="button"
+                aria-label="Open navigation"
+                onClick={() => setMobileOpen(true)}
+                className="rounded-lg border border-[#101828]/12 p-2 hover:bg-[#101828]/5 lg:hidden shrink-0"
+              >
+                <PanelLeft className="size-4 text-[#101828]/70" />
+              </button>
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#101828]/40 whitespace-nowrap overflow-hidden text-ellipsis">
+                  <span>{fmtDate(TODAY)}</span>
+                  <span aria-hidden>·</span>
+                  <span className="text-[#5146E5] font-bold shrink-0">{activeWorkspace?.label ?? "Privé"}</span>
+                  {currentModule ? (
+                    <>
+                      <span aria-hidden>·</span>
+                      <span className="text-[#101828]/70 font-medium truncate">{currentModule.label}</span>
+                    </>
+                  ) : null}
+                </div>
+                <div className="truncate text-xs sm:text-sm font-semibold text-[#101828]/80 leading-tight">
+                  {activeWorkspace?.who ?? BRAND}
+                </div>
               </div>
-              <div className="truncate text-sm font-semibold">{active?.who ?? BRAND}</div>
             </div>
-            <div className="ml-auto flex items-center gap-2">
-              <span className="hidden items-center gap-1.5 rounded-full bg-[#0F9D8A]/12 px-2.5 py-1 text-[11px] font-semibold text-[#0B7A6C] sm:inline-flex">
-                <Activity className="size-3.5" /> Live data
-              </span>
-              <span className="hidden text-xs text-[#101828]/50 md:inline">{BRAND}</span>
+
+            {/* Quick role switcher compact pills in header */}
+            <div className="flex items-center gap-2 shrink-0">
+              <div className="hidden lg:flex items-center gap-1 rounded-lg border border-[#101828]/10 bg-white p-1 text-xs shrink-0">
+                {ROLE_PILLS.map((ws) => {
+                  const isActive = ws.id === persona;
+                  return (
+                    <Link
+                      key={ws.href}
+                      to={ws.href}
+                      className={`rounded-md px-2.5 py-1 text-xs font-semibold transition-all ${
+                        isActive
+                          ? "bg-[#5146E5] text-white shadow-xs"
+                          : "text-[#101828]/60 hover:bg-[#101828]/5 hover:text-[#101828]"
+                      }`}
+                    >
+                      {ws.label}
+                    </Link>
+                  );
+                })}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setCommandOpen(true)}
+                  className="flex items-center gap-2 rounded-lg border border-[#101828]/12 bg-white px-3 py-1.5 text-xs font-medium text-[#101828]/70 hover:border-[#101828]/25 hover:bg-[#101828]/[0.03] shadow-xs transition-all"
+                  title="Search modules or Ask Privé (Cmd+K)"
+                >
+                  <Search className="size-3.5 text-[#101828]/50" />
+                  <span className="hidden md:inline">Search or Ask Privé...</span>
+                  <kbd className="rounded border border-[#101828]/15 bg-[#101828]/5 px-1.5 py-0.5 text-[10px] font-bold text-[#101828]/70">
+                    ⌘K
+                  </kbd>
+                </button>
+
+                <span className="hidden items-center gap-1.5 rounded-full border border-[#0F9D8A]/30 bg-[#0F9D8A]/10 px-2.5 py-1 text-[11px] font-semibold text-[#0B7A6C] md:inline-flex">
+                  <Activity className="size-3.5" /> Live
+                </span>
+              </div>
             </div>
           </div>
         </header>
 
-        <main className="px-4 pb-24 pt-6 sm:px-6">
-          <div className="mb-6">
-            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h1>
-            <p className="mt-1 max-w-3xl text-sm text-[#101828]/60">{subtitle}</p>
-          </div>
-          {children}
+        {/* Main content with max-w-7xl container & Skeleton loading states */}
+        <main className="mx-auto max-w-7xl px-4 pb-24 pt-6 sm:px-6 lg:px-8">
+          {isLoading ? (
+            <PageSkeleton />
+          ) : (
+            <Suspense fallback={<PageSkeleton />}>{children}</Suspense>
+          )}
         </main>
       </div>
 
       <AskPriveDrawer persona={persona} />
+      <CommandPalette open={commandOpen} onClose={() => setCommandOpen(false)} />
     </div>
   );
 }

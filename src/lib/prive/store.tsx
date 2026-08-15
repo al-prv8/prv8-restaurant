@@ -73,6 +73,7 @@ interface State {
   gmReviewAssigned: boolean;
   avocadoOrderIncreased: boolean;
   w2AddressVerified: boolean;
+  pendingQuestion: string | null; // injected by quick-action buttons to pre-fill Ask Privé
 }
 
 type Action =
@@ -98,6 +99,8 @@ type Action =
   | { type: "assignGmReview" }
   | { type: "increaseAvocadoOrder" }
   | { type: "verifyW2Address" }
+  | { type: "askPriveTrigger"; question: string }
+  | { type: "clearPendingQuestion" }
   | { type: "audit"; event: Omit<AuditEvent, "id" | "at"> }
   | { type: "hydrate"; state: Partial<State> }
   | { type: "resetDemo" };
@@ -128,7 +131,7 @@ function code(): string {
 
 const initialState: State = {
   persona: "gm",
-  regionalRestaurantId: TROUBLED_RESTAURANT_ID,
+  regionalRestaurantId: GM_RESTAURANT_ID,
   shiftAccepted: false,
   extraStaffApproved: 0,
   potatoOrderIncrease: 0,
@@ -158,7 +161,7 @@ const initialState: State = {
       approval: "Automatic (low risk)",
     },
   ],
-  scenarioUplift: 10,
+  scenarioUplift: 0,
   tomorrowUplift: 18,
   shiftOfferSent: false,
   separationDecision: null,
@@ -167,6 +170,7 @@ const initialState: State = {
   gmReviewAssigned: false,
   avocadoOrderIncreased: false,
   w2AddressVerified: false,
+  pendingQuestion: null,
 };
 
 function reducer(state: State, action: Action): State {
@@ -433,6 +437,10 @@ function reducer(state: State, action: Action): State {
           approval: "Automatic (low risk)",
         }),
       };
+    case "askPriveTrigger":
+      return { ...state, pendingQuestion: action.question };
+    case "clearPendingQuestion":
+      return { ...state, pendingQuestion: null };
     case "audit":
       return { ...state, audit: withLog(state, action.event) };
     case "hydrate":
@@ -768,9 +776,65 @@ const PriveContext = createContext<Ctx | null>(null);
 
 const STORAGE_KEY = "prive-demo-state";
 
+import { notifySuccess, notifyBrand, notifyGray, notifyWarning } from "./notifications";
+
 export function PriveProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [hydrated, setHydrated] = useState(false);
+
+  const dispatchWithToast: React.Dispatch<Action> = (action) => {
+    dispatch(action);
+    switch (action.type) {
+      case "sendShiftOffer":
+        notifyBrand("Broadcast Open Shift", "Saturday 4:00–8:00 PM shift sent to qualified team members.");
+        break;
+      case "acceptShift":
+        notifyBrand("Shift Interest Submitted", "Maya Robinson's availability routed to GM for approval.");
+        break;
+      case "approveStaffing":
+        notifySuccess("Approved Staffing Adjustment", "Extra server added to Saturday 4–8 PM peak block. Store readiness increased.");
+        break;
+      case "increasePotatoOrder":
+        notifySuccess("Supplier Order Increased", `Russet Potatoes +${action.lbs} lbs added to Carolina Produce order.`);
+        break;
+      case "transferInventory":
+        notifySuccess("Cross-Store Transfer Requested", `Russet Potatoes +${action.lbs} lbs transferring from Charlotte #01.`);
+        break;
+      case "completeCertification":
+        notifySuccess("Certification Renewed", "ServSafe food handler extended 24 months for Andre Vega.");
+        break;
+      case "completeTraining":
+        notifySuccess("Allergen Training Complete", "Maya Robinson cleared assigned onboarding training.");
+        break;
+      case "completeI9":
+        notifySuccess("I-9 Verified", "Maya Robinson I-9 documents verified and synced to Paycor.");
+        break;
+      case "resolveComplaint":
+        notifySuccess("Guest Recovery Approved", `Single-use gift credit $${action.amount} generated and response sent.`);
+        break;
+      case "rejectComplaint":
+        notifyGray("Complaint Recovery Rejected", "No compensation issued; apology response sent.");
+        break;
+      case "escalateComplaint":
+        notifyWarning("Escalated to Regional", "Case routed to Dana Whitmore for regional review.");
+        break;
+      case "redeemCredit":
+        notifySuccess("Credit Code Redeemed", `Single-use recovery credit ${action.code} marked redeemed.`);
+        break;
+      case "createComplaint":
+        notifyBrand("Voice AI Complaint Created", "Order issue intake logged and routed to Ballantyne #02 GM.");
+        break;
+      case "assignGmReview":
+        notifySuccess("GM Review Assigned", "Performance review & retention plan requested for Charlotte #04.");
+        break;
+      case "increaseAvocadoOrder":
+        notifySuccess("Avocado Order Boosted 14%", "Friday order increased for 3 Charlotte locations.");
+        break;
+      case "resetDemo":
+        notifyGray("Demo State Reset", "Baseline readiness restored to 61%.");
+        break;
+    }
+  };
 
   // Demo continuity: keep cross-persona state across reloads and hard navigation.
   useEffect(() => {
@@ -791,8 +855,9 @@ export function PriveProvider({ children }: { children: ReactNode }) {
       /* storage unavailable */
     }
   }, [state, hydrated]);
+
   const derived = useMemo(() => derive(state), [state]);
-  const value = useMemo(() => ({ state, derived, dispatch }), [state, derived]);
+  const value = useMemo(() => ({ state, derived, dispatch: dispatchWithToast }), [state, derived, dispatchWithToast]);
   return <PriveContext.Provider value={value}>{children}</PriveContext.Provider>;
 }
 

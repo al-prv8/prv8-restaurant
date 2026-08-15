@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { PriveShell } from "@/components/prive/Shell";
-import { Card, Pill, SectionTitle } from "@/components/prive/ui";
+import { Card, Pill, SectionTitle, Pagination } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 
 export const Route = createFileRoute("/integrations")({
@@ -26,42 +27,64 @@ const SYSTEMS = [
 
 function IntegrationsPage() {
   const { state } = usePrive();
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 4;
+
+  const totalPages = Math.ceil(state.audit.length / pageSize);
+  const paginatedAudit = state.audit.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
   return (
-    <PriveShell persona="gm" title="Integrations & audit" subtitle="Privé reads from the systems you already run and records every action it takes.">
+    <PriveShell persona="gm">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Integrations & Audit Log</h1>
+        <p className="mt-1 max-w-3xl text-sm text-[#101828]/60">
+          Privé reads from connected POS & payroll systems and records an immutable audit log for every action.
+        </p>
+      </div>
+
       <div className="grid gap-5 lg:grid-cols-2">
         <Card>
-          <SectionTitle hint="All connected">Source systems</SectionTitle>
-          <div className="space-y-2">
+          <SectionTitle hint="All connected">Source Systems</SectionTitle>
+          <div className="space-y-2.5">
             {SYSTEMS.map(([name, desc]) => (
-              <div key={name} className="flex items-center justify-between gap-3 rounded-lg border border-[#101828]/8 bg-white px-3 py-2.5">
+              <div key={name} className="flex items-center justify-between gap-3 rounded-xl border border-[#101828]/8 bg-white p-3.5 shadow-xs">
                 <div>
-                  <div className="text-sm font-medium">{name}</div>
-                  <div className="text-xs text-[#101828]/50">{desc}</div>
+                  <div className="text-sm font-bold text-[#101828]">{name}</div>
+                  <div className="text-xs font-semibold text-[#101828]/50">{desc}</div>
                 </div>
                 <Pill tone="teal">Connected</Pill>
               </div>
             ))}
           </div>
         </Card>
+
         <Card>
-          <SectionTitle hint={`${state.audit.length} events`}>Audit trail</SectionTitle>
-          <div className="space-y-2">
+          <SectionTitle hint={`${state.audit.length} events`}>Immutable Audit Ledger</SectionTitle>
+          <div className="space-y-2.5">
             {state.audit.length === 0 ? (
-              <p className="text-sm text-[#101828]/55">No actions recorded yet in this session.</p>
+              <p className="text-sm font-medium text-[#101828]/55">No actions recorded yet in this session.</p>
             ) : (
-              state.audit.map((a) => (
-                <div key={a.id} className="rounded-lg border border-[#101828]/8 bg-white px-3 py-2.5">
+              paginatedAudit.map((a) => (
+                <div key={a.id} className="rounded-xl border border-[#101828]/8 bg-white p-3.5 shadow-xs space-y-1">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-medium">{a.action}</span>
+                    <span className="text-sm font-bold text-[#101828]">{a.action}</span>
                     <Pill tone={a.approval === "Pending" ? "amber" : "teal"}>{a.approval}</Pill>
                   </div>
-                  <p className="mt-1 text-xs text-[#101828]/55">
+                  <p className="text-xs font-medium text-[#101828]/60">
                     {a.at} · {a.actor} · {a.agent} — {a.detail}
                   </p>
                 </div>
               ))
             )}
           </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={state.audit.length}
+            pageSize={pageSize}
+          />
         </Card>
       </div>
     </PriveShell>
