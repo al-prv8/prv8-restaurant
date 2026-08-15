@@ -40,11 +40,11 @@ export default function RegionalIntelligencePage() {
        <Metric label="Labor Cost Variance" value={`${troubled.restaurant.laborDelta > 0 ? "+" : ""}${troubled.restaurant.laborDelta} pts`} sub="vs labor target" tone={troubled.restaurant.laborDelta > 1 ? "warn" : "neutral"} />
        <Metric label="Training Completion" value={`${troubled.restaurant.trainingDelta}%`} sub="completion delta" tone={troubled.restaurant.trainingDelta < 0 ? "warn" : "good"} />
       </div>
-      <div className="mt-6 rounded-2xl bg-white/40 backdrop-blur-sm shadow-sm ring-1 ring-black/[0.04] p-5 text-sm font-medium text-white leading-relaxed">
-       <div className="text-[10px] font-bold uppercase tracking-wider text-[#A8A29E] mb-2">✦ Privé Pattern Match Insight</div>
-       <p>
-        Sales have declined six consecutive weeks at Charlotte #03. The deterioration correlates with staffing instability: turnover rose first, guest complaints surged 2 weeks later, and labor drifted +1.4 pts above target as remaining staff logged overtime. Privé recommends a GM performance review and retention incentive before the summer LTO launch.
-       </p>
+      <div className="mt-6 rounded-2xl bg-white/40 backdrop-blur-sm shadow-sm ring-1 ring-black/[0.04] p-5 text-sm font-medium text-[#1C1917] leading-relaxed">
+        <div className="text-[10px] font-bold uppercase tracking-wider text-[#A8A29E] mb-2">✦ Privé Pattern Match Insight</div>
+        <p className="text-[#44403C]">
+         Sales have declined six consecutive weeks at Charlotte #03. The deterioration correlates with staffing instability: turnover rose first, guest complaints surged 2 weeks later, and labor drifted +1.4 pts above target as remaining staff logged overtime. Privé recommends a GM performance review and retention incentive before the summer LTO launch.
+        </p>
       </div>
      </Card>
     ) : null}
