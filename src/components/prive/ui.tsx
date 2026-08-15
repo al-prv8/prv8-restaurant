@@ -321,6 +321,55 @@ export function Sparkline({ data, color = "#881337" }: { data: number[]; color?:
   );
 }
 
+// ─── RadialGauge ─────────────────────────────────────────────────────────────
+export function RadialGauge({
+  value,
+  size = 110,
+  strokeWidth = 10,
+  color,
+}: {
+  value: number;
+  size?: number;
+  strokeWidth?: number;
+  color?: string;
+}) {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (Math.min(100, Math.max(0, value)) / 100) * circumference;
+  const strokeColor = color ?? (value >= 85 ? "#15803D" : value >= 70 ? "#B45309" : "#B91C1C");
+
+  return (
+    <div className="relative inline-flex items-center justify-center">
+      <svg width={size} height={size} className="-rotate-90 transform">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          className="text-black/[0.06]"
+          fill="transparent"
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={strokeColor}
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          fill="transparent"
+          className="transition-all duration-700 ease-out"
+        />
+      </svg>
+      <div className="absolute flex flex-col items-center justify-center text-center">
+        <span className="text-2xl font-black tabular-nums tracking-tight text-[#1C1917]">{value}%</span>
+      </div>
+    </div>
+  );
+}
+
 // ─── Metric tile ─────────────────────────────────────────────────────────────
 export function Metric({
   label,

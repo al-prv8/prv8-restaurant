@@ -1,7 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Card, Meter, Pill, SectionTitle } from "./ui";
+import { Card, Meter, Pill, RadialGauge, SectionTitle } from "./ui";
+
 import { usePrive, type OpAlert } from "@/lib/prive/store";
 
 // Alert type → pill tone mapping
@@ -84,22 +85,25 @@ export function MorningBrief() {
 export function ReadinessCard() {
   const { derived: d, dispatch } = usePrive();
   const ready = d.readiness.score >= 85;
-  const scoreColor = ready ? "text-[#15803D]" : d.readiness.score >= 70 ? "text-[#B45309]" : "text-[#B91C1C]";
 
   return (
     <Card tone={ready ? "default" : "alert"}>
       <SectionTitle hint="Tomorrow">Readiness Score</SectionTitle>
-      <div className="flex items-end gap-3 mb-3">
-        <span className={`text-5xl font-bold tabular-nums leading-none ${scoreColor}`}>
-          {d.readiness.score}%
-        </span>
-        <div className="mb-1">
+      
+      <div className="flex items-center justify-between gap-4 my-2 p-3 rounded-2xl bg-white/40 backdrop-blur-sm ring-1 ring-black/[0.03]">
+        <div>
+          <div className="text-[11px] font-bold uppercase tracking-wider text-[#78716C] mb-1">
+            Store Status
+          </div>
           <Pill tone={ready ? "teal" : "amber"}>
-            {ready ? "Ready" : "Action Required"}
+            {ready ? "Operational Ready" : "Action Required"}
           </Pill>
+          <p className="mt-2 text-xs font-medium text-[#78716C] max-w-[180px]">
+            {ready ? "All key operational drivers inside target tolerance." : "Resolve pending actions to reach target readiness."}
+          </p>
         </div>
+        <RadialGauge value={d.readiness.score} size={96} strokeWidth={9} />
       </div>
-      <Meter value={d.readiness.score} tone={ready ? "teal" : d.readiness.score >= 70 ? "amber" : "red"} />
 
       <ul className="mt-4 space-y-2">
         {d.readiness.risks.map((r) => (

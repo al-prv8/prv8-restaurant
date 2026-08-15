@@ -39,14 +39,14 @@ export default function ExecutiveScenarioPage() {
          key={p.label}
          type="button"
          onClick={() => dispatch({ type: "scenario", uplift: p.uplift })}
-         className={`flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all shadow-sm ${
+         className={`flex flex-col items-center justify-center rounded-2xl p-4 text-center transition-all duration-200 ${
           state.scenarioUplift === p.uplift
-           ? "bg-[#881337] text-white shadow-lg"
-           : "bg-white/60 backdrop-blur-sm text-[#1C1917] hover:bg-white/80 shadow-md"
+           ? "bg-[#881337] text-white shadow-xl ring-2 ring-[#881337]/30 scale-[1.02]"
+           : "bg-white/60 backdrop-blur-md text-[#1C1917] hover:bg-white/80 shadow-md ring-1 ring-black/[0.04]"
          }`}
         >
          <span className="text-sm font-black mb-1">{p.label}</span>
-         <span className={`text-[10px] font-medium ${state.scenarioUplift === p.uplift ? "text-[#44403C]" : "text-[#78716C]"}`}>{p.desc}</span>
+         <span className={`text-[11px] font-medium ${state.scenarioUplift === p.uplift ? "text-white/80" : "text-[#78716C]"}`}>{p.desc}</span>
         </button>
        ))}
       </div>
@@ -55,7 +55,7 @@ export default function ExecutiveScenarioPage() {
      <Card tone="intel" className="border-t-4">
       <SectionTitle hint="Recalculated live from historical 90-day series">Scenario Uplift Simulation</SectionTitle>
       
-      <div className="rounded-2xl bg-white/6 backdrop-blur-xl shadow-inner p-8 space-y-8 mt-4 text-center relative overflow-hidden">
+      <div className="rounded-2xl bg-white/40 backdrop-blur-2xl shadow-lg ring-1 ring-black/[0.04] p-8 space-y-8 mt-4 text-center relative overflow-hidden">
        <div className="flex flex-col items-center gap-2 relative z-10">
         <label className="text-xs font-bold uppercase tracking-widest text-[#78716C] flex items-center gap-2">
          <Sliders className="size-4 text-[#881337]" /> Simulated Weekend Traffic Adjustment
@@ -63,7 +63,7 @@ export default function ExecutiveScenarioPage() {
         <div className="text-6xl md:text-7xl font-black tabular-nums tracking-tighter text-[#1C1917] my-2">
          {state.scenarioUplift === 0 ? "0%" : `${state.scenarioUplift > 0 ? "+" : ""}${state.scenarioUplift}%`}
         </div>
-        <div className="text-sm font-semibold text-[#881337]">
+        <div className="text-sm font-bold text-[#881337]">
          {state.scenarioUplift === 0 ? "Baseline Operations" : state.scenarioUplift > 0 ? "Traffic Surge Simulation" : "Traffic Contraction Simulation"}
         </div>
        </div>
@@ -76,9 +76,9 @@ export default function ExecutiveScenarioPage() {
          step={1}
          value={state.scenarioUplift}
          onChange={(ev) => dispatch({ type: "scenario", uplift: Number(ev.target.value) })}
-         className="w-full accent-[#881337] h-2 bg-[#E7E5E0] rounded-lg appearance-none cursor-pointer"
+         className="w-full accent-[#881337] h-2.5 bg-[#E7E5E0] rounded-lg appearance-none cursor-pointer"
         />
-        <div className="flex justify-between text-xs text-[#A8A29E] font-bold uppercase tracking-wider mt-4">
+        <div className="flex justify-between text-xs text-[#78716C] font-bold uppercase tracking-wider mt-4">
          <span>−20%</span>
          <span>Baseline (0%)</span>
          <span>+15% Target</span>
