@@ -35,14 +35,14 @@ const COMMAND_MODULES = [
   { group: "System", label: "Integrations & Audit Trail", to: "/integrations", keywords: "integrations toast paycor restaurant365 audit log" },
 ];
 
-// Group colour chips (neutral, no purple)
+// Group colour chips
 const GROUP_COLORS: Record<string, string> = {
-  "General Manager": "bg-[#881337]/8 text-[#881337]",
-  Employee: "bg-[#B45309]/8 text-[#B45309]",
-  "Regional Director": "bg-[#15803D]/8 text-[#15803D]",
-  Executive: "bg-[#1C1917]/8 text-white",
-  Guest: "bg-[#B91C1C]/8 text-[#B91C1C]",
-  System: "bg-[#78716C]/8 text-white/55",
+  "General Manager": "bg-[#881337]/10 text-[#881337]",
+  Employee: "bg-[#B45309]/10 text-[#B45309]",
+  "Regional Director": "bg-[#15803D]/10 text-[#15803D]",
+  Executive: "bg-[#1C1917]/10 text-[#1C1917]",
+  Guest: "bg-[#B91C1C]/10 text-[#B91C1C]",
+  System: "bg-[#78716C]/10 text-[#78716C]",
 };
 
 export function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -94,16 +94,16 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/40 animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-150"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl overflow-hidden rounded-2xl border border-[#E7E5E0] bg-white shadow-2xl"
+        className="w-full max-w-2xl overflow-hidden rounded-3xl bg-[#FAFAF8]/95 backdrop-blur-2xl shadow-2xl ring-1 ring-black/10 border border-white/80"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search header */}
-        <div className="relative flex items-center border-b border-[#E7E5E0] bg-white px-4 py-3.5">
-          <Search className="size-5 shrink-0 text-white/40" />
+        <div className="relative flex items-center border-b border-[#E7E5E0] bg-white/70 backdrop-blur-md px-4 py-3.5">
+          <Search className="size-5 shrink-0 text-[#881337]" />
           <input
             type="text"
             value={query}
@@ -118,14 +118,14 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
               }
             }}
             placeholder="Search modules or ask Privé (e.g. 'Why is labor high?')…"
-            className="flex-1 bg-transparent px-3 text-[13px] font-medium text-white placeholder-[#A8A29E] outline-none"
+            className="flex-1 bg-transparent px-3 text-[14px] font-medium text-[#1C1917] placeholder-[#A8A29E] outline-none"
             autoFocus
           />
           {query ? (
             <button
               type="button"
               onClick={() => { setQuery(""); setAiAnswer(null); }}
-              className="mr-2 text-[12px] font-semibold text-white/40 hover:text-white transition-colors"
+              className="mr-2 text-[12px] font-semibold text-[#78716C] hover:text-[#1C1917] transition-colors"
             >
               Clear
             </button>
@@ -133,7 +133,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1 text-white/40 hover:bg-white/10 hover:text-white transition-colors"
+            className="rounded-lg p-1.5 text-[#78716C] hover:bg-black/[0.05] hover:text-[#1C1917] transition-colors"
           >
             <X className="size-4" />
           </button>
@@ -141,25 +141,25 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
 
         {/* AI answer box */}
         {aiAnswer ? (
-          <div className="border-b border-white/10 bg-white/8 p-4 space-y-3">
+          <div className="border-b border-[#E7E5E0] bg-white/80 backdrop-blur-md p-4 space-y-3">
             <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.15em] text-[#881337]">
               <span>✦</span> Privé Answer
             </div>
-            <p className="text-[13px] font-semibold leading-relaxed text-white">{aiAnswer.answer}</p>
+            <p className="text-[13px] font-semibold leading-relaxed text-[#1C1917]">{aiAnswer.answer}</p>
             {aiAnswer.evidence && aiAnswer.evidence.length > 0 ? (
-              <div className="rounded-lg bg-white border border-[#E7E5E0] p-2.5 space-y-1">
-                <span className="text-[10px] font-bold uppercase text-white/40">Evidence:</span>
+              <div className="rounded-xl bg-white/60 border border-[#E7E5E0] p-3 space-y-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#A8A29E]">Evidence:</span>
                 {aiAnswer.evidence.map((ev, i) => (
-                  <div key={i} className="text-[12px] font-medium text-white">• {ev}</div>
+                  <div key={i} className="text-[12px] font-medium text-[#44403C]">• {ev}</div>
                 ))}
               </div>
             ) : null}
             {aiAnswer.recommendation ? (
-              <div className="rounded-lg border border-[#15803D]/25 bg-[#15803D]/6 p-2.5 text-[12px] font-medium text-[#15803D]">
+              <div className="rounded-xl border border-[#881337]/20 bg-[#881337]/5 p-3 text-[12px] font-medium text-[#881337]">
                 <span className="font-bold">Recommendation:</span> {aiAnswer.recommendation}
               </div>
             ) : null}
-            <div className="flex items-center justify-between text-[11px] text-white/40">
+            <div className="flex items-center justify-between text-[11px] text-[#78716C]">
               <span>Sources: {aiAnswer.sources.join(" · ")}</span>
               {aiAnswer.confidence ? (
                 <span className="font-bold text-[#15803D]">{aiAnswer.confidence} confidence</span>
@@ -169,11 +169,11 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
         ) : null}
 
         {/* Results */}
-        <div className="max-h-[360px] overflow-y-auto bg-white">
+        <div className="max-h-[360px] overflow-y-auto bg-[#FAFAF8]/50">
           {/* Suggestion pills */}
           {!query && !aiAnswer ? (
-            <div className="px-4 pt-3 pb-2 border-b border-[#F5F4F0]">
-              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/40 mb-2">
+            <div className="px-4 pt-3.5 pb-2.5 border-b border-[#E7E5E0]">
+              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#A8A29E] mb-2">
                 Quick Ask ({state.persona.toUpperCase()})
               </p>
               <div className="flex flex-wrap gap-1.5">
@@ -182,7 +182,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
                     key={sug}
                     type="button"
                     onClick={() => { setQuery(sug); handleAsk(sug); }}
-                    className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-medium text-white/80 hover:bg-white/20 hover:text-[#881337] transition-all"
+                    className="rounded-full border border-[#881337]/20 bg-white/80 px-3 py-1 text-[11px] font-medium text-[#881337] hover:bg-[#881337] hover:text-white transition-all shadow-xs"
                   >
                     {sug}
                   </button>
@@ -193,30 +193,36 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
 
           {/* Module list */}
           <div className="p-2 space-y-0.5">
-            <p className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white/40">
+            <p className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-[#A8A29E]">
               Workspace Modules ({filteredModules.length})
             </p>
             {filteredModules.map((item, idx) => {
               const isSelected = idx === selectedIndex;
-              const chipClass = GROUP_COLORS[item.group] ?? "bg-[#1C1917]/6 text-white/80";
+              const chipClass = GROUP_COLORS[item.group] ?? "bg-[#1C1917]/10 text-[#1C1917]";
               return (
                 <button
                   key={item.to}
                   type="button"
                   onClick={() => handleSelectRoute(item.to)}
-                  className={`w-full flex items-center justify-between rounded-lg px-3 py-2.5 text-left text-[13px] transition-all group ${
-                    isSelected ? "bg-[#881337]/8 text-[#881337]" : "hover:bg-white/10 text-white"
+                  className={`w-full flex items-center justify-between rounded-xl px-3 py-2.5 text-left text-[13px] transition-all group ${
+                    isSelected
+                      ? "bg-[#881337] text-white font-bold shadow-sm"
+                      : "hover:bg-white/80 text-[#1C1917]"
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <span className={`rounded-md px-2 py-0.5 text-[10px] font-bold shrink-0 ${chipClass}`}>
+                    <span className={`rounded-md px-2 py-0.5 text-[10px] font-bold shrink-0 ${
+                      isSelected ? "bg-white/20 text-white" : chipClass
+                    }`}>
                       {item.group}
                     </span>
-                    <span className={`font-semibold truncate ${isSelected ? "text-[#881337]" : "text-white"}`}>
+                    <span className={`truncate ${isSelected ? "text-white font-bold" : "text-[#1C1917] font-semibold"}`}>
                       {item.label}
                     </span>
                   </div>
-                  <div className={`flex items-center gap-1 shrink-0 transition-colors ${isSelected ? "text-[#881337]" : "text-white/40 group-hover:text-white/80"}`}>
+                  <div className={`flex items-center gap-1 shrink-0 transition-colors ${
+                    isSelected ? "text-white" : "text-[#A8A29E] group-hover:text-[#1C1917]"
+                  }`}>
                     <span className="text-[11px] hidden sm:inline">{item.to}</span>
                     <ArrowRight className="size-3.5" />
                   </div>
@@ -227,16 +233,16 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t border-white/10 bg-white/8 px-4 py-2.5 text-[11px] text-white/40">
+        <div className="flex items-center justify-between border-t border-[#E7E5E0] bg-white/70 px-4 py-2.5 text-[11px] text-[#78716C]">
           <div className="flex items-center gap-3">
             <span>
-              Press <kbd className="rounded border border-[#E7E5E0] bg-white px-1 py-0.5 text-[10px] text-white/80">Enter</kbd> to navigate or ask
+              Press <kbd className="rounded border border-[#E7E5E0] bg-white px-1.5 py-0.5 text-[10px] font-mono font-bold text-[#1C1917] shadow-xs">Enter</kbd> to navigate or ask
             </span>
             <span>
-              <kbd className="rounded border border-[#E7E5E0] bg-white px-1 py-0.5 text-[10px] text-white/80">Esc</kbd> to close
+              <kbd className="rounded border border-[#E7E5E0] bg-white px-1.5 py-0.5 text-[10px] font-mono font-bold text-[#1C1917] shadow-xs">Esc</kbd> to close
             </span>
           </div>
-          <span className="font-semibold text-[#881337]">Privé</span>
+          <span className="font-bold text-[#881337]">Privé Intelligence</span>
         </div>
       </div>
     </div>
