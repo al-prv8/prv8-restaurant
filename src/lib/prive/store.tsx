@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext, useEffect, useMemo, useReducer, useState, type ReactNode } from "react";
 import {
   CERT_EMPLOYEE,
@@ -74,6 +76,7 @@ interface State {
   avocadoOrderIncreased: boolean;
   w2AddressVerified: boolean;
   pendingQuestion: string | null; // injected by quick-action buttons to pre-fill Ask Privé
+  expandedSections: Record<string, boolean>; // global persistent sidebar dropdown state
 }
 
 type Action =
@@ -101,6 +104,7 @@ type Action =
   | { type: "verifyW2Address" }
   | { type: "askPriveTrigger"; question: string }
   | { type: "clearPendingQuestion" }
+  | { type: "toggleSidebarSection"; href: string; open?: boolean }
   | { type: "audit"; event: Omit<AuditEvent, "id" | "at"> }
   | { type: "hydrate"; state: Partial<State> }
   | { type: "resetDemo" };
@@ -171,10 +175,22 @@ const initialState: State = {
   avocadoOrderIncreased: false,
   w2AddressVerified: false,
   pendingQuestion: null,
+  expandedSections: { "/gm/home": true },
 };
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
+    case "toggleSidebarSection": {
+      const current = state.expandedSections[action.href] ?? true;
+      const nextOpen = action.open !== undefined ? action.open : !current;
+      return {
+        ...state,
+        expandedSections: {
+          ...state.expandedSections,
+          [action.href]: nextOpen,
+        },
+      };
+    }
     case "persona":
       return { ...state, persona: action.persona };
     case "regionalRestaurant":

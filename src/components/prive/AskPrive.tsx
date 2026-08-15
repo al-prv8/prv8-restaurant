@@ -1,6 +1,8 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "@tanstack/react-router";
-import { Sparkles, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowRight, CheckCircle, Loader2, MessageSquare, X } from "lucide-react";
 import { SUGGESTIONS, askPrive, type PriveAnswer } from "@/lib/prive/askPrive";
 import { usePrive, type Persona } from "@/lib/prive/store";
 import { Button, ConfidenceTag, Pill, Skeleton } from "./ui";
@@ -11,6 +13,7 @@ interface Turn {
   actionDone?: boolean;
 }
 
+// ─── AskPriveConsole ──────────────────────────────────────────────────────────
 export function AskPriveConsole({ persona, compact = false }: { persona: Persona; compact?: boolean }) {
   const { derived, state, dispatch } = usePrive();
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -18,9 +21,9 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
   const [thinking, setThinking] = useState(false);
   const [thinkingQuery, setThinkingQuery] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
+  const router = useRouter();
 
-  // Consume pendingQuestion injected by quick-action buttons (e.g. "Can we handle tomorrow?")
+  // Consume pendingQuestion injected by quick-action buttons
   useEffect(() => {
     if (state.pendingQuestion) {
       ask(state.pendingQuestion);
@@ -28,7 +31,6 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
     }
   }, [state.pendingQuestion]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-scroll to latest turn
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [turns, thinking]);
@@ -36,12 +38,9 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
   function ask(question: string) {
     const q = question.trim();
     if (!q || thinking) return;
-
     setThinking(true);
     setThinkingQuery(q);
     setInput("");
-
-    // Simulate realistic Cognitive Intelligence Layer processing (450ms)
     setTimeout(() => {
       const answer = askPrive(q, persona, derived);
       setTurns((t) => [...t, { q, a: answer }]);
@@ -53,13 +52,12 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
   function handleActionClick(turnIdx: number, turn: Turn) {
     const a = turn.a;
     if (a.actionType === "potatoOrderIncrease") {
-      dispatch({ type: "potatoOrderIncrease" });
+      dispatch({ type: "increasePotatoOrder", lbs: 35 });
     } else if (a.actionType === "approveStaffing") {
       dispatch({ type: "approveStaffing" });
     } else if (a.actionType === "openRoute" && a.actionPayload) {
-      navigate({ to: a.actionPayload });
+      router.push(a.actionPayload);
     }
-
     setTurns((prev) =>
       prev.map((t, idx) => (idx === turnIdx ? { ...t, actionDone: true } : t))
     );
@@ -68,12 +66,13 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
   return (
     <div className="flex h-full flex-col">
       <div className={`flex-1 space-y-4 overflow-y-auto ${compact ? "" : "pr-1"}`}>
+        {/* Empty state — suggestions */}
         {turns.length === 0 && !thinking ? (
-          <div className="rounded-xl border border-[#7C3AED]/20 bg-[#7C3AED]/[0.04] p-4">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#7C3AED] mb-1">
-              <Sparkles className="size-3.5" /> Privé Cognitive Engine Active
+          <div className="rounded-xl border border-[#881337]/15 bg-[#881337]/[0.03] p-4">
+            <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.15em] text-[#881337] mb-2">
+              <span>✦</span> Privé Intelligence Console
             </div>
-            <p className="text-sm text-[#101828]/70">
+            <p className="text-[13px] font-medium text-[#78716C] leading-relaxed">
               Ask Privé anything about POS sales, inventory velocity, staffing coverage, guest complaints, training, or financial margins.
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -81,7 +80,7 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
                 <button
                   key={s}
                   onClick={() => ask(s)}
-                  className="rounded-full border border-[#7C3AED]/25 bg-white px-3 py-1.5 text-xs font-medium text-[#7C3AED] hover:bg-[#7C3AED]/8 transition-all text-left"
+                  className="rounded-full border border-[#881337]/20 bg-white px-3 py-1.5 text-[12px] font-medium text-[#881337] hover:bg-[#881337]/5 transition-all text-left"
                 >
                   {s}
                 </button>
@@ -90,37 +89,41 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
           </div>
         ) : null}
 
+        {/* Conversation turns */}
         {turns.map((t, i) => (
           <div key={i} className="space-y-2">
-            <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-[#101828] px-4 py-2 text-sm text-white font-medium shadow-xs">
+            {/* User message */}
+            <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-[#1C1917] px-4 py-2.5 text-[13px] text-white font-medium">
               {t.q}
             </div>
-            <div className="rounded-2xl rounded-bl-sm border border-[#7C3AED]/20 bg-white p-4 shadow-xs space-y-3">
-              <div className="flex items-center justify-between gap-2 border-b border-[#101828]/8 pb-2">
+
+            {/* Privé response */}
+            <div className="rounded-2xl rounded-bl-sm bg-white/70 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-4 space-y-3">
+              <div className="flex items-center justify-between gap-2 border-b border-[#E7E5E0] pb-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="grid h-6 w-6 place-items-center rounded-md bg-[#7C3AED] text-[11px] font-bold text-white shadow-xs">
+                  <span className="grid size-6 place-items-center rounded-md bg-[#881337] text-[11px] font-black text-white">
                     P
                   </span>
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#7C3AED]">
-                    Privé AI
+                  <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#881337]">
+                    Privé
                   </span>
                 </div>
                 {t.a.confidence ? <ConfidenceTag level={t.a.confidence} /> : null}
               </div>
 
-              <p className="whitespace-pre-line text-sm font-medium leading-relaxed text-[#101828]">
+              <p className="whitespace-pre-line text-[13px] font-medium leading-relaxed text-[#1C1917]">
                 {t.a.answer}
               </p>
 
               {t.a.evidence?.length ? (
-                <div className="rounded-xl bg-[#101828]/[0.03] border border-[#101828]/8 p-3 space-y-1.5">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#101828]/45">
+                <div className="rounded-xl bg-white/50 backdrop-blur-sm p-3 space-y-1.5">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#A8A29E]">
                     Live System Evidence
                   </div>
                   <ul className="space-y-1">
                     {t.a.evidence.map((e) => (
-                      <li key={e} className="flex items-start gap-2 text-xs font-medium text-[#101828]/80">
-                        <span className="mt-[5px] size-1.5 shrink-0 rounded-full bg-[#5146E5]" />
+                      <li key={e} className="flex items-start gap-2 text-[12px] font-medium text-[#44403C]">
+                        <span className="mt-[5px] size-1.5 shrink-0 rounded-full bg-[#881337]" />
                         {e}
                       </li>
                     ))}
@@ -129,43 +132,43 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
               ) : null}
 
               {t.a.forecast ? (
-                <div className="rounded-xl border border-[#0F9D8A]/30 bg-[#0F9D8A]/8 p-3 text-xs text-[#0B7A6C]">
-                  <span className="font-bold uppercase tracking-wider text-[10px]">Forecast Signal · </span>
+                <div className="rounded-lg border border-[#15803D]/25 bg-[#15803D]/6 p-3 text-[12px] text-[#15803D]">
+                  <span className="font-bold uppercase tracking-wider text-[10px]">Forecast · </span>
                   <span className="font-semibold">{t.a.forecast}</span>
                 </div>
               ) : null}
 
               {t.a.recommendation ? (
-                <div className="rounded-xl border border-[#5146E5]/25 bg-[#5146E5]/8 p-3 text-xs text-[#3f36bd]">
-                  <span className="font-bold uppercase tracking-wider text-[10px]">AI Recommendation · </span>
+                <div className="rounded-lg border border-[#881337]/20 bg-[#881337]/5 p-3 text-[12px] text-[#881337]">
+                  <span className="font-bold uppercase tracking-wider text-[10px]">Recommendation · </span>
                   <span className="font-semibold">{t.a.recommendation}</span>
                 </div>
               ) : null}
 
-              {/* Interactive 1-Click Action Trigger inside AI Response */}
+              {/* 1-Click Action Button */}
               {t.a.action ? (
                 <div className="pt-1">
                   <button
                     type="button"
                     onClick={() => handleActionClick(i, t)}
                     disabled={t.actionDone}
-                    className={`w-full flex items-center justify-between rounded-xl px-4 py-2.5 text-xs font-bold transition-all shadow-xs ${
+                    className={`w-full flex items-center justify-between rounded-lg px-4 py-2.5 text-[13px] font-bold transition-all ${
                       t.actionDone
-                        ? "bg-[#0F9D8A]/10 border border-[#0F9D8A]/30 text-[#0B7A6C] cursor-default"
-                        : "bg-[#7C3AED] text-white hover:bg-[#6d28d9] shadow-[#7C3AED]/20 active:scale-[0.98]"
+                        ? "bg-[#15803D]/8 border border-[#15803D]/25 text-[#15803D] cursor-default"
+                        : "bg-[#881337] text-white hover:bg-[#6B0F2A] shadow-sm active:scale-[0.98]"
                     }`}
                   >
                     <span className="flex items-center gap-2">
-                      {t.actionDone ? <CheckCircle className="size-4" /> : <Sparkles className="size-4" />}
+                      {t.actionDone ? <CheckCircle className="size-4" /> : <ArrowRight className="size-4" />}
                       {t.actionDone ? "Executed Successfully" : t.a.action}
                     </span>
-                    {!t.actionDone ? <ArrowRight className="size-4" /> : null}
+                    {!t.actionDone ? <ArrowRight className="size-4 opacity-60" /> : null}
                   </button>
                 </div>
               ) : null}
 
-              <div className="flex flex-wrap items-center gap-1.5 border-t border-[#101828]/8 pt-2.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#101828]/40">
+              <div className="flex flex-wrap items-center gap-1.5 border-t border-[#E7E5E0] pt-2.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#A8A29E]">
                   Data Feeds
                 </span>
                 {t.a.sources.map((s) => (
@@ -176,21 +179,21 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
           </div>
         ))}
 
-        {/* Real Cognitive Processing Thinking State */}
+        {/* Thinking state */}
         {thinking ? (
           <div className="space-y-2 animate-in fade-in duration-150">
-            <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-[#101828] px-4 py-2 text-sm text-white font-medium">
+            <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-[#1C1917] px-4 py-2.5 text-[13px] text-white font-medium">
               {thinkingQuery}
             </div>
-            <div className="rounded-2xl rounded-bl-sm border border-[#7C3AED]/25 bg-white p-4 shadow-xs space-y-3">
-              <div className="flex items-center gap-2.5 text-xs font-bold text-[#7C3AED]">
-                <Loader2 className="size-4 animate-spin text-[#7C3AED]" />
-                <span>Privé Cognitive Layer is evaluating POS, inventory & scheduling data...</span>
+            <div className="rounded-2xl rounded-bl-sm bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-4 space-y-3">
+              <div className="flex items-center gap-2.5 text-[12px] font-semibold text-[#881337]">
+                <Loader2 className="size-4 animate-spin" />
+                Privé is analysing live POS, inventory & scheduling data…
               </div>
               <div className="space-y-2 pt-1">
                 <Skeleton className="h-4 w-5/6" />
                 <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-12 w-full rounded-xl" />
+                <Skeleton className="h-10 w-full rounded-lg" />
               </div>
             </div>
           </div>
@@ -199,66 +202,75 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
         <div ref={bottomRef} />
       </div>
 
+      {/* Input bar */}
       <form
         className="mt-4 flex gap-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          ask(input);
-        }}
+        onSubmit={(e) => { e.preventDefault(); ask(input); }}
       >
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask Privé anything (e.g. 'Can we handle tomorrow?')..."
-          className="w-full rounded-xl border border-[#101828]/15 bg-white px-3.5 py-2.5 text-sm font-medium outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/15 shadow-xs"
+          placeholder="Ask Privé anything (e.g. 'Can we handle tomorrow?')…"
+          className="w-full rounded-xl bg-white/70 backdrop-blur-sm px-3.5 py-2.5 text-[13px] font-medium text-[#1C1917] placeholder-[#A8A29E] outline-none focus:border-[#881337] focus:ring-2 focus:ring-[#881337]/10 shadow-sm transition-all"
         />
-        <Button type="submit" variant="violet" disabled={thinking} className="rounded-xl px-5">
+        <Button type="submit" variant="primary" disabled={thinking} className="rounded-lg px-4 shrink-0">
           Ask
         </Button>
       </form>
-      <p className="mt-2 text-[11px] text-[#101828]/40">
+      <p className="mt-2 text-[11px] font-medium text-[#78716C]">
         Privé operates under human-in-the-loop governance. Consequential actions require GM confirmation.
       </p>
     </div>
   );
 }
 
+// ─── AskPriveDrawer ───────────────────────────────────────────────────────────
 export function AskPriveDrawer({ persona }: { persona: Persona }) {
   const { state } = usePrive();
   const [open, setOpen] = useState(false);
 
-  // Auto-open the drawer when a question is injected from a quick-action button
   useEffect(() => {
-    if (state.pendingQuestion) {
-      setOpen(true);
-    }
+    if (state.pendingQuestion) setOpen(true);
   }, [state.pendingQuestion]);
 
   return (
     <>
+      {/* FAB */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 rounded-full bg-[#7C3AED] px-5 py-3 text-sm font-bold text-white shadow-xl shadow-[#7C3AED]/30 hover:bg-[#6d28d9] transition-all hover:scale-105 active:scale-95"
+        className="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-full px-5 py-3 text-[13px] font-bold text-white shadow-xl transition-all hover:scale-105 active:scale-95"
+        style={{ backgroundColor: "#881337" }}
       >
-        <Sparkles className="size-4" />
-        Ask Privé AI
+        <MessageSquare className="size-4" />
+        Ask Privé
       </button>
+
+      {/* Drawer */}
       {open ? (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-xs" onClick={() => setOpen(false)}>
+        <div
+          className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm"
+          onClick={() => setOpen(false)}
+        >
           <div
-            className="flex h-full w-full max-w-md flex-col bg-[#F7F6F2] p-5 shadow-2xl transition-all"
+            className="flex h-full w-full max-w-md flex-col bg-[#FAFAF8]/95 backdrop-blur-2xl p-5 shadow-2xl ring-1 ring-black/10"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="mb-4 flex items-center justify-between border-b border-[#101828]/10 pb-3">
+            {/* Drawer header */}
+            <div className="mb-4 flex items-center justify-between border-b border-[#E7E5E0] pb-3">
               <div>
-                <div className="text-base font-bold text-[#101828]">Privé Cognitive Console</div>
-                <div className="text-xs font-semibold text-[#101828]/50 capitalize">{persona} context · role-scoped live data</div>
+                <div className="flex items-center gap-2">
+                  <span className="grid size-6 place-items-center rounded-md bg-[#881337] text-[11px] font-black text-white">P</span>
+                  <div className="text-[14px] font-bold text-[#1C1917]">Privé Intelligence Console</div>
+                </div>
+                <div className="mt-0.5 text-[11px] font-medium text-[#78716C] capitalize pl-8">
+                  {persona} context · role-scoped live data
+                </div>
               </div>
               <button
                 onClick={() => setOpen(false)}
-                className="rounded-lg border border-[#101828]/10 bg-white px-2.5 py-1 text-xs font-semibold text-[#101828]/60 hover:bg-[#101828]/5 hover:text-[#101828]"
+                className="rounded-lg bg-white/60 backdrop-blur-sm p-1.5 text-[#78716C] hover:text-[#1C1917] transition-colors"
               >
-                Close
+                <X className="size-4" />
               </button>
             </div>
             <AskPriveConsole persona={persona} compact />
@@ -268,3 +280,4 @@ export function AskPriveDrawer({ persona }: { persona: Persona }) {
     </>
   );
 }
+

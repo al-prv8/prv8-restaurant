@@ -1,0 +1,122 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { Card, SectionTitle, Button, Pill, Pagination } from "@/components/prive/ui";
+import { usePrive } from "@/lib/prive/store";
+
+export default function GuestCreditsPage() {
+ const { state, dispatch } = usePrive();
+ const liveComplaint = state.complaints.find((c) => c.id.startsWith("c-live-"));
+ const [currentPage, setCurrentPage] = useState(1);
+ const pageSize = 3;
+
+ const totalPages = Math.ceil(state.giftCredits.length / pageSize);
+ const paginatedCredits = state.giftCredits.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+ const totalIssued = state.giftCredits.length;
+ const totalRedeemed = state.giftCredits.filter(c => c.redeemed).length;
+ const totalPending = totalIssued - totalRedeemed;
+
+ return (
+  <>
+   <div className="mb-8 space-y-1">
+    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337]">24/7 AI Contact · Recovery Credits</p>
+    <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">Recovery Credits</h1>
+    <p className="text-sm font-medium text-[#78716C]">Single-use dining credits issued after manager approval — fraud-controlled and tracked.</p>
+   </div>
+
+   <div className="grid gap-4 sm:grid-cols-3 mb-8">
+     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
+      <span className="text-sm font-bold text-[#78716C]">Credits Issued</span>
+      <span className="block text-3xl font-black tabular-nums text-[#1C1917] mt-1">{totalIssued}</span>
+     </div>
+     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
+      <span className="text-sm font-bold text-[#78716C]">Redeemed</span>
+      <span className="block text-3xl font-black tabular-nums text-[#15803D] mt-1">{totalRedeemed}</span>
+     </div>
+     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
+      <span className="text-sm font-bold text-[#78716C]">Pending Use</span>
+      <span className="block text-3xl font-black tabular-nums text-[#B45309] mt-1">{totalPending}</span>
+     </div>
+   </div>
+
+   <div className="grid gap-6 lg:grid-cols-12">
+    <div className="space-y-6 lg:col-span-7">
+     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
+      <SectionTitle hint={`${state.giftCredits.length} Issued`}>Your Active & Redeemed Credits</SectionTitle>
+      {state.giftCredits.length === 0 ? (
+       <div className="mt-6 rounded-2xl bg-white/40 backdrop-blur-sm shadow-sm ring-1 ring-black/[0.04] p-10 text-center flex flex-col items-center justify-center">
+        <h3 className="text-lg font-black text-[#1C1917] mb-2">No Credits Available</h3>
+        <p className="text-sm font-medium text-[#78716C] max-w-sm mb-6">
+         {liveComplaint
+          ? "Your GM is currently reviewing your service case recommendation. You will be notified via email upon approval."
+          : "Simulate a guest call in Guest Service, then approve the recovery in the GM command center to see credits here."}
+        </p>
+        {!liveComplaint && (
+         <Link href="/guest/service">
+          <Button variant="primary" className="bg-[#881337] text-white hover:bg-[#881337]/90 font-bold px-6 py-2 border-none">Go to Guest Service</Button>
+         </Link>
+        )}
+       </div>
+      ) : (
+       <div className="mt-6 space-y-4">
+        {paginatedCredits.map((g) => (
+         <div key={g.code} className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm`}>
+          <div>
+           <div className="flex flex-col gap-1 mb-2">
+            <span className="text-3xl font-black tracking-tight text-[#881337] tabular-nums">${g.amount}</span>
+            <span className="font-mono text-sm font-bold text-[#1C1917] tracking-widest">{g.code}</span>
+           </div>
+           <div className="text-xs font-medium text-[#78716C]">
+            Issued to {g.customer} · Expires: <span className="text-[#B91C1C] font-semibold">{g.expires}</span>
+           </div>
+          </div>
+          <Button
+           variant={g.redeemed ? "ghost" : "primary"}
+           disabled={g.redeemed}
+           onClick={() => dispatch({ type: "redeemCredit", code: g.code })}
+           className={g.redeemed ? "bg-white/30 text-[#A8A29E] font-bold cursor-not-allowed" : "bg-[#1C1917] text-white hover:bg-[#1C1917]/90 font-bold border-none"}
+          >
+           {g.redeemed ? "Redeemed" : "Redeem Now"}
+          </Button>
+         </div>
+        ))}
+
+        <div className="mt-6">
+         <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={state.giftCredits.length}
+          pageSize={pageSize}
+         />
+        </div>
+       </div>
+      )}
+     </div>
+    </div>
+
+    <div className="space-y-6 lg:col-span-5">
+     <div className="rounded-2xl bg-white/40 backdrop-blur-md shadow-md ring-1 ring-black/[0.04] p-5">
+      <SectionTitle>Credit Security & Rules</SectionTitle>
+      <ul className="mt-4 space-y-4 text-sm font-medium text-[#44403C] leading-relaxed">
+       <li className="flex items-start gap-3">
+        <span className="text-[#15803D] font-black text-lg leading-none mt-0.5">✓</span>
+        <span>Single-use barcode issued directly to verified phone or email.</span>
+       </li>
+       <li className="flex items-start gap-3">
+        <span className="text-[#15803D] font-black text-lg leading-none mt-0.5">✓</span>
+        <span>Automatically synced with Toast POS checkout for instant redemption.</span>
+       </li>
+       <li className="flex items-start gap-3">
+        <span className="text-[#15803D] font-black text-lg leading-none mt-0.5">✓</span>
+        <span>Audit logged to prevent fraudulent re-issuance or duplicate redemption.</span>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </>
+ );
+}

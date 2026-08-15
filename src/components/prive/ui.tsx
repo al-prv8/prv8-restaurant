@@ -1,15 +1,26 @@
+"use client";
+
 import { useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+// ─── Brand tokens ────────────────────────────────────────────────────────────
+const BRAND = "#881337";   // deep burgundy
+const CHARCOAL = "#1C1917";
+const STONE = "#78716C";
+const GREEN = "#15803D";
+const AMBER = "#B45309";
+const RED = "#B91C1C";
+
+// ─── Skeleton primitives ─────────────────────────────────────────────────────
 export function Skeleton({ className = "" }: { className?: string }) {
   return (
-    <div className={`animate-pulse rounded-lg bg-[#101828]/[0.08] ${className}`} />
+    <div className={`animate-pulse rounded-lg bg-[#1C1917]/[0.07] ${className}`} />
   );
 }
 
 export function MetricSkeleton() {
   return (
-    <div className="rounded-xl border border-[#101828]/8 bg-white p-4 shadow-xs space-y-3">
+    <div className="rounded-2xl bg-white/12 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.28)] ring-1 ring-white/20 p-4 space-y-3">
       <Skeleton className="h-3.5 w-24" />
       <Skeleton className="h-7 w-32" />
       <Skeleton className="h-3 w-40" />
@@ -19,14 +30,14 @@ export function MetricSkeleton() {
 
 export function CardSkeleton({ rows = 3 }: { rows?: number }) {
   return (
-    <div className="rounded-2xl border border-[#101828]/10 bg-white p-5 shadow-xs space-y-4">
+    <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 space-y-4">
       <div className="flex items-center justify-between">
         <Skeleton className="h-5 w-40" />
         <Skeleton className="h-4 w-16" />
       </div>
       <div className="space-y-2.5">
         {Array.from({ length: rows }).map((_, i) => (
-          <div key={i} className="flex items-center justify-between rounded-xl border border-[#101828]/6 p-3">
+          <div key={i} className="flex items-center justify-between rounded-xl bg-white/40 backdrop-blur-sm p-3">
             <div className="space-y-1.5 flex-1 pr-4">
               <Skeleton className="h-4 w-1/3" />
               <Skeleton className="h-3 w-2/3" />
@@ -46,24 +57,21 @@ export function PageSkeleton() {
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-4 w-96" />
       </div>
-      <Skeleton className="h-14 w-full rounded-2xl" />
+      <Skeleton className="h-14 w-full rounded-xl" />
       <div className="grid gap-4 sm:grid-cols-3">
         <MetricSkeleton />
         <MetricSkeleton />
         <MetricSkeleton />
       </div>
       <div className="grid gap-6 lg:grid-cols-12">
-        <div className="lg:col-span-6">
-          <CardSkeleton rows={4} />
-        </div>
-        <div className="lg:col-span-6">
-          <CardSkeleton rows={4} />
-        </div>
+        <div className="lg:col-span-6"><CardSkeleton rows={4} /></div>
+        <div className="lg:col-span-6"><CardSkeleton rows={4} /></div>
       </div>
     </div>
   );
 }
 
+// ─── Pagination ──────────────────────────────────────────────────────────────
 export function Pagination({
   currentPage,
   totalPages,
@@ -83,16 +91,16 @@ export function Pagination({
   const endItem = Math.min(currentPage * pageSize, totalItems ?? totalPages * pageSize);
 
   return (
-    <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-[#101828]/10 bg-[#FAFAFC] p-3 text-xs shadow-xs">
-      <div className="text-[#101828]/60 font-semibold flex items-center justify-between sm:justify-start gap-1.5 w-full sm:w-auto">
+    <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl bg-white/30 backdrop-blur-sm p-3 text-xs shadow-sm">
+      <div className="text-[#78716C] font-semibold flex items-center justify-between sm:justify-start gap-1.5 w-full sm:w-auto">
         <div className="flex items-center gap-1.5">
           <span>Showing</span>
-          <span className="font-bold text-[#101828] bg-white px-2 py-0.5 rounded-md border border-[#101828]/10 shadow-2xs">
-            {startItem} - {endItem}
+          <span className="font-bold text-[#1C1917] bg-white/80 px-2 py-0.5 rounded-md shadow-sm">
+            {startItem}–{endItem}
           </span>
-          {totalItems ? <>of <span className="font-bold text-[#101828]">{totalItems}</span></> : null}
+          {totalItems ? <>of <span className="font-bold text-[#1C1917]">{totalItems}</span></> : null}
         </div>
-        <span className="sm:hidden text-[10px] text-[#101828]/40 font-bold uppercase">
+        <span className="sm:hidden text-[10px] text-[#A8A29E] font-bold uppercase">
           Pg {currentPage}/{totalPages}
         </span>
       </div>
@@ -102,7 +110,7 @@ export function Pagination({
           type="button"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="rounded-lg border border-[#101828]/12 bg-white px-2.5 sm:px-3 py-1.5 font-bold text-[#101828]/80 hover:bg-[#101828]/5 hover:text-[#101828] disabled:opacity-40 disabled:cursor-not-allowed shadow-2xs transition-all flex items-center gap-1 shrink-0"
+          className="rounded-lg bg-white/60 backdrop-blur-sm px-2.5 sm:px-3 py-1.5 font-bold text-[#44403C] hover:bg-white/80 hover:text-[#1C1917] disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all flex items-center gap-1 shrink-0"
         >
           <ChevronLeft className="size-3.5" />
           <span>Prev</span>
@@ -116,8 +124,8 @@ export function Pagination({
               onClick={() => onPageChange(p)}
               className={`size-7 rounded-lg text-xs font-bold shrink-0 transition-all ${
                 p === currentPage
-                  ? "bg-[#5146E5] text-white shadow-xs"
-                  : "text-[#101828]/70 hover:bg-[#101828]/5 bg-white border border-[#101828]/8"
+                  ? "bg-[#881337] text-white shadow-sm"
+                  : "text-[#78716C] hover:bg-white/80 bg-white/60"
               }`}
             >
               {p}
@@ -129,7 +137,7 @@ export function Pagination({
           type="button"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="rounded-lg border border-[#101828]/12 bg-white px-2.5 sm:px-3 py-1.5 font-bold text-[#101828]/80 hover:bg-[#101828]/5 hover:text-[#101828] disabled:opacity-40 disabled:cursor-not-allowed shadow-2xs transition-all flex items-center gap-1 shrink-0"
+          className="rounded-lg bg-white/60 backdrop-blur-sm px-2.5 sm:px-3 py-1.5 font-bold text-[#44403C] hover:bg-white/80 hover:text-[#1C1917] disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all flex items-center gap-1 shrink-0"
         >
           <span>Next</span>
           <ChevronRight className="size-3.5" />
@@ -139,6 +147,8 @@ export function Pagination({
   );
 }
 
+// ─── Morning Brief / Intel Banner ─────────────────────────────────────────────
+// No AI badges. No purple. Clean operational briefing bar.
 export function PriveIntelBanner({
   summary,
   details,
@@ -154,29 +164,30 @@ export function PriveIntelBanner({
 }) {
   const [expanded, setExpanded] = useState(false);
   return (
-    <div className="mb-6 rounded-2xl border border-[#7C3AED]/25 bg-gradient-to-r from-[#7C3AED]/[0.06] via-white to-white p-3 shadow-xs transition-all">
+    <div className="mb-6 rounded-2xl bg-[#1C1917]/85 backdrop-blur-md text-white p-4 shadow-xl ring-1 ring-white/[0.06] transition-all">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-[#7C3AED] text-xs font-bold text-white shadow-xs">
+        <div className="flex items-start gap-3 min-w-0">
+          <div
+            className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg text-[11px] font-black text-white"
+            style={{ backgroundColor: "#881337" }}
+          >
             ✦
-          </span>
+          </div>
           <div className="min-w-0">
-            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[#7C3AED]">
-              <span>Privé Cognitive Signal</span>
-              <span className="rounded-full bg-[#7C3AED]/12 px-2 py-0.5 text-[9px] font-bold text-[#7C3AED]">
-                Live AI
-              </span>
+            <div className="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">
+              Morning Operations Brief · Privé
             </div>
-            <p className="text-xs font-semibold text-[#101828] truncate">{summary}</p>
+            <p className="text-sm font-medium text-white/90 leading-snug">{summary}</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 pl-10 sm:pl-0">
           {action && actionLabel ? (
             <button
               type="button"
               onClick={action}
-              className="rounded-lg bg-[#7C3AED] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#6d28d9] shadow-xs transition-all"
+              className="rounded-lg px-3.5 py-1.5 text-xs font-bold text-white transition-all hover:opacity-90 active:scale-95"
+              style={{ backgroundColor: "#881337" }}
             >
               {actionLabel}
             </button>
@@ -185,22 +196,25 @@ export function PriveIntelBanner({
             <button
               type="button"
               onClick={() => setExpanded(!expanded)}
-              className="rounded-lg border border-[#7C3AED]/20 bg-white px-2.5 py-1.5 text-xs font-semibold text-[#7C3AED] hover:bg-[#7C3AED]/5 transition-all"
+              className="rounded-lg border border-white/15 bg-white/8 px-3 py-1.5 text-xs font-semibold text-white/70 hover:bg-white/15 hover:text-white transition-all"
             >
-              {expanded ? "Hide Details" : "View Insights"}
+              {expanded ? "Collapse" : "View Details"}
             </button>
           ) : null}
         </div>
       </div>
 
       {expanded && details && details.length > 0 ? (
-        <div className="mt-3 border-t border-[#7C3AED]/15 pt-3 space-y-2 text-xs animate-in fade-in duration-150">
-          <ul className="space-y-1 font-medium text-[#101828]/80 list-disc pl-5">
+        <div className="mt-4 border-t border-white/10 pt-4 space-y-2 animate-in fade-in duration-150">
+          <ul className="space-y-1.5 text-[12px] font-medium text-white/70 list-none pl-10">
             {details.map((d, i) => (
-              <li key={i}>{d}</li>
+              <li key={i} className="flex items-start gap-2">
+                <span className="mt-1.5 size-1 rounded-full bg-[#881337] shrink-0" />
+                {d}
+              </li>
             ))}
           </ul>
-          <div className="text-[10px] text-[#101828]/40 pt-1 font-medium">
+          <div className="text-[10px] text-white/30 pt-1 font-medium pl-10">
             Sources: {sources.join(" · ")}
           </div>
         </div>
@@ -209,6 +223,7 @@ export function PriveIntelBanner({
   );
 }
 
+// ─── Status dot + label ──────────────────────────────────────────────────────
 export function BadgeWithDot({
   children,
   color = "success",
@@ -218,23 +233,26 @@ export function BadgeWithDot({
 }) {
   const colorCls =
     color === "success"
-      ? "border-[#0F9D8A]/30 bg-[#0F9D8A]/10 text-[#0B7A6C]"
+      ? "border-[#15803D]/30 bg-[#15803D]/10 text-[#15803D]"
       : color === "warning"
-      ? "border-[#F59E0B]/30 bg-[#F59E0B]/10 text-[#B45309]"
-      : "border-[#5146E5]/30 bg-[#5146E5]/10 text-[#5146E5]";
+      ? "border-[#B45309]/30 bg-[#B45309]/10 text-[#B45309]"
+      : "border-[#881337]/30 bg-[#881337]/10 text-[#881337]";
+
   const dotCls =
-    color === "success" ? "bg-[#0F9D8A]" : color === "warning" ? "bg-[#F59E0B]" : "bg-[#5146E5]";
+    color === "success" ? "bg-[#15803D]" : color === "warning" ? "bg-[#B45309]" : "bg-[#881337]";
 
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-bold ${colorCls}`}
-    >
-      <span className={`size-1.5 rounded-full animate-pulse ${dotCls}`} />
+    <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-bold ${colorCls}`}>
+      <span className="relative flex size-2">
+        <span className={`absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping ${dotCls}`} />
+        <span className={`relative inline-flex size-2 rounded-full ${dotCls}`} />
+      </span>
       {children}
     </span>
   );
 }
 
+// ─── Card ────────────────────────────────────────────────────────────────────
 export function Card({
   children,
   className = "",
@@ -244,32 +262,33 @@ export function Card({
   className?: string;
   tone?: "default" | "intel" | "alert";
 }) {
-  const toneCls =
-    tone === "intel"
-      ? "border-[#7C3AED]/25 bg-gradient-to-br from-[#7C3AED]/[0.05] via-white to-white shadow-[0_4px_20px_-4px_rgba(124,58,237,0.08)]"
-      : tone === "alert"
-        ? "border-[#F59E0B]/30 bg-gradient-to-br from-[#F59E0B]/[0.05] via-white to-white shadow-[0_4px_20px_-4px_rgba(245,158,11,0.08)]"
-        : "border-[#101828]/10 bg-white shadow-[0_2px_8px_-2px_rgba(16,24,40,0.04)]";
   return (
-    <section className={`rounded-2xl border ${toneCls} p-5 transition-all duration-200 ${className}`}>
+    <section
+      className={`relative overflow-hidden rounded-2xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/90 before:to-transparent transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgba(31,38,135,0.08)] hover:bg-white/70 p-5 ${className}`}
+    >
       {children}
     </section>
   );
 }
 
+// ─── SectionTitle ─────────────────────────────────────────────────────────────
 export function SectionTitle({ children, hint }: { children: ReactNode; hint?: string }) {
   return (
     <div className="mb-4 flex items-center justify-between gap-3">
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.14em] text-[#101828]/60 flex items-center gap-2">
-        <span className="inline-block size-1.5 rounded-full bg-[#5146E5]" />
+      <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#78716C]">
         {children}
       </h2>
-      {hint ? <span className="rounded-full bg-[#101828]/5 px-2.5 py-0.5 text-[11px] font-medium text-[#101828]/50">{hint}</span> : null}
+      {hint ? (
+        <span className="rounded-full bg-black/[0.04] px-2.5 py-0.5 text-[11px] font-medium text-[#A8A29E]">
+          {hint}
+        </span>
+      ) : null}
     </div>
   );
 }
 
-export function Sparkline({ data, color = "#5146E5" }: { data: number[]; color?: string }) {
+// ─── Sparkline ───────────────────────────────────────────────────────────────
+export function Sparkline({ data, color = "#881337" }: { data: number[]; color?: string }) {
   if (!data || data.length < 2) return null;
   const min = Math.min(...data);
   const max = Math.max(...data);
@@ -292,7 +311,7 @@ export function Sparkline({ data, color = "#5146E5" }: { data: number[]; color?:
     <svg width={width} height={height} className="shrink-0 overflow-visible">
       <defs>
         <linearGradient id={fillGradientId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.25" />
+          <stop offset="0%" stopColor={color} stopOpacity="0.20" />
           <stop offset="100%" stopColor={color} stopOpacity="0.0" />
         </linearGradient>
       </defs>
@@ -302,6 +321,7 @@ export function Sparkline({ data, color = "#5146E5" }: { data: number[]; color?:
   );
 }
 
+// ─── Metric tile ─────────────────────────────────────────────────────────────
 export function Metric({
   label,
   value,
@@ -315,29 +335,30 @@ export function Metric({
   tone?: "neutral" | "good" | "warn" | "bad";
   sparkline?: number[];
 }) {
-  const color =
-    tone === "good" ? "text-[#0F9D8A]" : tone === "warn" ? "text-[#B45309]" : tone === "bad" ? "text-[#DC3545]" : "text-[#101828]";
-  const strokeColor = tone === "good" ? "#0F9D8A" : tone === "warn" ? "#B45309" : tone === "bad" ? "#DC3545" : "#5146E5";
+  const valueColor =
+    tone === "good" ? `text-[${GREEN}]` : tone === "warn" ? `text-[${AMBER}]` : tone === "bad" ? `text-[${RED}]` : `text-[${CHARCOAL}]`;
+  const strokeColor = tone === "good" ? GREEN : tone === "warn" ? AMBER : tone === "bad" ? RED : BRAND;
 
   return (
-    <div className="rounded-xl border border-[#101828]/8 bg-white px-4 py-3.5 shadow-sm transition-all hover:border-[#101828]/15">
-      <div className="text-[11px] font-semibold uppercase tracking-wider text-[#101828]/45">{label}</div>
-      <div className="mt-1.5 flex items-baseline justify-between gap-2">
-        <div className={`text-2xl font-bold tracking-tight tabular-nums ${color}`}>{value}</div>
+    <div className="relative overflow-hidden rounded-2xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/90 before:to-transparent px-4 py-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgba(31,38,135,0.08)] hover:bg-white/70">
+      <div className="text-[11px] font-semibold uppercase tracking-wider text-[#A8A29E]">{label}</div>
+      <div className="mt-2 flex items-baseline justify-between gap-2">
+        <div className={`text-2xl font-bold tracking-tight tabular-nums ${valueColor}`}>{value}</div>
         {sparkline ? <Sparkline data={sparkline} color={strokeColor} /> : null}
       </div>
-      {sub ? <div className="mt-1 text-[11px] font-medium text-[#101828]/50">{sub}</div> : null}
+      {sub ? <div className="mt-1.5 text-[11px] font-medium text-[#78716C]">{sub}</div> : null}
     </div>
   );
 }
 
+// ─── Pill / Badge ─────────────────────────────────────────────────────────────
 const badgeTones: Record<string, string> = {
-  neutral: "bg-[#101828]/6 text-[#101828]/70 border border-[#101828]/8",
-  indigo: "bg-[#5146E5]/10 text-[#5146E5] border border-[#5146E5]/20",
-  violet: "bg-[#7C3AED]/10 text-[#7C3AED] border border-[#7C3AED]/20",
-  teal: "bg-[#0F9D8A]/12 text-[#0B7A6C] border border-[#0F9D8A]/25",
-  amber: "bg-[#F59E0B]/15 text-[#92400E] border border-[#F59E0B]/30",
-  red: "bg-[#DC3545]/12 text-[#B02A37] border border-[#DC3545]/25",
+  neutral: "bg-[#1C1917]/6 text-[#78716C]",
+  indigo:  "bg-[#881337]/8 text-[#881337] border border-[#881337]/20",
+  violet:  "bg-[#881337]/8 text-[#881337] border border-[#881337]/20",
+  teal:    "bg-[#15803D]/10 text-[#15803D] border border-[#15803D]/25",
+  amber:   "bg-[#B45309]/12 text-[#B45309] border border-[#B45309]/25",
+  red:     "bg-[#B91C1C]/10 text-[#B91C1C] border border-[#B91C1C]/25",
 };
 
 export function Pill({ tone = "neutral", children }: { tone?: keyof typeof badgeTones; children: ReactNode }) {
@@ -348,6 +369,7 @@ export function Pill({ tone = "neutral", children }: { tone?: keyof typeof badge
   );
 }
 
+// ─── Button ──────────────────────────────────────────────────────────────────
 export function Button({
   children,
   onClick,
@@ -366,11 +388,11 @@ export function Button({
   const base =
     "inline-flex items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-sm font-semibold transition-all shadow-sm active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100";
   const styles = {
-    primary: "bg-[#5146E5] text-white hover:bg-[#4238cf] shadow-[#5146E5]/20",
-    violet: "bg-[#7C3AED] text-white hover:bg-[#6d28d9] shadow-[#7C3AED]/20",
-    danger: "bg-[#DC3545] text-white hover:bg-[#b02a37] shadow-[#DC3545]/20",
-    ghost: "border border-[#101828]/15 bg-white text-[#101828] hover:bg-[#101828]/[0.04]",
-    quiet: "text-[#5146E5] hover:bg-[#5146E5]/10 shadow-none",
+    primary: "bg-[#881337] text-white hover:bg-[#6B0F2A] shadow-[#881337]/20",
+    violet:  "bg-[#881337] text-white hover:bg-[#6B0F2A] shadow-[#881337]/20",
+    danger:  "bg-[#B91C1C] text-white hover:bg-[#991B1B] shadow-[#B91C1C]/20",
+    ghost:   "bg-white/60 backdrop-blur-sm text-[#1C1917] hover:bg-white/80",
+    quiet:   "text-[#881337] hover:bg-[#881337]/8 shadow-none",
   }[variant];
   return (
     <button type={type} onClick={onClick} disabled={disabled} className={`${base} ${styles} ${className}`}>
@@ -379,10 +401,11 @@ export function Button({
   );
 }
 
+// ─── Meter ───────────────────────────────────────────────────────────────────
 export function Meter({ value, tone = "indigo" }: { value: number; tone?: "indigo" | "teal" | "amber" | "red" }) {
-  const color = { indigo: "#5146E5", teal: "#0F9D8A", amber: "#F59E0B", red: "#DC3545" }[tone];
+  const color = { indigo: BRAND, teal: GREEN, amber: AMBER, red: RED }[tone];
   return (
-    <div className="h-2 w-full overflow-hidden rounded-full bg-[#101828]/8 p-0.5">
+    <div className="h-2 w-full overflow-hidden rounded-full bg-[#1C1917]/8">
       <div
         className="h-full rounded-full transition-[width] duration-700 ease-out"
         style={{ width: `${Math.max(0, Math.min(100, value))}%`, background: color }}
@@ -391,6 +414,7 @@ export function Meter({ value, tone = "indigo" }: { value: number; tone?: "indig
   );
 }
 
+// ─── Page Tabs ───────────────────────────────────────────────────────────────
 export function PageTabs<T extends string>({
   tabs,
   active,
@@ -401,7 +425,7 @@ export function PageTabs<T extends string>({
   onChange: (id: T) => void;
 }) {
   return (
-    <div className="mb-6 flex items-center gap-1.5 overflow-x-auto no-scrollbar whitespace-nowrap rounded-xl border border-[#101828]/10 bg-white p-1.5 shadow-sm">
+    <div className="mb-6 flex items-center gap-0 overflow-x-auto no-scrollbar whitespace-nowrap border-b border-[#E7E5E0]">
       {tabs.map((tab) => {
         const isActive = tab.id === active;
         return (
@@ -409,17 +433,17 @@ export function PageTabs<T extends string>({
             key={tab.id}
             type="button"
             onClick={() => onChange(tab.id)}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition-all shrink-0 ${
+            className={`flex items-center gap-2 border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-all shrink-0 ${
               isActive
-                ? "bg-[#5146E5] text-white shadow-sm"
-                : "text-[#101828]/60 hover:bg-[#101828]/5 hover:text-[#101828]"
+                ? "border-[#881337] text-[#881337]"
+                : "border-transparent text-[#78716C] hover:text-[#1C1917] hover:border-[#A8A29E]"
             }`}
           >
             <span>{tab.label}</span>
             {tab.badge !== undefined && tab.badge !== 0 ? (
               <span
                 className={`rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums ${
-                  isActive ? "bg-white/20 text-white" : "bg-[#5146E5]/10 text-[#5146E5]"
+                  isActive ? "bg-[#881337] text-white" : "bg-[#1C1917]/8 text-[#78716C]"
                 }`}
               >
                 {tab.badge}
@@ -432,6 +456,7 @@ export function PageTabs<T extends string>({
   );
 }
 
+// ─── Confidence tag ───────────────────────────────────────────────────────────
 export function ConfidenceTag({ level, pct }: { level: string; pct?: number }) {
   const tone: keyof typeof badgeTones = level === "High" ? "teal" : level === "Medium" ? "amber" : "red";
   return (
@@ -442,5 +467,5 @@ export function ConfidenceTag({ level, pct }: { level: string; pct?: number }) {
 }
 
 export function stateTone(state: string): keyof typeof badgeTones {
-  return state === "Healthy" ? "teal" : state === "Watch" ? "amber" : state === "Action Required" ? "amber" : "red";
+  return state === "Healthy" ? "teal" : state === "Watch" ? "amber" : "red";
 }

@@ -16,9 +16,13 @@ dist-ssr
 .nitro
 *.local
 
-# Wrangler / Cloudflare
+# Next.js & Build Output
+.next/
+out/
+build/
 .wrangler/
-.dev.vars
+*.py
+
 
 # Editor directories and files
 .vscode/*
@@ -30,3 +34,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+

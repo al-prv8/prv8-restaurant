@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 export interface FeaturedCardProgressBarProps {
@@ -19,44 +21,46 @@ export function FeaturedCardProgressBar({
   onDismiss,
   className = "",
 }: FeaturedCardProgressBarProps) {
+  const barColor = progress >= 85 ? "#15803D" : progress >= 70 ? "#B45309" : "#B91C1C";
+
   return (
     <div
-      className={`relative rounded-2xl border border-[#101828]/12 bg-[#F9FAFB] p-3.5 shadow-sm ${className}`}
+      className={`relative rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-4 ${className}`}
     >
       {onDismiss ? (
         <button
           type="button"
           onClick={onDismiss}
-          className="absolute right-2.5 top-2.5 text-[#101828]/35 hover:text-[#101828] text-xs transition-colors"
+          className="absolute right-3 top-3 text-[#A8A29E] hover:text-[#1C1917] text-xs transition-colors"
           aria-label="Dismiss card"
         >
           ✕
         </button>
       ) : null}
 
-      <div className="flex items-center justify-between text-xs font-bold text-[#101828]">
+      <div className="flex items-center justify-between text-xs font-bold text-[#1C1917]">
         <span>{title}</span>
-        <span className="tabular-nums font-extrabold text-[#0F9D8A]">{progress}%</span>
+        <span className="tabular-nums font-extrabold" style={{ color: barColor }}>
+          {progress}%
+        </span>
       </div>
 
-      <p className="mt-1 text-[11px] leading-relaxed text-[#101828]/60">{description}</p>
+      <p className="mt-1 text-[11px] leading-relaxed text-[#78716C]">{description}</p>
 
-      <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-[#101828]/10">
+      <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-[#1C1917]/8">
         <div
           className="h-full rounded-full transition-all duration-700"
-          style={{
-            width: `${progress}%`,
-            background: progress >= 85 ? "#0F9D8A" : "#F59E0B",
-          }}
+          style={{ width: `${progress}%`, background: barColor }}
         />
       </div>
 
       {confirmLabel ? (
-        <div className="mt-3 flex items-center justify-between">
+        <div className="mt-3">
           <button
             type="button"
             onClick={onConfirm}
-            className="rounded-lg bg-[#5146E5] px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-[#4238cf] transition-all"
+            className="rounded-lg px-3 py-1.5 text-xs font-bold text-white transition-all hover:opacity-90 active:scale-95"
+            style={{ backgroundColor: "#881337" }}
           >
             {confirmLabel}
           </button>
