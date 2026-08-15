@@ -27,9 +27,11 @@ export default function RegionalPortfolioPage() {
  const { state, derived: d, dispatch } = usePrive();
  const [activeTab, setActiveTab] = useState<Tab>("all");
  const [currentPage, setCurrentPage] = useState(1);
+ const [compareStoreId, setCompareStoreId] = useState<string>("mt-clt-01");
  const pageSize = 10;
 
  const selectedHealth = d.health.find((x) => x.restaurant.id === state.regionalRestaurantId) ?? d.health[0];
+ const compareHealth = d.health.find((x) => x.restaurant.id === compareStoreId);
  const filteredHealth = d.health.filter((x) => {
   if (activeTab === "healthy") return x.state === "Healthy";
   if (activeTab === "action") return x.state === "Watch" || x.state === "Action Required" || x.state === "Critical";
@@ -144,6 +146,70 @@ export default function RegionalPortfolioPage() {
     </div>
 
     <div className="space-y-6 lg:col-span-5">
+     {/* Dual Store Comparison Glass HUD Trigger / Panel */}
+     <div className="rounded-2xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] p-5 space-y-4">
+      <div className="flex items-center justify-between border-b border-[#E7E5E0] pb-3">
+       <div>
+        <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#881337]">Regional Intelligence</div>
+        <div className="text-base font-black text-[#1C1917]">Side-by-Side Store Comparison</div>
+       </div>
+       <Pill tone="teal">Dual Store HUD</Pill>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+       <div>
+        <label className="text-[10px] font-bold uppercase tracking-wider text-[#A8A29E] block mb-1">Store A</label>
+        <div className="rounded-xl bg-white/80 border border-white/80 p-2.5 text-xs font-bold text-[#1C1917]">
+         {selectedHealth.restaurant.name}
+        </div>
+       </div>
+
+       <div>
+        <label className="text-[10px] font-bold uppercase tracking-wider text-[#A8A29E] block mb-1">Compare vs Store B</label>
+        <select
+         value={compareStoreId}
+         onChange={(e) => setCompareStoreId(e.target.value)}
+         className="w-full rounded-xl bg-white/80 border border-white/80 p-2 text-xs font-bold text-[#1C1917] outline-none"
+        >
+         {d.health.map((h) => (
+          <option key={h.restaurant.id} value={h.restaurant.id}>
+           {h.restaurant.name} ({h.score} pts)
+          </option>
+         ))}
+        </select>
+       </div>
+      </div>
+
+      {compareHealth ? (
+       <div className="space-y-3 pt-2">
+        <div className="grid grid-cols-2 gap-3 text-center">
+         <div className="rounded-xl bg-white/50 p-3 border border-white/60">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-[#78716C] mb-1">{selectedHealth.restaurant.name}</div>
+          <div className={`text-3xl font-black tabular-nums ${selectedHealth.score >= 85 ? "text-[#15803D]" : selectedHealth.score >= 70 ? "text-[#B45309]" : "text-[#B91C1C]"}`}>
+           {selectedHealth.score}
+          </div>
+          <div className="text-[11px] font-medium text-[#78716C] mt-1">Labor: +{selectedHealth.restaurant.laborDelta} pts</div>
+         </div>
+
+         <div className="rounded-xl bg-white/50 p-3 border border-white/60">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-[#78716C] mb-1">{compareHealth.restaurant.name}</div>
+          <div className={`text-3xl font-black tabular-nums ${compareHealth.score >= 85 ? "text-[#15803D]" : compareHealth.score >= 70 ? "text-[#B45309]" : "text-[#B91C1C]"}`}>
+           {compareHealth.score}
+          </div>
+          <div className="text-[11px] font-medium text-[#78716C] mt-1">Labor: +{compareHealth.restaurant.laborDelta} pts</div>
+         </div>
+        </div>
+
+        <div className="rounded-xl bg-[#881337]/5 border border-[#881337]/15 p-3 text-xs font-medium text-[#881337]">
+         <span className="font-bold">Variance Analysis · </span>
+         {selectedHealth.score > compareHealth.score
+          ? `${selectedHealth.restaurant.name} leads by +${selectedHealth.score - compareHealth.score} pts in overall operational stability.`
+          : `${compareHealth.restaurant.name} leads by +${compareHealth.score - selectedHealth.score} pts. Transfer surplus inventory to balance.`}
+        </div>
+       </div>
+      ) : null}
+     </div>
+
      {selectedHealth ? (
       <Card tone="intel" >
        <SectionTitle hint={`Selected: ${selectedHealth.restaurant.name}`}>Store Analysis</SectionTitle>

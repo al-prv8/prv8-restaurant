@@ -10,6 +10,50 @@ import { AskPriveConsole } from "@/components/prive/AskPrive";
 const statusTone = (s: string) =>
  s === "Resolved" ? "teal" : s === "Escalated" ? "violet" : s === "Rejected" ? "neutral" : "amber";
 
+function AudioWaveform({ active, speaker }: { active: boolean; speaker: "ai" | "guest" | null }) {
+  const bars = [24, 45, 68, 30, 85, 52, 95, 60, 40, 80, 55, 35, 75, 45, 65, 25, 50, 82, 40, 20];
+
+  return (
+    <div className="relative overflow-hidden flex items-center justify-between gap-1 h-14 px-5 rounded-2xl bg-[#1C1917] border border-white/10 shadow-inner my-4">
+      <div className="flex items-center gap-2 text-xs font-bold text-white/70 min-w-[100px]">
+        {active ? (
+          <>
+            <span className={`size-2 rounded-full animate-ping ${speaker === "ai" ? "bg-[#15803D]" : "bg-[#881337]"}`} />
+            <span className={speaker === "ai" ? "text-[#4ADE80]" : "text-[#F87171]"}>
+              {speaker === "ai" ? "Voice AI" : "Priya (Guest)"}
+            </span>
+          </>
+        ) : (
+          <span className="text-[#A8A29E]">Voice Standby</span>
+        )}
+      </div>
+
+      <div className="flex items-center justify-center gap-1.5 h-full flex-1 max-w-xs px-4">
+        {bars.map((height, i) => (
+          <span
+            key={i}
+            className={`w-1 rounded-full transition-all duration-150 ${
+              active
+                ? speaker === "ai"
+                  ? "bg-[#4ADE80] animate-pulse"
+                  : "bg-[#F87171] animate-bounce"
+                : "bg-white/20 h-1.5"
+            }`}
+            style={{
+              height: active ? `${Math.max(8, height * 0.45)}px` : "6px",
+              animationDelay: active ? `${(i * 70) % 500}ms` : "0ms",
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="text-[10px] font-bold uppercase tracking-widest text-white/50 text-right">
+        {active ? (speaker === "ai" ? "Synthesizing" : "Live Input") : "Ready"}
+      </div>
+    </div>
+  );
+}
+
 export default function GuestServicePage() {
  const { state, derived: d, dispatch } = usePrive();
  const [isPlaying, setIsPlaying] = useState(false);
@@ -123,7 +167,7 @@ export default function GuestServicePage() {
    <div className="grid gap-6 lg:grid-cols-12">
     <div className="space-y-6 lg:col-span-7">
      <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
-      <div className="flex items-center justify-between gap-3 mb-6">
+      <div className="flex items-center justify-between gap-3 mb-4">
        <SectionTitle hint="Voice AI · 24/7 · Ballantyne #02">Simulate Inbound Voice Call</SectionTitle>
        {isPlaying ? (
         <span className="inline-flex items-center gap-1.5 rounded-full bg-[#881337]/15 px-3 py-1 text-xs font-bold text-[#881337] animate-pulse">
@@ -132,14 +176,17 @@ export default function GuestServicePage() {
        ) : null}
       </div>
 
+      {/* Real-time Audio Waveform Visualizer */}
+      <AudioWaveform active={isPlaying} speaker={activeSpeaker} />
+
       <div className="rounded-xl bg-[#1C1917] p-5 font-mono text-sm text-[#FAFAF8] shadow-inner space-y-4">
-       <div className={`rounded-lg p-3 transition-all ${activeSpeaker === "ai" ? "bg-[#881337]/30 border-l-2 border-[#881337]" : "border-l-2 border-transparent"}`}>
+       <div className={`rounded-lg p-3 transition-all ${activeSpeaker === "ai" ? "bg-[#881337]/30 ring-1 ring-[#881337]" : ""}`}>
         <p><span className="font-bold text-[#15803D] uppercase tracking-wider text-xs">Privé Voice AI:</span><br/>Thank you for calling The Morning Table — Ballantyne location. How can I help you today?</p>
        </div>
-       <div className={`rounded-lg p-3 transition-all ${activeSpeaker === "guest" ? "bg-[#881337]/30 border-l-2 border-[#881337]" : "border-l-2 border-transparent"}`}>
+       <div className={`rounded-lg p-3 transition-all ${activeSpeaker === "guest" ? "bg-[#881337]/30 ring-1 ring-[#881337]" : ""}`}>
         <p><span className="font-bold text-[#A8A29E] uppercase tracking-wider text-xs">Guest (Priya):</span><br/>Hi, I ordered curbside pickup earlier and two sides of bacon were missing.</p>
        </div>
-       <div className={`rounded-lg p-3 transition-all ${activeSpeaker === "ai" ? "bg-[#881337]/30 border-l-2 border-[#881337]" : "border-l-2 border-transparent"}`}>
+       <div className={`rounded-lg p-3 transition-all ${activeSpeaker === "ai" ? "bg-[#881337]/30 ring-1 ring-[#881337]" : ""}`}>
         <p><span className="font-bold text-[#15803D] uppercase tracking-wider text-xs">Privé Voice AI:</span><br/>I'm sorry about that, Priya. I found your order ORD-51993 from 9:42 AM. I'm creating a service case now and routing it to your location's general manager for review. You'll hear back within the hour.</p>
        </div>
       </div>
