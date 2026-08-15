@@ -52,7 +52,7 @@ export default function ExecutiveScenarioPage() {
       </div>
      </div>
 
-     <Card tone="intel" className="border-t-4">
+     <Card tone="intel" >
       <SectionTitle hint="Recalculated live from historical 90-day series">Scenario Uplift Simulation</SectionTitle>
       
       <div className="rounded-2xl bg-white/40 backdrop-blur-2xl shadow-lg ring-1 ring-black/[0.04] p-8 space-y-8 mt-4 text-center relative overflow-hidden">

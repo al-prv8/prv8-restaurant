@@ -52,7 +52,7 @@ export default function GmWorkforcePage() {
     <div className="lg:col-span-6 space-y-6">
      <Card>
       <SectionTitle hint="Employee Separation">Separation Review</SectionTitle>
-      <div className={`rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm space-y-3 ${!state.separationDecision ? "border-l-4" : "border-l-4"}`}>
+      <div className={`rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm space-y-3 ${!state.separationDecision ? "" : ""}`}>
        <div className="flex items-center justify-between gap-2">
         <span className="font-bold text-lg text-[#1C1917]">Jordan Smith</span>
         <Pill tone={state.separationDecision ? "teal" : "red"}>

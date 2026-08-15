@@ -73,7 +73,7 @@ export default function GmApprovalsPage() {
               <div
                 key={p.id}
                 className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm ${
-                  p.done ? "border-l-4" : "border-l-4"
+                  p.done ? "" : ""
                 }`}
               >
                 <div className="space-y-1">

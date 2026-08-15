@@ -96,7 +96,7 @@ export default function GmStaffingPage() {
      <Card className="h-full">
       <SectionTitle hint="Shift Opportunities">Saturday Peak Broadcast (4:00 PM – 8:00 PM)</SectionTitle>
       <div className="space-y-3">
-       <div className={`rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm space-y-3 ${!state.shiftOfferSent ? "border-l-4" : ""}`}>
+       <div className={`rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm space-y-3 ${!state.shiftOfferSent ? "" : ""}`}>
         <div className="flex items-center justify-between gap-2">
          <span className="font-bold text-sm text-[#1C1917]">Saturday Peak Shift (4:00 PM – 8:00 PM)</span>
          <Pill tone={state.shiftOfferSent ? "teal" : "amber"}>

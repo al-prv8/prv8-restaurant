@@ -68,7 +68,7 @@ export default function GmCommunicationsPage() {
           <SectionTitle hint={`${d.comms.length} Broadcasts`}>Corporate Announcements & SOPs</SectionTitle>
           <div className="grid gap-4 sm:grid-cols-2">
             {paginatedComms.map((a) => (
-              <div key={a.id} className={`rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm flex flex-col justify-between space-y-4 ${a.acknowledged ? "border-l-4" : "border-l-4"}`}>
+              <div key={a.id} className={`rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm flex flex-col justify-between space-y-4 ${a.acknowledged ? "" : ""}`}>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between gap-2 border-b border-[#E7E5E0] pb-3">
                     <span className="font-bold text-base text-[#1C1917]">{a.title}</span>

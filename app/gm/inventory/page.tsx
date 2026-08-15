@@ -97,7 +97,7 @@ export default function GmInventoryPage() {
         ) : (
          <div className="space-y-4">
           {paginatedRisk.map((i) => (
-           <div key={i.itemId} className={`rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm ${i.shortage > 0 ? "border-l-4" : "border-l-4"}`}>
+           <div key={i.itemId} className={`rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm ${i.shortage > 0 ? "" : ""}`}>
             <div className="flex items-center justify-between gap-2">
              <span className="text-lg font-bold text-[#1C1917]">{i.name}</span>
              <Pill tone={i.risk === "Critical" ? "red" : i.risk === "At Risk" ? "amber" : "neutral"}>

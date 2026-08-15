@@ -192,20 +192,11 @@ export default function Home() {
                 <Link
                   key={entry.to}
                   href={entry.to}
-                  className={`group relative overflow-hidden rounded-2xl border border-white/80 p-5 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/90 before:to-transparent ${
-                    entry.highlight
-                      ? "bg-white/75 backdrop-blur-2xl shadow-xl ring-2 ring-[#881337]/30 hover:shadow-[0_20px_45px_rgba(136,19,55,0.15)]"
-                      : "bg-white/60 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] hover:shadow-[0_20px_45px_rgba(31,38,135,0.1)] hover:bg-white/75"
-                  }`}
+                  className="group relative overflow-hidden rounded-2xl border border-white/80 bg-white/60 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(31,38,135,0.1)] hover:bg-white/75 flex flex-col justify-between before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/90 before:to-transparent"
                 >
-                  {entry.highlight && (
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-[#881337] rounded-t-xl" />
-                  )}
                   <div>
                     <div className="flex items-center justify-between gap-3 mb-4">
-                      <div className={`grid size-9 place-items-center rounded-lg ${
-                        entry.highlight ? "bg-[#881337] text-white" : "bg-[#881337]/8 text-[#881337]"
-                      }`}>
+                      <div className="grid size-9 place-items-center rounded-lg bg-[#881337]/8 text-[#881337]">
                         <Icon className="size-4" />
                       </div>
                       <span className="rounded-full bg-black/[0.04] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#78716C]">
@@ -213,9 +204,7 @@ export default function Home() {
                       </span>
                     </div>
 
-                    <h3 className={`text-[15px] font-bold transition-colors ${
-                      entry.highlight ? "text-[#881337]" : "text-[#1C1917] group-hover:text-[#881337]"
-                    }`}>
+                    <h3 className="text-[15px] font-bold text-[#1C1917] group-hover:text-[#881337] transition-colors">
                       {entry.label}
                     </h3>
                     <div className="text-[12px] font-semibold text-[#881337] mt-0.5 opacity-90">{entry.who}</div>

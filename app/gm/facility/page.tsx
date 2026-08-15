@@ -84,9 +84,9 @@ export default function GmFacilityPage() {
                 <div
                   key={t.label}
                   className={`flex items-center justify-between gap-2 rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-4 shadow-sm ${
-                    t.state === "overdue" ? "border-l-4" : 
-                    t.state === "due" ? "border-l-4" : 
-                    "border-l-4"
+                    t.state === "overdue" ? "" : 
+                    t.state === "due" ? "" : 
+                    ""
                   }`}
                 >
                   <span className="font-bold text-sm text-[#1C1917]">{t.label}</span>

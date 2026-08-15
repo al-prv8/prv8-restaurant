@@ -31,7 +31,7 @@ export default function RegionalIntelligencePage() {
 
    <div className="space-y-6">
     {troubled ? (
-     <Card tone="alert" className="border-l-4">
+     <Card tone="alert" >
       <SectionTitle hint={`Health ${troubled.score}`}>Priority Store Breakdown — {troubled.restaurant.name}</SectionTitle>
       <Meter value={troubled.score} tone={troubled.score >= 85 ? "teal" : troubled.score >= 74 ? "amber" : "red"} />
       <div className="mt-6 grid gap-3 sm:grid-cols-4">

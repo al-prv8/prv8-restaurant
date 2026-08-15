@@ -145,7 +145,7 @@ export default function RegionalPortfolioPage() {
 
     <div className="space-y-6 lg:col-span-5">
      {selectedHealth ? (
-      <Card tone="intel" className="border-l-4">
+      <Card tone="intel" >
        <SectionTitle hint={`Selected: ${selectedHealth.restaurant.name}`}>Store Analysis</SectionTitle>
        <div className="space-y-4">
         <div className="flex items-center justify-between border-b border-[#E7E5E0] pb-3">

@@ -86,9 +86,9 @@ export default function GmGuestsPage() {
      <div className="grid gap-6 sm:grid-cols-2">
       {paginatedComplaints.map((c) => (
        <div key={c.id} className={`rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm space-y-4 flex flex-col justify-between ${
-        c.status === "Awaiting Approval" ? "border-l-4" :
-        c.status === "Resolved" ? "border-l-4" :
-        "border-l-4"
+        c.status === "Awaiting Approval" ? "" :
+        c.status === "Resolved" ? "" :
+        ""
        }`}>
         <div className="space-y-3">
          <div className="flex items-center justify-between gap-2 border-b border-[#E7E5E0] pb-3">

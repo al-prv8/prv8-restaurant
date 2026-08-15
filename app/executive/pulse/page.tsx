@@ -94,7 +94,7 @@ export default function ExecutivePulsePage() {
       </div>
      </div>
 
-     <Card tone="intel" className="border-t-4">
+     <Card tone="intel" >
       <SectionTitle hint="Updated 6:00 AM">Morning Enterprise Summary</SectionTitle>
       <p className="text-base font-medium leading-relaxed text-[#44403C] mt-2">
        Enterprise revenue is pacing <strong className="text-[#15803D]">+3.2% ahead of budget</strong> across the 12 Carolinas locations. EBITDA margin is lagging by <strong className="text-[#B91C1C]">1.2 points</strong>, driven primarily by overtime and elevated turnover at Charlotte #03.
