@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Card, Pill, SectionTitle, Pagination } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
+import { DataFlowMesh } from "@/components/prive/DataFlowMesh";
 
 const SYSTEMS = [
   {
@@ -80,6 +81,11 @@ export default function IntegrationsPage() {
             {SYSTEMS.length} Systems Connected
           </span>
         </div>
+      </div>
+
+      {/* Live Operational Telemetry Node Graph Mesh */}
+      <div className="mb-6">
+        <DataFlowMesh />
       </div>
 
       {/* Stats Strip */}
