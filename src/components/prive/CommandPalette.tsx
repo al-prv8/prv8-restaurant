@@ -98,7 +98,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl overflow-hidden rounded-3xl bg-[#FAFAF8]/95 backdrop-blur-2xl shadow-2xl ring-1 ring-black/10 border border-white/80"
+        className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white/75 backdrop-blur-3xl shadow-[0_25px_60px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.05] border border-white/80 before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/90 before:to-transparent z-10"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search header */}

@@ -68,19 +68,19 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
       <div className={`flex-1 space-y-4 overflow-y-auto ${compact ? "" : "pr-1"}`}>
         {/* Empty state — suggestions */}
         {turns.length === 0 && !thinking ? (
-          <div className="rounded-xl border border-[#881337]/15 bg-[#881337]/[0.03] p-4">
+          <div className="relative overflow-hidden rounded-2xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/90 before:to-transparent p-5">
             <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.15em] text-[#881337] mb-2">
               <span>✦</span> Privé Intelligence Console
             </div>
             <p className="text-[13px] font-medium text-[#78716C] leading-relaxed">
               Ask Privé anything about POS sales, inventory velocity, staffing coverage, guest complaints, training, or financial margins.
             </p>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-3.5 flex flex-wrap gap-2">
               {SUGGESTIONS[persona].map((s) => (
                 <button
                   key={s}
                   onClick={() => ask(s)}
-                  className="rounded-full border border-[#881337]/20 bg-white px-3 py-1.5 text-[12px] font-medium text-[#881337] hover:bg-[#881337]/5 transition-all text-left"
+                  className="rounded-full border border-[#881337]/20 bg-white/80 backdrop-blur-sm px-3.5 py-1.5 text-[12px] font-medium text-[#881337] hover:bg-[#881337] hover:text-white transition-all shadow-xs text-left"
                 >
                   {s}
                 </button>
@@ -93,15 +93,15 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
         {turns.map((t, i) => (
           <div key={i} className="space-y-2">
             {/* User message */}
-            <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-[#1C1917] px-4 py-2.5 text-[13px] text-white font-medium">
+            <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-[#1C1917] px-4 py-2.5 text-[13px] text-white font-medium shadow-md">
               {t.q}
             </div>
 
             {/* Privé response */}
-            <div className="rounded-2xl rounded-bl-sm bg-white/70 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-4 space-y-3">
+            <div className="relative overflow-hidden rounded-2xl rounded-bl-sm bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/90 before:to-transparent p-4 space-y-3">
               <div className="flex items-center justify-between gap-2 border-b border-[#E7E5E0] pb-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="grid size-6 place-items-center rounded-md bg-[#881337] text-[11px] font-black text-white">
+                  <span className="grid size-6 place-items-center rounded-md bg-[#881337] text-[11px] font-black text-white shadow-xs">
                     P
                   </span>
                   <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#881337]">
@@ -116,7 +116,7 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
               </p>
 
               {t.a.evidence?.length ? (
-                <div className="rounded-xl bg-white/50 backdrop-blur-sm p-3 space-y-1.5">
+                <div className="rounded-xl bg-white/50 backdrop-blur-sm border border-white/60 p-3 space-y-1.5">
                   <div className="text-[10px] font-bold uppercase tracking-wider text-[#A8A29E]">
                     Live System Evidence
                   </div>
@@ -132,14 +132,14 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
               ) : null}
 
               {t.a.forecast ? (
-                <div className="rounded-lg border border-[#15803D]/25 bg-[#15803D]/6 p-3 text-[12px] text-[#15803D]">
+                <div className="rounded-lg border border-[#15803D]/25 bg-[#15803D]/8 p-3 text-[12px] text-[#15803D]">
                   <span className="font-bold uppercase tracking-wider text-[10px]">Forecast · </span>
                   <span className="font-semibold">{t.a.forecast}</span>
                 </div>
               ) : null}
 
               {t.a.recommendation ? (
-                <div className="rounded-lg border border-[#881337]/20 bg-[#881337]/5 p-3 text-[12px] text-[#881337]">
+                <div className="rounded-lg border border-[#881337]/20 bg-[#881337]/8 p-3 text-[12px] text-[#881337]">
                   <span className="font-bold uppercase tracking-wider text-[10px]">Recommendation · </span>
                   <span className="font-semibold">{t.a.recommendation}</span>
                 </div>
@@ -152,10 +152,10 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
                     type="button"
                     onClick={() => handleActionClick(i, t)}
                     disabled={t.actionDone}
-                    className={`w-full flex items-center justify-between rounded-lg px-4 py-2.5 text-[13px] font-bold transition-all ${
+                    className={`w-full flex items-center justify-between rounded-xl px-4 py-2.5 text-[13px] font-bold transition-all ${
                       t.actionDone
                         ? "bg-[#15803D]/8 border border-[#15803D]/25 text-[#15803D] cursor-default"
-                        : "bg-[#881337] text-white hover:bg-[#6B0F2A] shadow-sm active:scale-[0.98]"
+                        : "bg-[#881337] text-white hover:bg-[#6B0F2A] shadow-md active:scale-[0.98]"
                     }`}
                   >
                     <span className="flex items-center gap-2">
@@ -185,7 +185,7 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
             <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-[#1C1917] px-4 py-2.5 text-[13px] text-white font-medium">
               {thinkingQuery}
             </div>
-            <div className="rounded-2xl rounded-bl-sm bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-4 space-y-3">
+            <div className="relative overflow-hidden rounded-2xl rounded-bl-sm bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] p-4 space-y-3">
               <div className="flex items-center gap-2.5 text-[12px] font-semibold text-[#881337]">
                 <Loader2 className="size-4 animate-spin" />
                 Privé is analysing live POS, inventory & scheduling data…
@@ -211,9 +211,9 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask Privé anything (e.g. 'Can we handle tomorrow?')…"
-          className="w-full rounded-xl bg-white/70 backdrop-blur-sm px-3.5 py-2.5 text-[13px] font-medium text-[#1C1917] placeholder-[#A8A29E] outline-none focus:border-[#881337] focus:ring-2 focus:ring-[#881337]/10 shadow-sm transition-all"
+          className="w-full rounded-xl bg-white/70 backdrop-blur-md border border-white/80 px-3.5 py-2.5 text-[13px] font-medium text-[#1C1917] placeholder-[#A8A29E] outline-none focus:border-[#881337] focus:ring-2 focus:ring-[#881337]/15 shadow-sm transition-all"
         />
-        <Button type="submit" variant="primary" disabled={thinking} className="rounded-lg px-4 shrink-0">
+        <Button type="submit" variant="primary" disabled={thinking} className="rounded-xl px-5 shrink-0 shadow-md">
           Ask
         </Button>
       </form>
@@ -238,7 +238,7 @@ export function AskPriveDrawer({ persona }: { persona: Persona }) {
       {/* FAB */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-full px-5 py-3 text-[13px] font-bold text-white shadow-xl transition-all hover:scale-105 active:scale-95"
+        className="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-full px-5 py-3 text-[13px] font-bold text-white shadow-2xl backdrop-blur-xl ring-2 ring-white/40 transition-all hover:scale-105 active:scale-95"
         style={{ backgroundColor: "#881337" }}
       >
         <MessageSquare className="size-4" />
@@ -248,18 +248,18 @@ export function AskPriveDrawer({ persona }: { persona: Persona }) {
       {/* Drawer */}
       {open ? (
         <div
-          className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm animate-in fade-in duration-200"
           onClick={() => setOpen(false)}
         >
           <div
-            className="flex h-full w-full max-w-md flex-col bg-[#FAFAF8]/95 backdrop-blur-2xl p-5 shadow-2xl ring-1 ring-black/10"
+            className="relative overflow-hidden flex h-full w-full max-w-md flex-col bg-white/75 backdrop-blur-3xl border-l border-white/80 p-5 shadow-2xl ring-1 ring-black/10 before:absolute before:inset-y-0 before:left-0 before:w-[1px] before:bg-gradient-to-b before:from-transparent before:via-white/90 before:to-transparent"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drawer header */}
             <div className="mb-4 flex items-center justify-between border-b border-[#E7E5E0] pb-3">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="grid size-6 place-items-center rounded-md bg-[#881337] text-[11px] font-black text-white">P</span>
+                  <span className="grid size-6 place-items-center rounded-md bg-[#881337] text-[11px] font-black text-white shadow-xs">P</span>
                   <div className="text-[14px] font-bold text-[#1C1917]">Privé Intelligence Console</div>
                 </div>
                 <div className="mt-0.5 text-[11px] font-medium text-[#78716C] capitalize pl-8">

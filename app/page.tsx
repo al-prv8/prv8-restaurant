@@ -192,10 +192,10 @@ export default function Home() {
                 <Link
                   key={entry.to}
                   href={entry.to}
-                  className={`group relative overflow-hidden rounded-2xl p-5 transition-all duration-200 hover:-translate-y-0.5 flex flex-col justify-between ${
+                  className={`group relative overflow-hidden rounded-2xl border border-white/80 p-5 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/90 before:to-transparent ${
                     entry.highlight
-                      ? "bg-white/80 backdrop-blur-md shadow-xl ring-1 ring-[#881337]/20"
-                      : "bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] hover:shadow-xl hover:bg-white/80"
+                      ? "bg-white/75 backdrop-blur-2xl shadow-xl ring-2 ring-[#881337]/30 hover:shadow-[0_20px_45px_rgba(136,19,55,0.15)]"
+                      : "bg-white/60 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] hover:shadow-[0_20px_45px_rgba(31,38,135,0.1)] hover:bg-white/75"
                   }`}
                 >
                   {entry.highlight && (
