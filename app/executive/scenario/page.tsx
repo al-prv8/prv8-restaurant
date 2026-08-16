@@ -1,7 +1,7 @@
 "use client";
 
 import { Sliders, Zap } from "lucide-react";
-import { Card, SectionTitle, Metric, ConfidenceTag } from "@/components/prive/ui";
+import { Card, SectionTitle, ConfidenceTag, KpiRow } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 import { money, moneyShort } from "@/lib/prive/forecast";
 
@@ -39,10 +39,10 @@ export default function ExecutiveScenarioPage() {
          key={p.label}
          type="button"
          onClick={() => dispatch({ type: "scenario", uplift: p.uplift })}
-         className={`flex flex-col items-center justify-center rounded-2xl p-4 text-center transition-all duration-200 ${
+         className={`flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 ${
           state.scenarioUplift === p.uplift
-           ? "bg-[#881337] text-white shadow-xl ring-2 ring-[#881337]/30 scale-[1.02]"
-           : "bg-white/60 backdrop-blur-md text-[#1C1917] hover:bg-white/80 shadow-md ring-1 ring-black/[0.04]"
+           ? "bg-[#881337] text-white border-[#881337] shadow-md scale-[1.02]"
+           : "bg-white border border-[#E7E5E0] text-[#1C1917] shadow-sm hover:bg-[#F7F5F2]"
          }`}
         >
          <span className="text-sm font-black mb-1">{p.label}</span>
@@ -52,10 +52,10 @@ export default function ExecutiveScenarioPage() {
       </div>
      </div>
 
-     <Card tone="intel" >
+     <Card tone="intel">
       <SectionTitle hint="Recalculated live from historical 90-day series">Scenario Uplift Simulation</SectionTitle>
       
-      <div className="rounded-2xl bg-white/40 backdrop-blur-2xl shadow-lg ring-1 ring-black/[0.04] p-8 space-y-8 mt-4 text-center relative overflow-hidden">
+      <div className="rounded-xl bg-[#F7F5F2] border border-[#F3F2F0] p-8 space-y-8 mt-4 text-center relative overflow-hidden">
        <div className="flex flex-col items-center gap-2 relative z-10">
         <label className="text-xs font-bold uppercase tracking-widest text-[#78716C] flex items-center gap-2">
          <Sliders className="size-4 text-[#881337]" /> Simulated Weekend Traffic Adjustment
@@ -87,41 +87,16 @@ export default function ExecutiveScenarioPage() {
        </div>
       </div>
 
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-       <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm flex flex-col justify-between min-h-[140px]">
-        <div className="text-[10px] font-bold uppercase tracking-widest text-[#A8A29E]">Revenue Impact</div>
-        <div>
-         <div className={`text-3xl font-black tabular-nums tracking-tight mt-2 ${s.revenueDelta >= 0 ? "text-[#15803D]" : "text-[#B91C1C]"}`}>{money(s.revenueDelta)}</div>
-         <div className="text-xs font-semibold text-[#78716C] mt-1">Total: {moneyShort(s.revenueTotal)}</div>
-        </div>
-       </div>
-       
-       <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm flex flex-col justify-between min-h-[140px]">
-        <div className="text-[10px] font-bold uppercase tracking-widest text-[#A8A29E]">Extra Transactions</div>
-        <div>
-         <div className="text-3xl font-black tabular-nums tracking-tight mt-2 text-[#1C1917]">+{s.transactionDelta.toLocaleString()}</div>
-         <div className="text-xs font-semibold text-[#78716C] mt-1">Across 12 locations</div>
-        </div>
-       </div>
-       
-       <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm flex flex-col justify-between min-h-[140px]">
-        <div className="text-[10px] font-bold uppercase tracking-widest text-[#A8A29E]">Labor Required</div>
-        <div>
-         <div className={`text-3xl font-black tabular-nums tracking-tight mt-2 ${s.laborHoursDelta > 0 ? "text-[#B45309]" : "text-[#15803D]"}`}>{`${s.laborHoursDelta > 0 ? "+" : ""}${s.laborHoursDelta} hrs`}</div>
-         <div className="text-xs font-semibold text-[#78716C] mt-1">{s.extraStaffNeeded} extra team members</div>
-        </div>
-       </div>
-       
-       <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm flex flex-col justify-between min-h-[140px]">
-        <div className="text-[10px] font-bold uppercase tracking-widest text-[#A8A29E]">Service Risk</div>
-        <div>
-         <div className={`text-3xl font-black tabular-nums tracking-tight mt-2 ${s.serviceRiskPct > 50 ? "text-[#B91C1C]" : "text-[#B45309]"}`}>{`${s.serviceRiskPct}%`}</div>
-         <div className="text-xs font-semibold text-[#78716C] mt-1">Service breach probability</div>
-        </div>
-       </div>
+      <div className="mt-8">
+       <KpiRow items={[
+         { label: "Revenue Impact", value: money(s.revenueDelta), sub: `Total: ${moneyShort(s.revenueTotal)}`, tone: s.revenueDelta >= 0 ? "good" : "bad" },
+         { label: "Extra Transactions", value: `+${s.transactionDelta.toLocaleString()}`, sub: "Across 12 locations", tone: "neutral" },
+         { label: "Labor Required", value: `${s.laborHoursDelta > 0 ? "+" : ""}${s.laborHoursDelta} hrs`, sub: `${s.extraStaffNeeded} extra team members`, tone: s.laborHoursDelta > 0 ? "warn" : "good" },
+         { label: "Service Risk", value: `${s.serviceRiskPct}%`, sub: "Service breach probability", tone: s.serviceRiskPct > 50 ? "bad" : "warn" }
+       ]} />
       </div>
 
-      <div className="mt-8 flex flex-col sm:flex-row items-center justify-between border-t border-[#E7E5E0] pt-4">
+      <div className="mt-4 flex flex-col sm:flex-row items-center justify-between border-t border-[#E7E5E0] pt-4">
        <div className="flex items-center gap-3">
          <div className="text-[10px] font-bold uppercase tracking-widest text-[#A8A29E]">Confidence Level</div>
          <ConfidenceTag level={s.confidence} />

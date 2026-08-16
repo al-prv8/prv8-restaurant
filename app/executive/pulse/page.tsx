@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, TrendingUp, TrendingDown, AlertTriangle } from "lucide-react";
+import { Download, TrendingUp, TrendingDown, AlertTriangle, Sparkles } from "lucide-react";
 import { Card, SectionTitle, Button } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 import { money, moneyShort } from "@/lib/prive/forecast";
@@ -28,7 +28,7 @@ export default function ExecutivePulsePage() {
       12 restaurants · month-to-date financial performance vs plan.
      </p>
     </div>
-    <Button variant="ghost" onClick={handleExportBrief} className="shrink-0 bg-white/10 backdrop-blur-xl hover:bg-white/15 shadow-sm font-bold">
+    <Button variant="ghost" onClick={handleExportBrief} className="shrink-0 shadow-sm font-bold">
      <Download className="size-4 mr-2" /> Export Executive Brief
     </Button>
    </div>
@@ -38,7 +38,7 @@ export default function ExecutivePulsePage() {
      
      {/* Top Metric Cards */}
      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-      <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-6 flex flex-col justify-between min-h-[140px]">
+      <div className="rounded-xl bg-white border border-[#E7E5E0] p-4 shadow-sm flex flex-col justify-between min-h-[120px]">
        <div className="text-[11px] font-black tracking-widest uppercase text-[#78716C]">Month Revenue</div>
        <div className="mt-2 flex items-center gap-2">
         <div className="text-3xl font-black text-[#1C1917] tabular-nums">{moneyShort(e.monthRevenue)}</div>
@@ -49,7 +49,7 @@ export default function ExecutivePulsePage() {
        </div>
       </div>
 
-      <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-6 flex flex-col justify-between min-h-[140px]">
+      <div className="rounded-xl bg-white border border-[#E7E5E0] p-4 shadow-sm flex flex-col justify-between min-h-[120px]">
        <div className="text-[11px] font-black tracking-widest uppercase text-[#78716C]">Margin Variance</div>
        <div className="mt-2 flex items-center gap-2">
         <div className="text-3xl font-black text-[#1C1917] tabular-nums">{e.marginDelta > 0 ? "+" : ""}{e.marginDelta} pts</div>
@@ -60,7 +60,7 @@ export default function ExecutivePulsePage() {
        </div>
       </div>
 
-      <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-6 flex flex-col justify-between min-h-[140px]">
+      <div className="rounded-xl bg-white border border-[#E7E5E0] p-4 shadow-sm flex flex-col justify-between min-h-[120px]">
        <div className="text-[11px] font-black tracking-widest uppercase text-[#78716C]">Enterprise Labor</div>
        <div className="mt-2 flex items-center gap-2">
         <div className="text-3xl font-black text-[#1C1917] tabular-nums">{e.laborPct}%</div>
@@ -71,7 +71,7 @@ export default function ExecutivePulsePage() {
        </div>
       </div>
 
-      <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-6 flex flex-col justify-between min-h-[140px]">
+      <div className="rounded-xl bg-white border border-[#E7E5E0] p-4 shadow-sm flex flex-col justify-between min-h-[120px]">
        <div className="text-[11px] font-black tracking-widest uppercase text-[#78716C]">Recovery Spend</div>
        <div className="mt-2 flex items-center gap-2">
         <div className="text-3xl font-black text-[#1C1917] tabular-nums">{moneyShort(e.recoverySpend)}</div>
@@ -82,7 +82,7 @@ export default function ExecutivePulsePage() {
        </div>
       </div>
       
-      <div className="rounded-2xl bg-[#B91C1C]/10 backdrop-blur-sm p-6 shadow-sm flex flex-col justify-between min-h-[140px]">
+      <div className="rounded-xl bg-[#FEF2F2] border border-[#B91C1C]/20 p-4 shadow-sm flex flex-col justify-between min-h-[120px]">
        <div className="text-[11px] font-black tracking-widest uppercase text-[#B91C1C]">At-Risk Stores</div>
        <div className="mt-2 flex items-center gap-2">
         <div className="text-3xl font-black text-[#B91C1C] tabular-nums">{e.atRiskStores ?? 2}</div>
@@ -96,12 +96,22 @@ export default function ExecutivePulsePage() {
 
      <Card tone="intel">
       <SectionTitle hint="Updated 6:00 AM">Morning Enterprise Summary</SectionTitle>
-      <p className="text-base font-medium leading-relaxed text-[#44403C] mt-2">
+      <p className="text-base font-medium leading-relaxed text-[#44403C] mt-2 mb-6">
        Enterprise revenue is pacing <strong className="text-[#15803D]">+3.2% ahead of budget</strong> across the 12 Carolinas locations. EBITDA margin is lagging by <strong className="text-[#B91C1C]">1.2 points</strong>, driven primarily by overtime and elevated turnover at Charlotte #03.
       </p>
 
+      {/* Predictive Narrative */}
+      <div className="mb-8">
+       <h3 className="text-sm font-black text-[#1C1917] flex items-center gap-2 mb-2">
+        <Sparkles className="size-4 text-[#881337]" /> What Privé Anticipates
+       </h3>
+       <p className="text-sm font-medium text-[#44403C] leading-relaxed">
+        Based on current run-rates, Enterprise EBITDA is forecasted to close at <strong className="text-[#15803D]">45.2%</strong> (+$42K above plan). Overtime at Charlotte #03 will normalize by week 3 if recent hiring patterns hold.
+       </p>
+      </div>
+
       {/* Financial Margin Waterfall Chart */}
-      <div className="mt-8 pt-6 border-t border-[#E7E5E0]">
+      <div className="pt-6 border-t border-[#E7E5E0]">
        <div className="flex items-center justify-between mb-4">
         <div>
          <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#881337]">Executive Financial Waterfall</div>
@@ -114,7 +124,7 @@ export default function ExecutivePulsePage() {
 
        <div className="grid gap-3 sm:grid-cols-5 mt-4">
         {/* Step 1: Gross Revenue */}
-        <div className="rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 p-4 shadow-sm flex flex-col justify-between">
+        <div className="rounded-lg bg-white border border-[#E7E5E0] p-4 shadow-sm flex flex-col justify-between">
          <div className="text-[10px] font-bold uppercase tracking-wider text-[#78716C]">1. Gross Revenue</div>
          <div className="text-xl font-black text-[#15803D] tabular-nums mt-2">+$1.24M</div>
          <div className="w-full bg-[#15803D]/20 h-2 rounded-full mt-3 overflow-hidden">
@@ -124,7 +134,7 @@ export default function ExecutivePulsePage() {
         </div>
 
         {/* Step 2: Food Cost */}
-        <div className="rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 p-4 shadow-sm flex flex-col justify-between">
+        <div className="rounded-lg bg-white border border-[#E7E5E0] p-4 shadow-sm flex flex-col justify-between">
          <div className="text-[10px] font-bold uppercase tracking-wider text-[#78716C]">2. Food & COGS</div>
          <div className="text-xl font-black text-[#B91C1C] tabular-nums mt-2">-$364.5K</div>
          <div className="w-full bg-[#B91C1C]/20 h-2 rounded-full mt-3 overflow-hidden">
@@ -134,7 +144,7 @@ export default function ExecutivePulsePage() {
         </div>
 
         {/* Step 3: Labor Cost */}
-        <div className="rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 p-4 shadow-sm flex flex-col justify-between">
+        <div className="rounded-lg bg-white border border-[#E7E5E0] p-4 shadow-sm flex flex-col justify-between">
          <div className="text-[10px] font-bold uppercase tracking-wider text-[#78716C]">3. Direct Labor</div>
          <div className="text-xl font-black text-[#B91C1C] tabular-nums mt-2">-$317.4K</div>
          <div className="w-full bg-[#B91C1C]/20 h-2 rounded-full mt-3 overflow-hidden">
@@ -144,7 +154,7 @@ export default function ExecutivePulsePage() {
         </div>
 
         {/* Step 4: Recovery Credits */}
-        <div className="rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 p-4 shadow-sm flex flex-col justify-between">
+        <div className="rounded-lg bg-white border border-[#E7E5E0] p-4 shadow-sm flex flex-col justify-between">
          <div className="text-[10px] font-bold uppercase tracking-wider text-[#78716C]">4. Guest Recovery</div>
          <div className="text-xl font-black text-[#B45309] tabular-nums mt-2">-$1.25K</div>
          <div className="w-full bg-[#B45309]/20 h-2 rounded-full mt-3 overflow-hidden">
@@ -154,7 +164,7 @@ export default function ExecutivePulsePage() {
         </div>
 
         {/* Step 5: Net EBITDA Margin */}
-        <div className="rounded-2xl bg-[#881337] text-white p-4 shadow-md flex flex-col justify-between">
+        <div className="rounded-lg bg-[#881337] text-white p-4 shadow-md flex flex-col justify-between">
          <div className="text-[10px] font-bold uppercase tracking-wider text-white/70">5. Net EBITDA</div>
          <div className="text-xl font-black text-white tabular-nums mt-2">+$556.7K</div>
          <div className="w-full bg-white/20 h-2 rounded-full mt-3 overflow-hidden">
@@ -166,22 +176,99 @@ export default function ExecutivePulsePage() {
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-       <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm flex flex-col justify-between min-h-[120px]">
+       <div className="rounded-lg bg-white border border-[#E7E5E0] p-4 shadow-sm flex flex-col justify-between min-h-[120px]">
         <div className="text-[11px] font-black uppercase tracking-widest text-[#A8A29E]">Top Performer</div>
         <div className="text-lg font-black text-[#1C1917] mt-2">Ballantyne #02</div>
         <div className="text-sm font-bold text-[#15803D] mt-1">+4.2% revenue growth</div>
        </div>
 
-       <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm flex flex-col justify-between min-h-[120px]">
+       <div className="rounded-lg bg-white border border-[#E7E5E0] p-4 shadow-sm flex flex-col justify-between min-h-[120px]">
         <div className="text-[11px] font-black uppercase tracking-widest text-[#A8A29E]">Primary Margin Driver</div>
         <div className="text-lg font-black text-[#1C1917] mt-2">Labor Variance</div>
         <div className="text-sm font-bold text-[#B45309] mt-1">14 overtime hours</div>
        </div>
 
-       <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm flex flex-col justify-between min-h-[120px]">
+       <div className="rounded-lg bg-white border border-[#E7E5E0] p-4 shadow-sm flex flex-col justify-between min-h-[120px]">
         <div className="text-[11px] font-black uppercase tracking-widest text-[#A8A29E]">Turnover Watch</div>
         <div className="text-lg font-black text-[#1C1917] mt-2">{e.turnoverRiskStores} Stores Flagged</div>
         <div className="text-sm font-bold text-[#B91C1C] mt-1">Charlotte #03 high risk</div>
+       </div>
+      </div>
+
+      {/* Guest Sentiment Trend — 8-Week Line Chart */}
+      <div className="pt-6 border-t border-[#E7E5E0]">
+       <div className="flex items-center justify-between mb-4">
+        <div>
+         <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#881337]">Guest Sentiment</div>
+         <h4 className="text-base font-black text-[#1C1917]">Enterprise Satisfaction Score — 8-Week Trend</h4>
+        </div>
+        <span className="text-xs font-bold text-[#15803D] bg-[#15803D]/10 px-3 py-1 rounded-full">4.2 / 5.0 avg</span>
+       </div>
+
+       {(() => {
+        const weeks = [
+         { week: "W1", score: 4.5 },
+         { week: "W2", score: 4.3 },
+         { week: "W3", score: 4.4 },
+         { week: "W4", score: 4.1 },
+         { week: "W5", score: 3.9 },
+         { week: "W6", score: 4.0 },
+         { week: "W7", score: 4.2 },
+         { week: "W8", score: 4.2 },
+        ];
+        const W = 520, H = 90, PAD_L = 32, PAD_B = 20;
+        const minScore = 3.5, maxScore = 5.0;
+        const px = (i: number) => PAD_L + (i / (weeks.length - 1)) * (W - PAD_L);
+        const py = (v: number) => H - PAD_B - ((v - minScore) / (maxScore - minScore)) * (H - PAD_B - 8);
+        const pathD = weeks.map((w, i) => `${i === 0 ? "M" : "L"} ${px(i).toFixed(1)},${py(w.score).toFixed(1)}`).join(" ");
+        const areaD = `${pathD} L ${px(weeks.length - 1).toFixed(1)},${(H - PAD_B).toFixed(1)} L ${px(0).toFixed(1)},${(H - PAD_B).toFixed(1)} Z`;
+        const trend = weeks[weeks.length - 1].score >= weeks[0].score;
+        const lineColor = trend ? "#15803D" : "#B91C1C";
+
+        return (
+         <div className="w-full overflow-x-auto">
+          <svg viewBox={`0 0 ${W + 20} ${H + 8}`} className="w-full" style={{ minWidth: 280 }}>
+           {/* Y-axis gridlines */}
+           {[3.5, 4.0, 4.5, 5.0].map(v => {
+            const y = py(v);
+            return (
+             <g key={v}>
+              <line x1={PAD_L} y1={y} x2={W} y2={y} stroke="#F3F2F0" strokeWidth="1" />
+              <text x={PAD_L - 4} y={y + 3.5} textAnchor="end" fontSize="8" fill="#A8A29E" fontWeight="600">{v.toFixed(1)}</text>
+             </g>
+            );
+           })}
+           {/* Target line at 4.3 */}
+           {(() => {
+            const y = py(4.3);
+            return (
+             <>
+              <line x1={PAD_L} y1={y} x2={W} y2={y} stroke="#B45309" strokeWidth="1" strokeDasharray="4 3" />
+              <text x={W + 2} y={y + 3} fontSize="8" fill="#B45309" fontWeight="700">Target</text>
+             </>
+            );
+           })()}
+           {/* Area fill */}
+           <path d={areaD} fill={lineColor} opacity="0.07" />
+           {/* Line */}
+           <path d={pathD} fill="none" stroke={lineColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+           {/* Data points */}
+           {weeks.map((w, i) => (
+            <g key={w.week}>
+             <circle cx={px(i)} cy={py(w.score)} r="4" fill="white" stroke={lineColor} strokeWidth="2" />
+             <text x={px(i)} y={H - PAD_B + 12} textAnchor="middle" fontSize="8" fill="#A8A29E" fontWeight="600">{w.week}</text>
+            </g>
+           ))}
+           {/* Baseline */}
+           <line x1={PAD_L} y1={H - PAD_B} x2={W} y2={H - PAD_B} stroke="#E7E5E0" strokeWidth="1.5" />
+          </svg>
+         </div>
+        );
+       })()}
+
+       {/* 3-location driver callout */}
+       <div className="mt-3 rounded-lg bg-[#FEF2F2] border border-[#B91C1C]/20 px-4 py-3 text-xs font-medium text-[#B91C1C]">
+        <span className="font-bold">Sentiment Pressure:</span> Charlotte #03, Raleigh #07, and Greensboro #11 account for 61% of negative guest feedback. Primary driver: extended wait times during dinner peak.
        </div>
       </div>
      </Card>

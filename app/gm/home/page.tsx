@@ -6,10 +6,12 @@ import {
  MessageCircle, ChevronRight, CheckCircle2, AlertTriangle, Zap
 } from "lucide-react";
 import { MorningBrief, AlertCard } from "@/components/prive/panels";
-import { Card, Metric, SectionTitle, PageTabs, PriveIntelBanner, Sparkline, Meter, Pill, RadialGauge } from "@/components/prive/ui";
+import { Card, Metric, SectionTitle, PageTabs, PriveIntelBanner, Sparkline, Meter, Pill, RadialGauge, KpiRow } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 import { money } from "@/lib/prive/forecast";
 import Link from "next/link";
+
+import { playSuccessChime } from "@/lib/prive/audio";
 
 type Tab = "all" | "readiness" | "alerts";
 
@@ -35,7 +37,7 @@ function HourlySalesLaborChart() {
   const activeData = activeIdx !== null ? hours[activeIdx] : hours[6];
 
   return (
-    <div className="rounded-2xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] p-5 my-6">
+    <div className="bg-white border border-[#E7E5E0] rounded-xl p-5 my-6">
       <div className="flex items-center justify-between border-b border-[#E7E5E0] pb-3 mb-4">
         <div>
           <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#881337]">Tomorrow's Curve</div>
@@ -125,7 +127,7 @@ function HourlySalesLaborChart() {
 
       {/* Active Hover Tooltip Card */}
       {activeData && (
-        <div className="mt-3 rounded-xl bg-white/80 backdrop-blur-md p-3 border border-white/80 flex items-center justify-between text-xs">
+        <div className="mt-3 rounded-xl bg-white p-3 border border-[#E7E5E0] shadow-sm flex items-center justify-between text-xs">
           <div>
             <span className="font-black text-[#1C1917]">{activeData.time} Peak Forecast:</span>{" "}
             <span className="text-[#78716C]">Sales:</span> <strong className="text-[#15803D]">${activeData.sales}/hr</strong> ·{" "}
@@ -157,16 +159,19 @@ export default function GmHomePage() {
   dispatch({ type: "approveStaffing" });
  };
 
+ const hour = new Date().getHours();
+ const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+
  return (
   <>
    {/* ── Page Header ─────────────────────────────────────────────────── */}
    <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
     <div>
      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-1">
-      Ballantyne #02 · Tomorrow's Outlook
+      Ballantyne #02 · Saturday, August 16
      </p>
      <h1 className="text-2xl font-black tracking-tight sm:text-3xl text-[#1C1917]">
-      Command Center
+      {greeting}, Jordan.
      </h1>
      <p className="mt-1 text-sm font-medium text-[#78716C]">
       Everything Privé knows about tomorrow, ranked by financial impact.
@@ -182,9 +187,39 @@ export default function GmHomePage() {
     )}
    </div>
 
+   {/* ── Location Hero Strip ──────────────────────────────────────────── */}
+   <div className="mb-6 relative h-[160px] sm:h-[200px] w-full overflow-hidden rounded-xl border border-[#E7E5E0] shadow-sm">
+    <img
+     src="/kitchen-hero.jpg"
+     alt="Ballantyne kitchen in service"
+     className="absolute inset-0 w-full h-full object-cover object-center"
+    />
+    {/* dark overlay for readability */}
+    <div className="absolute inset-0 bg-gradient-to-r from-[#1C1917]/80 via-[#1C1917]/30 to-transparent" />
+    <div className="absolute inset-0 flex items-end p-4 sm:p-5">
+     <div className="flex items-end justify-between w-full">
+      <div>
+       <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-1">
+        Ballantyne #02 · Line Kitchen
+       </div>
+       <div className="text-lg font-black text-white leading-tight sm:text-xl">
+        The Morning Table
+       </div>
+       <div className="text-xs font-medium text-white/70 mt-0.5">
+        Charlotte, NC · Open 6 AM – 10 PM
+       </div>
+      </div>
+      <div className="flex items-center gap-1.5 rounded-full bg-[#15803D] px-3 py-1.5 text-[11px] font-black text-white shadow-lg shrink-0">
+       <span className="size-1.5 rounded-full bg-white animate-pulse" />
+       Kitchen In Service
+      </div>
+     </div>
+    </div>
+   </div>
+
    {/* ── Intel Banner ────────────────────────────────────────────────── */}
    <PriveIntelBanner
-    summary={`Good morning Jordan. Tomorrow volume is projected +${d.tomorrow.vsTypicalPct}% above typical (${money(d.tomorrow.sales)}). ${pendingCount} approval(s) needed to reach 88% readiness.`}
+    summary={`Tomorrow volume is projected +${d.tomorrow.vsTypicalPct}% above typical (${money(d.tomorrow.sales)}). ${pendingCount} approval(s) needed to reach 88% readiness.`}
     details={[
      `Russet Potato inventory short by ${d.potato.shortage} lbs (supplier cutoff 5:00 PM).`,
      `Saturday 4–8 PM peak block requires +${d.staffing.gap} staff member for full coverage.`,
@@ -195,16 +230,19 @@ export default function GmHomePage() {
    />
 
    {/* ── 1-Click Hero Quick Action Chips ── */}
-   <div className="mb-6 rounded-2xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+   <div className="mb-6 rounded-xl bg-white border border-[#E7E5E0] shadow-sm p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
     <div className="text-xs font-bold uppercase tracking-wider text-[#881337] flex items-center gap-1.5 shrink-0">
      <Zap className="size-3.5" /> 1-Click GM Actions:
     </div>
     <div className="flex flex-wrap items-center gap-2 flex-1">
      <button
       type="button"
-      onClick={() => dispatch({ type: "increasePotatoOrder", lbs: 35 })}
+      onClick={() => {
+       playSuccessChime();
+       dispatch({ type: "increasePotatoOrder", lbs: 35 });
+      }}
       disabled={d.potato.shortage === 0}
-      className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all shadow-xs ${
+      className={`rounded-md px-2.5 py-1.5 text-xs font-bold transition-all ${
        d.potato.shortage === 0
         ? "bg-[#15803D]/10 text-[#15803D] border border-[#15803D]/30"
         : "bg-[#881337] text-white hover:bg-[#6B0F2A] active:scale-95"
@@ -215,9 +253,12 @@ export default function GmHomePage() {
 
      <button
       type="button"
-      onClick={() => dispatch({ type: "approveStaffing" })}
+      onClick={() => {
+       playSuccessChime();
+       dispatch({ type: "approveStaffing" });
+      }}
       disabled={d.staffing.gap === 0}
-      className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all shadow-xs ${
+      className={`rounded-md px-2.5 py-1.5 text-xs font-bold transition-all ${
        d.staffing.gap === 0
         ? "bg-[#15803D]/10 text-[#15803D] border border-[#15803D]/30"
         : "bg-[#881337] text-white hover:bg-[#6B0F2A] active:scale-95"
@@ -228,9 +269,12 @@ export default function GmHomePage() {
 
      <button
       type="button"
-      onClick={() => dispatch({ type: "completeCertification" })}
+      onClick={() => {
+       playSuccessChime();
+       dispatch({ type: "completeCertification" });
+      }}
       disabled={d.expiringCerts === 0}
-      className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all shadow-xs ${
+      className={`rounded-md px-2.5 py-1.5 text-xs font-bold transition-all ${
        d.expiringCerts === 0
         ? "bg-[#15803D]/10 text-[#15803D] border border-[#15803D]/30"
         : "bg-[#881337] text-white hover:bg-[#6B0F2A] active:scale-95"
@@ -256,28 +300,76 @@ export default function GmHomePage() {
     {/* ── KPI Row & Interactive Dual-Axis Chart ─────────────────────────── */}
     {(activeTab === "all" || activeTab === "readiness") && (
      <>
-      <div className="grid gap-4 sm:grid-cols-3">
-       <Metric
-        label="Tomorrow Sales"
-        value={money(d.tomorrow.sales)}
-        sub={`${d.tomorrow.transactions.toLocaleString()} txns · ${d.tomorrow.vsTypicalPct > 0 ? "+" : ""}${d.tomorrow.vsTypicalPct}% vs typical`}
-        tone="good"
-        sparkline={[3800, 4100, 3950, 4200, 4400, 4600, d.tomorrow.sales]}
-       />
-       <Metric
-        label="Labor Projected"
-        value={`${d.staffing.projectedLaborPct}%`}
-        sub={`Target ${d.staffing.targetLaborPct}% · ${d.staffing.gap > 0 ? `${d.staffing.gap} gap` : "Covered"}`}
-        tone={d.staffing.projectedLaborPct > d.staffing.targetLaborPct ? "warn" : "good"}
-        sparkline={[24.2, 24.8, 25.1, 25.4, 26.0, 26.2, d.staffing.projectedLaborPct]}
-       />
-       <Metric
-        label="Guest Complaints"
-        value={`${d.openComplaints}`}
-        sub={`${d.awaitingApproval} awaiting GM approval`}
-        tone={d.openComplaints > 0 ? "warn" : "good"}
-       />
-      </div>
+      <KpiRow
+       items={[
+        {
+         label: "Tomorrow Sales",
+         value: money(d.tomorrow.sales),
+         sub: `${d.tomorrow.transactions.toLocaleString()} txns · ${d.tomorrow.vsTypicalPct > 0 ? "+" : ""}${d.tomorrow.vsTypicalPct}% vs typical`,
+         tone: "good",
+        },
+        {
+         label: "Labor Projected",
+         value: `${d.staffing.projectedLaborPct}%`,
+         sub: `Target ${d.staffing.targetLaborPct}% · ${d.staffing.gap > 0 ? `${d.staffing.gap} gap` : "Covered"}`,
+         tone: d.staffing.projectedLaborPct > d.staffing.targetLaborPct ? "warn" : "good",
+        },
+        {
+         label: "Guest Complaints",
+         value: `${d.openComplaints}`,
+         sub: `${d.awaitingApproval} awaiting GM approval`,
+         tone: d.openComplaints > 0 ? "warn" : "good",
+        },
+       ]}
+      />
+
+      {(d.potato.shortage > 0 || d.staffing.gap > 0 || d.awaitingApproval > 0 || d.expiringCerts > 0) && (
+       <Card className="mb-6">
+        <SectionTitle hint="Prioritized">NEEDS YOUR ATTENTION</SectionTitle>
+        <div className="flex flex-col gap-2">
+         {d.potato.shortage > 0 && (
+          <Link href="/gm/inventory" className="flex items-start gap-3 rounded-lg border-l-4 border-[#B91C1C] bg-[#FEF2F2] px-4 py-3 hover:bg-[#FEE2E2] transition-colors">
+           <span className="text-lg">🔴</span>
+           <div className="flex-1">
+            <div className="text-sm font-bold text-[#991B1B]">Potato shortage</div>
+            <div className="text-xs text-[#7F1D1D] mt-0.5">Order +{d.potato.shortage} lbs before 5 PM cutoff</div>
+           </div>
+           <ChevronRight className="size-4 text-[#B91C1C]" />
+          </Link>
+         )}
+         {d.awaitingApproval > 0 && (
+          <Link href="/gm/guests" className="flex items-start gap-3 rounded-lg border-l-4 border-[#B91C1C] bg-[#FEF2F2] px-4 py-3 hover:bg-[#FEE2E2] transition-colors">
+           <span className="text-lg">🔴</span>
+           <div className="flex-1">
+            <div className="text-sm font-bold text-[#991B1B]">Guest complaints awaiting approval</div>
+            <div className="text-xs text-[#7F1D1D] mt-0.5">{d.awaitingApproval} draft response(s) need GM confirmation</div>
+           </div>
+           <ChevronRight className="size-4 text-[#B91C1C]" />
+          </Link>
+         )}
+         {d.expiringCerts > 0 && (
+          <Link href="/gm/staffing" className="flex items-start gap-3 rounded-lg border-l-4 border-[#B45309] bg-[#FFFBEB] px-4 py-3 hover:bg-[#FEF3C7] transition-colors">
+           <span className="text-lg">🟠</span>
+           <div className="flex-1">
+            <div className="text-sm font-bold text-[#92400E]">Expiring Certifications</div>
+            <div className="text-xs text-[#78350F] mt-0.5">{d.expiringCerts} staff member(s) need cert renewal</div>
+           </div>
+           <ChevronRight className="size-4 text-[#B45309]" />
+          </Link>
+         )}
+         {d.staffing.gap > 0 && (
+          <Link href="/gm/staffing" className="flex items-start gap-3 rounded-lg border-l-4 border-[#4F46E5] bg-[#EEF2FF] px-4 py-3 hover:bg-[#E0E7FF] transition-colors">
+           <span className="text-lg">🔵</span>
+           <div className="flex-1">
+            <div className="text-sm font-bold text-[#3730A3]">Staffing gap projected</div>
+            <div className="text-xs text-[#312E81] mt-0.5">Saturday 4-8 PM peak requires +{d.staffing.gap} staff for full coverage</div>
+           </div>
+           <ChevronRight className="size-4 text-[#4F46E5]" />
+          </Link>
+         )}
+        </div>
+       </Card>
+      )}
 
       <HourlySalesLaborChart />
      </>
@@ -319,7 +411,7 @@ export default function GmHomePage() {
         {/* Risk items */}
         <ul className="mt-4 space-y-2">
          {d.readiness.risks.map((r) => (
-          <li key={r.label} className="rounded-xl bg-white/40 backdrop-blur-sm shadow-sm px-3 py-2.5">
+          <li key={r.label} className="rounded-lg border border-[#F3F2F0] bg-[#F7F5F2] px-3 py-2.5">
            <div className="flex items-center justify-between gap-2">
             <span className="text-[13px] font-semibold text-[#1C1917]">{r.label}</span>
             <Pill tone={r.probability > 50 ? "red" : "amber"}>{r.probability}% risk</Pill>
@@ -362,7 +454,7 @@ export default function GmHomePage() {
           <Link
            key={href}
            href={href}
-           className="flex items-center gap-3 rounded-xl bg-white/60 backdrop-blur-md shadow-sm p-3 hover:bg-white/90 group transition-all"
+           className="flex items-center gap-3 rounded-lg bg-[#F7F5F2] border border-[#F3F2F0] hover:bg-[#F3F1EE] p-3 group transition-all"
           >
            <div className={`grid size-7 shrink-0 place-items-center rounded-lg ${done ? "bg-[#15803D]/10 text-[#15803D]" : "bg-[#B45309]/10 text-[#B45309]"}`}>
             {done

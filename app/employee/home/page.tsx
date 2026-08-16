@@ -44,7 +44,7 @@ export default function EmployeeHomePage() {
     </div>
 
     <div className="flex items-center gap-3">
-     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] px-4 py-2 flex items-center gap-2 text-xs font-bold text-[#15803D]">
+     <div className="rounded-md bg-[#F7F5F2] border border-[#E7E5E0] px-3 py-1.5 flex items-center gap-2 text-xs font-semibold text-[#15803D]">
       <Flame className="size-4 text-[#15803D]" /> 12-Day Attendance Streak
      </div>
     </div>
@@ -54,9 +54,7 @@ export default function EmployeeHomePage() {
     {/* Main Left Column */}
     <div className="lg:col-span-8 space-y-6">
      {/* Shift Hero & Clock-In HUD */}
-     <div className="rounded-2xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] p-6 relative overflow-hidden">
-      <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/90 to-transparent pointer-events-none" />
-
+     <div className="rounded-xl bg-white border border-[#E7E5E0] p-6 shadow-sm relative overflow-hidden">
       <div className="flex items-center justify-between border-b border-[#E7E5E0] pb-3 mb-4">
        <span className="text-xs font-bold uppercase tracking-wider text-[#78716C]">Today's Shift · Section 3 Server</span>
        <Pill tone={clockedIn ? (onBreak ? "amber" : "teal") : "neutral"}>
@@ -75,7 +73,7 @@ export default function EmployeeHomePage() {
        </div>
 
        {clockedIn ? (
-        <div className="text-center sm:text-right bg-[#15803D]/10 p-4 rounded-2xl border border-[#15803D]/20">
+        <div className="text-center sm:text-right bg-[#15803D]/10 p-4 rounded-xl border border-[#15803D]/20">
          <div className="text-[10px] font-bold uppercase tracking-wider text-[#15803D]">Shift Timer</div>
          <div className="text-3xl font-black tabular-nums text-[#15803D] my-1">{formatTimer(elapsedSeconds)}</div>
          <div className="text-[11px] font-semibold text-[#15803D]">Shift Active</div>
@@ -87,7 +85,7 @@ export default function EmployeeHomePage() {
        {!clockedIn ? (
         <button
          onClick={() => setClockedIn(true)}
-         className="flex-1 rounded-xl bg-[#881337] px-5 py-3 text-sm font-bold text-white shadow-md hover:bg-[#6B0F2A] active:scale-95 transition-all flex items-center justify-center gap-2"
+         className="flex-1 rounded-xl bg-[#881337] px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#6B0F2A] active:scale-95 transition-all flex items-center justify-center gap-2"
         >
          <Clock className="size-4" /> Clock In to Shift (10:00 AM)
         </button>
@@ -95,7 +93,7 @@ export default function EmployeeHomePage() {
         <>
          <button
           onClick={() => setOnBreak(!onBreak)}
-          className={`flex-1 rounded-xl px-5 py-3 text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 rounded-xl px-5 py-3 text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2 ${
            onBreak ? "bg-[#15803D] text-white" : "bg-[#B45309] text-white hover:bg-[#92400E]"
           }`}
          >
@@ -107,7 +105,7 @@ export default function EmployeeHomePage() {
            setOnBreak(false);
            setElapsedSeconds(0);
           }}
-          className="rounded-xl bg-white/80 border border-white/80 px-5 py-3 text-sm font-bold text-[#1C1917] hover:bg-white transition-all"
+          className="rounded-xl bg-white border border-[#E7E5E0] px-5 py-3 text-sm font-bold text-[#1C1917] hover:bg-[#F7F5F2] transition-all"
          >
           Clock Out
          </button>
@@ -118,7 +116,7 @@ export default function EmployeeHomePage() {
 
      {/* Weekly Hours & Earnings Metrics */}
      <div className="grid gap-4 sm:grid-cols-2">
-      <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
+      <div className="rounded-xl bg-white border border-[#E7E5E0] p-4 shadow-sm">
        <span className="text-xs font-bold uppercase tracking-wider text-[#78716C]">Hours Scheduled This Week</span>
        <div className="text-3xl font-black tabular-nums text-[#1C1917] mt-2">
         {state.shiftAccepted ? "32.5 hrs" : "28.5 hrs"}
@@ -129,7 +127,7 @@ export default function EmployeeHomePage() {
        <div className="text-xs font-medium text-[#78716C] mt-2">Target: 32.0 hrs</div>
       </div>
 
-      <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
+      <div className="rounded-xl bg-white border border-[#E7E5E0] p-4 shadow-sm">
        <span className="text-xs font-bold uppercase tracking-wider text-[#78716C]">Estimated Paycheck</span>
        <div className="text-3xl font-black tabular-nums text-[#15803D] mt-2">
         {state.shiftAccepted ? "$503.75" : "$441.75"}
@@ -142,22 +140,22 @@ export default function EmployeeHomePage() {
      </div>
 
      {/* Shift Roster Lineup */}
-     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
+     <div className="rounded-xl bg-white border border-[#E7E5E0] p-4 shadow-sm">
       <SectionTitle hint="On Duty Today">Your Shift Lineup (Ballantyne #02)</SectionTitle>
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
-       <div className="rounded-xl bg-white/50 border border-white/80 p-4">
+       <div className="rounded-xl bg-[#F7F5F2] border border-[#E7E5E0] p-4">
         <div className="text-xs font-bold text-[#A8A29E] uppercase tracking-wider">Line Cook / BOH</div>
         <div className="text-sm font-black text-[#1C1917] mt-1">Andre Vega</div>
         <div className="text-xs font-medium text-[#15803D] mt-1">✓ On Duty</div>
        </div>
 
-       <div className="rounded-xl bg-white/50 border border-white/80 p-4">
+       <div className="rounded-xl bg-[#F7F5F2] border border-[#E7E5E0] p-4">
         <div className="text-xs font-bold text-[#A8A29E] uppercase tracking-wider">Section 1 Server</div>
         <div className="text-sm font-black text-[#1C1917] mt-1">Sarah Jenkins</div>
         <div className="text-xs font-medium text-[#15803D] mt-1">✓ On Duty</div>
        </div>
 
-       <div className="rounded-xl bg-white/50 border border-white/80 p-4">
+       <div className="rounded-xl bg-[#F7F5F2] border border-[#E7E5E0] p-4">
         <div className="text-xs font-bold text-[#A8A29E] uppercase tracking-wider">Section 2 Server</div>
         <div className="text-sm font-black text-[#1C1917] mt-1">Marcus Chen</div>
         <div className="text-xs font-medium text-[#15803D] mt-1">✓ On Duty</div>
@@ -169,10 +167,10 @@ export default function EmployeeHomePage() {
     {/* Right Sidebar Column */}
     <div className="lg:col-span-4 space-y-6">
      {/* Kitchen Daily Focus Notes */}
-     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-md ring-1 ring-black/[0.04] p-5 space-y-4">
+     <div className="rounded-xl bg-white border border-[#E7E5E0] p-4 shadow-sm space-y-4">
       <SectionTitle hint="Shift Notes">Kitchen Focus & Specials</SectionTitle>
 
-      <div className="rounded-xl bg-[#881337]/5 border border-[#881337]/15 p-4 space-y-2">
+      <div className="rounded-lg bg-[#FFF8F6] border border-[#881337]/15 p-3 space-y-2">
        <div className="text-xs font-bold text-[#881337] uppercase tracking-wider flex items-center gap-1.5">
         <Utensils className="size-3.5" /> Featured Daily Special
        </div>
@@ -182,7 +180,7 @@ export default function EmployeeHomePage() {
        </p>
       </div>
 
-      <div className="rounded-xl bg-[#B45309]/10 border border-[#B45309]/20 p-4 space-y-2">
+      <div className="rounded-lg bg-[#FFFBEB] border border-[#B45309]/20 p-3 space-y-2">
        <div className="text-xs font-bold text-[#92400E] uppercase tracking-wider flex items-center gap-1.5">
         <span>⚠️</span> Allergen Safety Protocol
        </div>
@@ -193,20 +191,20 @@ export default function EmployeeHomePage() {
      </div>
 
      {/* Quick Actions Navigation */}
-     <div className="rounded-2xl bg-white/40 backdrop-blur-md shadow-md ring-1 ring-black/[0.04] p-5 space-y-3">
+     <div className="rounded-xl bg-white border border-[#E7E5E0] p-4 shadow-sm space-y-3">
       <SectionTitle>Employee Quick Links</SectionTitle>
       
-      <Link href="/employee/schedule" className="flex items-center justify-between p-3 rounded-xl bg-white/60 hover:bg-white/90 transition-all font-bold text-xs text-[#1C1917] group">
+      <Link href="/employee/schedule" className="flex items-center justify-between p-3 rounded-lg border border-[#F3F2F0] hover:bg-[#F7F5F2] font-semibold text-xs text-[#1C1917] group">
        <span>Schedule & Open Shift Pickup</span>
        <ChevronRight className="size-4 text-[#A8A29E] group-hover:text-[#881337]" />
       </Link>
 
-      <Link href="/employee/training" className="flex items-center justify-between p-3 rounded-xl bg-white/60 hover:bg-white/90 transition-all font-bold text-xs text-[#1C1917] group">
+      <Link href="/employee/training" className="flex items-center justify-between p-3 rounded-lg border border-[#F3F2F0] hover:bg-[#F7F5F2] font-semibold text-xs text-[#1C1917] group">
        <span>Training Modules & ServSafe Watch</span>
        <ChevronRight className="size-4 text-[#A8A29E] group-hover:text-[#881337]" />
       </Link>
 
-      <Link href="/employee/announcements" className="flex items-center justify-between p-3 rounded-xl bg-white/60 hover:bg-white/90 transition-all font-bold text-xs text-[#1C1917] group">
+      <Link href="/employee/announcements" className="flex items-center justify-between p-3 rounded-lg border border-[#F3F2F0] hover:bg-[#F7F5F2] font-semibold text-xs text-[#1C1917] group">
        <span>Corporate SOP & Policy Q&A</span>
        <ChevronRight className="size-4 text-[#A8A29E] group-hover:text-[#881337]" />
       </Link>

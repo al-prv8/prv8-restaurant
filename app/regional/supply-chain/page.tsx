@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Truck } from "lucide-react";
-import { Card, SectionTitle, Button, Pill, PriveIntelBanner, Pagination } from "@/components/prive/ui";
+import { Card, SectionTitle, Button, Pill, PriveIntelBanner, Pagination, KpiRow, DataTable, THead, Th, Tr, Td, StatusDot } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 
 export default function RegionalSupplyChainPage() {
@@ -27,19 +27,13 @@ export default function RegionalSupplyChainPage() {
      </p>
     </div>
     
-    <div className="flex gap-3">
-     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] py-3 flex flex-col justify-center min-w-[120px]">
-      <div className="text-3xl font-black text-[#B91C1C] leading-none mb-1">{locationsWithRisk}</div>
-      <div className="text-[10px] font-bold uppercase tracking-widest text-[#78716C] leading-tight">Locations<br/>At Risk</div>
-     </div>
-     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] py-3 flex flex-col justify-center min-w-[120px]">
-      <div className="text-3xl font-black text-[#B45309] leading-none mb-1">{criticalItems}</div>
-      <div className="text-[10px] font-bold uppercase tracking-widest text-[#78716C] leading-tight">Critical<br/>SKUs Short</div>
-     </div>
-    </div>
+    <KpiRow items={[
+     { label: 'Locations At Risk', value: String(locationsWithRisk), tone: 'bad' },
+     { label: 'Critical SKUs Short', value: String(criticalItems), tone: 'warn' }
+    ]} />
    </div>
 
-   <div className="mb-6 rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-0 overflow-hidden">
+   <div className="mb-6">
     <PriveIntelBanner
      summary={`Carolina Produce supply chain active across 12 locations. Avocado shortage projected for weekend LTO.`}
      details={[
@@ -51,28 +45,73 @@ export default function RegionalSupplyChainPage() {
     />
    </div>
 
+   {/* Cross-Location Transit Distance & Route Visualizer */}
+   <div className="mb-6 rounded-xl bg-white border border-[#E7E5E0] p-5">
+    <div className="flex items-center justify-between border-b border-[#E7E5E0] pb-3 mb-4">
+     <div>
+      <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#881337]">Inter-Store Inventory Logistics</div>
+      <div className="text-base font-black text-[#1C1917]">Recommended Cross-Store Transfer Route</div>
+     </div>
+     <Pill tone={state.transferRequested ? "teal" : "amber"}>
+      {state.transferRequested ? "Transfer Dispatched" : "Transfer Available"}
+     </Pill>
+    </div>
+
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-lg bg-[#F7F5F2] border border-[#E7E5E0] p-4">
+     <div className="flex items-center gap-3">
+      <div className="size-10 rounded-xl bg-[#881337]/10 flex items-center justify-center text-[#881337] font-black">
+       <Truck className="size-5" />
+      </div>
+      <div>
+       <div className="text-sm font-black text-[#1C1917]">Charlotte #01 ➔ Ballantyne #02</div>
+       <div className="text-xs font-medium text-[#78716C]">11 miles · 18 min transit delivery · 35 lbs Russet Potatoes</div>
+      </div>
+     </div>
+
+     <Button
+      variant="primary"
+      onClick={() => dispatch({ type: "transferInventory", lbs: 35 })}
+      disabled={state.transferRequested}
+      className="shrink-0 text-xs px-4 py-2 font-bold"
+     >
+      {state.transferRequested ? "✓ Transfer Dispatched (18 min)" : "Dispatch Transfer (18 min)"}
+     </Button>
+    </div>
+   </div>
+
    <div className="space-y-6">
     <Card>
      <SectionTitle hint={`${d.supplyChain.length} Locations`}>Cross-Location Supply Chain Status</SectionTitle>
-     <div className="space-y-3">
-      {paginatedSupplyChain.map((s) => {
-       const hasRisk = s.avocadoShortage > 0 || s.belowPar;
-       
-       return (
-        <div key={s.restaurant.id} className={`flex items-center justify-between gap-3 rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-4`}>
-         <div>
-          <div className="text-base font-black text-[#1C1917]">{s.restaurant.name}</div>
-          <div className="text-sm font-medium text-[#78716C] mt-1">
-           {s.shortSkus} SKU(s) projected short · Avocados: <span className={s.avocadoShortage > 0 ? "text-[#B91C1C] font-bold" : "text-[#15803D] font-bold"}>{s.avocadoShortage > 0 ? `short ${s.avocadoShortage} cases` : "covers demand"}</span>
-          </div>
-         </div>
-         <div className="text-right">
-          <Pill tone={s.avocadoShortage > 0 ? "red" : s.belowPar ? "amber" : "teal"}>{s.belowPar ? "Below Par" : "At Par"}</Pill>
-         </div>
-        </div>
-       );
-      })}
-     </div>
+     <DataTable>
+      <THead>
+       <Tr>
+        <Th>Location</Th>
+        <Th>Short SKUs</Th>
+        <Th>Avocado Status</Th>
+        <Th>Par Level</Th>
+       </Tr>
+      </THead>
+      <tbody>
+       {paginatedSupplyChain.map((s) => {
+        return (
+         <Tr key={s.restaurant.id}>
+          <Td className="font-bold text-[#1C1917]">{s.restaurant.name}</Td>
+          <Td>{s.shortSkus}</Td>
+          <Td>
+           {s.avocadoShortage > 0 ? (
+            <span className="text-[#B91C1C] font-bold">Short {s.avocadoShortage} cases</span>
+           ) : (
+            <span className="text-[#15803D] font-bold">Covers Demand</span>
+           )}
+          </Td>
+          <Td>
+           <Pill tone={s.avocadoShortage > 0 ? "red" : s.belowPar ? "amber" : "teal"}>{s.belowPar ? "Below Par" : "At Par"}</Pill>
+          </Td>
+         </Tr>
+        );
+       })}
+      </tbody>
+     </DataTable>
 
      <Pagination
       currentPage={currentPage}

@@ -32,7 +32,7 @@ export default function EmployeeAnnouncementsPage() {
    </div>
 
    {/* Interactive Knowledge Base Q&A Search Engine */}
-   <div className="mb-6 rounded-2xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] p-5">
+   <div className="mb-6 rounded-xl bg-white border border-[#E7E5E0] p-5 shadow-sm">
     <div className="flex items-center justify-between border-b border-[#E7E5E0] pb-3 mb-4">
      <div>
       <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#881337]">SOP Search Engine</div>
@@ -53,7 +53,7 @@ export default function EmployeeAnnouncementsPage() {
        setCurrentPage(1);
       }}
       placeholder="Search policies (e.g. allergen, uniform, sick leave, overtime)..."
-      className="w-full rounded-xl bg-white/80 border border-white/80 pl-10 pr-4 py-3 text-xs font-bold text-[#1C1917] outline-none placeholder-[#A8A29E] focus:ring-2 focus:ring-[#881337]"
+      className="w-full rounded-xl bg-[#F7F5F2] border border-[#E7E5E0] pl-10 pr-4 py-3 text-xs font-bold text-[#1C1917] outline-none placeholder-[#A8A29E] focus:ring-2 focus:ring-[#881337]"
      />
     </div>
 
@@ -70,10 +70,10 @@ export default function EmployeeAnnouncementsPage() {
         setSearchQuery(tag);
         setCurrentPage(1);
        }}
-       className={`rounded-lg px-2.5 py-1 text-[11px] font-bold transition-all ${
+       className={`rounded-md px-2.5 py-1 text-[11px] font-semibold border transition-all ${
         searchQuery.toLowerCase() === tag.toLowerCase()
-         ? "bg-[#881337] text-white shadow-xs"
-         : "bg-white/50 text-[#78716C] hover:bg-white/90"
+         ? "bg-[#881337] text-white border-[#881337]"
+         : "border-[#E7E5E0] bg-white text-[#78716C] hover:bg-[#F7F5F2]"
        }`}
       >
        #{tag}
@@ -93,17 +93,17 @@ export default function EmployeeAnnouncementsPage() {
 
    <div className="grid gap-6 lg:grid-cols-12">
     <div className="space-y-6 lg:col-span-7">
-     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
+     <div className="rounded-xl bg-white border border-[#E7E5E0] p-5 shadow-sm">
       <SectionTitle hint={`${filteredKnowledge.length} Articles`}>Store Policies & Procedures</SectionTitle>
 
       {filteredKnowledge.length === 0 ? (
-       <div className="mt-6 rounded-2xl bg-white/40 p-8 text-center text-sm font-medium text-[#78716C]">
+       <div className="mt-6 rounded-lg bg-[#F7F5F2] border border-[#E7E5E0] p-8 text-center text-sm font-medium text-[#78716C]">
         No policies found matching &ldquo;{searchQuery}&rdquo;. Try searching with Ask Privé AI on the right!
        </div>
       ) : (
        <div className="mt-4 space-y-4">
         {paginatedKnowledge.map((k) => (
-         <details key={k.q} open className="group rounded-2xl bg-white/40 backdrop-blur-sm shadow-sm ring-1 ring-black/[0.04] p-5 transition-all shadow-sm">
+         <details key={k.q} open className="group rounded-lg border border-[#E7E5E0] bg-white p-4 transition-all shadow-sm">
           <summary className="cursor-pointer text-sm font-black text-[#1C1917] flex items-center justify-between outline-none">
            <span>{k.q}</span>
            <span className="text-xs text-[#881337] font-bold group-open:rotate-180 transition-transform">▼</span>
@@ -135,7 +135,7 @@ export default function EmployeeAnnouncementsPage() {
     </div>
 
     <div className="space-y-6 lg:col-span-5">
-     <div className="rounded-2xl bg-white/40 backdrop-blur-md shadow-md ring-1 ring-black/[0.04] p-5 lg:sticky lg:top-20 min-h-[500px]">
+     <div className="rounded-xl bg-white border border-[#E7E5E0] p-5 shadow-sm lg:sticky lg:top-20 min-h-[500px]">
       <SectionTitle>Ask Privé AI Assistant</SectionTitle>
       <div className="mt-4">
        <AskPriveConsole persona="employee" compact />

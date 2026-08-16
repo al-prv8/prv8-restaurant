@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, CheckCircle, Loader2, MessageSquare, X, Sparkles, Send } from "lucide-react";
+import { ArrowRight, CheckCircle, Loader2, X, Sparkles, Send } from "lucide-react";
 import { SUGGESTIONS, askPrive, type PriveAnswer } from "@/lib/prive/askPrive";
 import { usePrive, type Persona } from "@/lib/prive/store";
 import { Button, ConfidenceTag, Pill, Skeleton } from "./ui";
@@ -207,58 +207,46 @@ export function AskPriveConsole({ persona, compact = false }: { persona: Persona
 }
 
 // ─── AskPriveDrawer ───────────────────────────────────────────────────────────
-export function AskPriveDrawer({ persona }: { persona: Persona }) {
-  const { state } = usePrive();
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (state.pendingQuestion) setOpen(true);
-  }, [state.pendingQuestion]);
+export function AskPriveDrawer({
+  persona,
+  open,
+  onClose,
+}: {
+  persona: Persona;
+  open: boolean;
+  onClose: () => void;
+}) {
+  if (!open) return null;
 
   return (
-    <>
-      {/* Floating Action Button */}
-      <button
-        onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2.5 rounded-full px-6 py-3.5 text-[13px] font-black text-white shadow-2xl backdrop-blur-xl ring-2 ring-white/40 transition-all hover:scale-105 active:scale-95"
-        style={{ backgroundColor: "#881337" }}
+    <div
+      className="fixed inset-0 z-50 flex justify-end bg-black/40 animate-in fade-in duration-200"
+      onClick={onClose}
+    >
+      <div
+        className="relative flex h-full w-full max-w-md flex-col bg-[#F7F5F2] border-l border-[#E7E5E0] p-6 shadow-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
       >
-        <MessageSquare className="size-4" />
-        Ask Privé
-      </button>
-
-      {/* Drawer Overlay & Panel */}
-      {open ? (
-        <div
-          className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-md animate-in fade-in duration-200"
-          onClick={() => setOpen(false)}
-        >
-          <div
-            className="relative overflow-hidden flex h-full w-full max-w-md flex-col bg-[#F4EFEA]/90 backdrop-blur-3xl border-l border-white/80 p-6 shadow-2xl ring-1 ring-black/10 before:absolute before:inset-y-0 before:left-0 before:w-[1px] before:bg-gradient-to-b before:from-transparent before:via-white/90 before:to-transparent"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Drawer header card */}
-            <div className="mb-4 flex items-center justify-between border-b border-[#E7E5E0] pb-3">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="grid size-6 place-items-center rounded-md bg-[#881337] text-[11px] font-black text-white shadow-xs">P</span>
-                  <div className="text-[14px] font-bold text-[#1C1917]">Privé Intelligence Console</div>
-                </div>
-                <div className="mt-0.5 text-[11px] font-medium text-[#78716C] capitalize pl-8">
-                  {persona} context · role-scoped live data
-                </div>
-              </div>
-              <button
-                onClick={() => setOpen(false)}
-                className="rounded-lg bg-white/60 backdrop-blur-sm p-1.5 text-[#78716C] hover:text-[#1C1917] transition-colors"
-              >
-                <X className="size-4" />
-              </button>
+        {/* Drawer header */}
+        <div className="mb-4 flex items-center justify-between border-b border-[#E7E5E0] pb-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="grid size-6 place-items-center rounded-md bg-[#881337] text-[11px] font-black text-white">P</span>
+              <div className="text-[14px] font-bold text-[#1C1917]">Privé Intelligence</div>
             </div>
-            <AskPriveConsole persona={persona} compact />
+            <div className="mt-0.5 text-[11px] font-medium text-[#78716C] capitalize pl-8">
+              {persona} · role-scoped live data
+            </div>
           </div>
+          <button
+            onClick={onClose}
+            className="rounded-lg border border-[#E7E5E0] bg-white p-1.5 text-[#78716C] hover:text-[#1C1917] transition-colors"
+          >
+            <X className="size-4" />
+          </button>
         </div>
-      ) : null}
-    </>
+        <AskPriveConsole persona={persona} compact />
+      </div>
+    </div>
   );
 }

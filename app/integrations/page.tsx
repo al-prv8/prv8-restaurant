@@ -5,45 +5,56 @@ import {
   CheckCircle2, Activity, ShieldCheck, Database,
   Clock, ArrowRight, Lock
 } from "lucide-react";
-import { Card, Pill, SectionTitle, Pagination } from "@/components/prive/ui";
+import { Card, Pill, SectionTitle, Pagination, KpiRow, DataTable } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
-import { DataFlowMesh } from "@/components/prive/DataFlowMesh";
 
 const SYSTEMS = [
   {
     name: "Toast POS",
     desc: "Sales, item mix, transactions",
-    scope: "Real-time · Every 90s",
+    scope: "Real-time",
+    status: "Live",
+    lastSync: "Every 90s",
     icon: "🍞",
   },
   {
     name: "Paycor",
     desc: "Payroll, labor cost, turnover",
-    scope: "Daily sync · 3:00 AM",
+    scope: "Daily sync",
+    status: "Live",
+    lastSync: "3:00 AM",
     icon: "💼",
   },
   {
     name: "7shifts",
     desc: "Scheduling and availability",
-    scope: "Real-time · On change",
+    scope: "Real-time",
+    status: "Live",
+    lastSync: "On change",
     icon: "📅",
   },
   {
     name: "Restaurant365",
     desc: "Inventory and purchasing",
-    scope: "Daily sync · 4:00 AM",
+    scope: "Daily sync",
+    status: "Live",
+    lastSync: "4:00 AM",
     icon: "📦",
   },
   {
     name: "Guest Feedback CRM",
     desc: "Complaints and recovery",
-    scope: "Real-time · Webhook",
+    scope: "Real-time",
+    status: "Live",
+    lastSync: "Webhook",
     icon: "💬",
   },
   {
     name: "Voice AI",
     desc: "Inbound guest calls",
-    scope: "Real-time · On call",
+    scope: "Real-time",
+    status: "Live",
+    lastSync: "On call",
     icon: "📞",
   },
 ];
@@ -59,6 +70,23 @@ export default function IntegrationsPage() {
     currentPage * pageSize
   );
 
+  const tableData = SYSTEMS.map((s) => ({
+    System: (
+      <div className="flex items-center gap-2">
+        <span className="text-lg">{s.icon}</span>
+        <span className="font-bold text-[#1C1917]">{s.name}</span>
+      </div>
+    ),
+    "Data Type": s.desc,
+    "Sync Mode": s.scope,
+    Status: (
+      <div className="flex items-center gap-1 text-[#15803D] font-bold text-xs">
+        <CheckCircle2 className="size-3.5" /> {s.status}
+      </div>
+    ),
+    "Last Sync": s.lastSync,
+  }));
+
   return (
     <>
       {/* Page Header */}
@@ -71,8 +99,8 @@ export default function IntegrationsPage() {
             Integrations & Audit Log
           </h1>
           <p className="mt-1.5 text-sm font-medium text-[#78716C] max-w-2xl">
-            Privé reads from connected systems in real time and records an immutable audit
-            log for every human approval — nothing executes without a traceable actor.
+            Privé reads from connected systems in real time and records a complete audit trail
+            for every human approval — nothing executes without a traceable actor.
           </p>
         </div>
         <div className="flex items-center gap-2 rounded-lg bg-[#15803D]/8 px-4 py-2.5 shrink-0">
@@ -83,57 +111,28 @@ export default function IntegrationsPage() {
         </div>
       </div>
 
-      {/* Live Operational Telemetry Node Graph Mesh */}
-      <div className="mb-6">
-        <DataFlowMesh />
+      {/* Stats Strip */}
+      <div className="mb-8">
+        <KpiRow
+          items={[
+            { label: "Active Sources", value: SYSTEMS.length },
+            { label: "Audit Events", value: state.audit.length },
+            { label: "Human Approved", value: "100%", valueColor: "text-[#881337]" },
+          ]}
+        />
       </div>
 
-      {/* Stats Strip */}
-      <div className="mb-6 grid grid-cols-3 gap-3">
-        <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-4 text-center">
-          <div className="text-2xl font-black text-[#15803D] tabular-nums">{SYSTEMS.length}</div>
-          <div className="text-[10px] font-bold uppercase tracking-widest text-[#A8A29E] mt-0.5">Active Sources</div>
-        </div>
-        <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-4 text-center">
-          <div className="text-2xl font-black text-[#1C1917] tabular-nums">{state.audit.length}</div>
-          <div className="text-[10px] font-bold uppercase tracking-widest text-[#A8A29E] mt-0.5">Audit Events</div>
-        </div>
-        <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-4 text-center">
-          <div className="text-2xl font-black text-[#881337] tabular-nums">100%</div>
-          <div className="text-[10px] font-bold uppercase tracking-widest text-[#A8A29E] mt-0.5">Human Approved</div>
+      <div className="mb-8">
+        <div className="rounded-xl bg-white border border-[#E7E5E0] p-5 shadow-sm overflow-hidden">
+          <DataTable
+            columns={["System", "Data Type", "Sync Mode", "Status", "Last Sync"]}
+            data={tableData}
+          />
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-12">
-
-        {/* Source Systems */}
         <div className="lg:col-span-5 space-y-4">
-          <Card>
-            <SectionTitle hint="All live">Connected Source Systems</SectionTitle>
-            <div className="space-y-2">
-              {SYSTEMS.map(({ name, desc, scope, icon }) => (
-                <div
-                  key={name}
-                  className="flex items-center justify-between gap-3 rounded-2xl bg-white/40 backdrop-blur-sm shadow-sm ring-1 ring-black/[0.04] px-3.5 py-3"
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="text-xl shrink-0">{icon}</span>
-                    <div className="min-w-0">
-                      <div className="text-[13px] font-bold text-[#1C1917] truncate">{name}</div>
-                      <div className="text-[11px] font-medium text-[#78716C] truncate">{desc}</div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end gap-1 shrink-0">
-                    <Pill tone="teal">
-                      <CheckCircle2 className="size-3" /> Live
-                    </Pill>
-                    <span className="text-[10px] text-[#A8A29E] font-medium whitespace-nowrap">{scope}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-
           {/* Governance Note */}
           <Card tone="intel">
             <div className="flex items-start gap-3">
@@ -154,11 +153,11 @@ export default function IntegrationsPage() {
         <div className="lg:col-span-7">
           <Card className="h-full">
             <SectionTitle hint={`${state.audit.length} events`}>
-              Immutable Audit Ledger
+              Audit Trail
             </SectionTitle>
 
             {state.audit.length === 0 ? (
-              <div className="rounded-2xl bg-white/8 backdrop-blur-xl shadow-md ring-1 ring-black/[0.04] p-8 text-center space-y-2">
+              <div className="rounded-xl bg-white border border-[#E7E5E0] p-8 text-center space-y-2 mt-4">
                 <Database className="size-8 text-[#1C1917]/20 mx-auto" />
                 <p className="text-sm font-semibold text-[#78716C]">
                   No actions recorded yet.
@@ -168,13 +167,13 @@ export default function IntegrationsPage() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-2.5">
-                {paginatedAudit.map((a) => (
+              <div className="mt-4 flex flex-col">
+                {paginatedAudit.map((a, i) => (
                   <div
                     key={a.id}
-                    className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-4 shadow-sm space-y-2"
+                    className={`flex items-start justify-between gap-2 py-3 ${i !== paginatedAudit.length - 1 ? 'border-b border-[#F3F2F0]' : ''}`}
                   >
-                    <div className="flex items-start justify-between gap-2">
+                    <div className="space-y-1.5 min-w-0">
                       <div className="flex items-start gap-2.5 min-w-0">
                         <div className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-md bg-[#881337]/8">
                           <Lock className="size-3 text-[#881337]" />
@@ -183,36 +182,40 @@ export default function IntegrationsPage() {
                           {a.action}
                         </span>
                       </div>
+                      <div className="flex items-center gap-3 pl-8 text-[11px] font-medium text-[#A8A29E]">
+                        <span className="flex items-center gap-1">
+                          <Clock className="size-3" /> {a.at}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <ArrowRight className="size-3" /> {a.actor}
+                        </span>
+                        <span className="text-[#78716C]">{a.agent}</span>
+                      </div>
+                      {a.detail && (
+                        <p className="pl-8 text-[11px] font-medium text-[#78716C] leading-snug">
+                          {a.detail}
+                        </p>
+                      )}
+                    </div>
+                    <div className="shrink-0">
                       <Pill tone={a.approval === "Pending" ? "amber" : "teal"}>
                         {a.approval}
                       </Pill>
                     </div>
-                    <div className="flex items-center gap-3 pl-8 text-[11px] font-medium text-[#A8A29E]">
-                      <span className="flex items-center gap-1">
-                        <Clock className="size-3" /> {a.at}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <ArrowRight className="size-3" /> {a.actor}
-                      </span>
-                      <span className="text-[#78716C]">{a.agent}</span>
-                    </div>
-                    {a.detail && (
-                      <p className="pl-8 text-[11px] font-medium text-[#78716C] leading-snug">
-                        {a.detail}
-                      </p>
-                    )}
                   </div>
                 ))}
               </div>
             )}
 
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-              totalItems={state.audit.length}
-              pageSize={pageSize}
-            />
+            <div className="mt-6">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                totalItems={state.audit.length}
+                pageSize={pageSize}
+              />
+            </div>
           </Card>
         </div>
       </div>

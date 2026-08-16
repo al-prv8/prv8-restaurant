@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
-import { Card, Pill, SectionTitle, PriveIntelBanner, Pagination } from "@/components/prive/ui";
+import { Card, Pill, SectionTitle, PriveIntelBanner, Pagination, KpiRow } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 
 export default function GmApprovalsPage() {
@@ -20,6 +20,8 @@ export default function GmApprovalsPage() {
     dispatch({ type: "increasePotatoOrder", lbs: 35 });
     dispatch({ type: "approveStaffing" });
   };
+
+  const time = "Today, 10:42 AM"; // Mock time for the approval timestamp
 
   return (
     <>
@@ -45,36 +47,55 @@ export default function GmApprovalsPage() {
         actionLabel={openApprovals.length > 0 ? `Approve All Pending (${openApprovals.length})` : undefined}
       />
 
-      <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-        <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
-          <div className="text-xs font-bold uppercase tracking-wider text-[#78716C] mb-1">Pending Actions</div>
-          <div className={`text-3xl font-black tabular-nums ${openApprovals.length > 0 ? "text-[#B45309]" : "text-[#1C1917]"}`}>
-            {openApprovals.length}
+      {/* Batch Approval Action Toolbar */}
+      {openApprovals.length > 0 && (
+        <div className="mb-6 bg-[#FEF3C7] border border-[#B45309]/20 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#881337]">Human-in-the-Loop Governance</div>
+            <div className="text-base font-black text-[#1C1917]">{openApprovals.length} Pending Actions Require GM Sign-Off</div>
           </div>
-          <div className="text-sm font-medium text-[#78716C] mt-1">Requires GM sign-off</div>
+
+          <button
+            type="button"
+            onClick={handleApproveAll}
+            className="rounded-xl bg-[#881337] px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#6B0F2A] active:scale-95 transition-all shrink-0"
+          >
+            ✦ Approve All Pending Actions ({openApprovals.length})
+          </button>
         </div>
-        <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
-          <div className="text-xs font-bold uppercase tracking-wider text-[#78716C] mb-1">Cleared</div>
-          <div className="text-3xl font-black tabular-nums text-[#15803D]">{clearedApprovals.length}</div>
-          <div className="text-sm font-medium text-[#78716C] mt-1">Approved & executed</div>
-        </div>
-        <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
-          <div className="text-xs font-bold uppercase tracking-wider text-[#78716C] mb-1">Total Queue</div>
-          <div className="text-3xl font-black tabular-nums text-[#1C1917]">{d.pendingApprovals.length}</div>
-          <div className="text-sm font-medium text-[#78716C] mt-1">All tracked actions</div>
-        </div>
-      </div>
+      )}
+
+      <KpiRow
+        items={[
+          {
+            label: "Pending Actions",
+            value: openApprovals.length.toString(),
+            sub: "Requires GM sign-off",
+            tone: openApprovals.length > 0 ? "warn" : "neutral",
+          },
+          {
+            label: "Cleared",
+            value: clearedApprovals.length.toString(),
+            sub: "Approved & executed",
+            tone: "good",
+          },
+          {
+            label: "Total Queue",
+            value: d.pendingApprovals.length.toString(),
+            sub: "All tracked actions",
+            tone: "neutral",
+          },
+        ]}
+      />
 
       <div className="space-y-6">
         <Card>
           <SectionTitle hint={`${openApprovals.length} Pending`}>Action Queue</SectionTitle>
-          <div className="space-y-4">
+          <div className="space-y-0">
             {paginatedApprovals.map((p) => (
               <div
                 key={p.id}
-                className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm ${
-                  p.done ? "" : ""
-                }`}
+                className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#F3F2F0] py-4 gap-4 last:border-0"
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
@@ -85,10 +106,11 @@ export default function GmApprovalsPage() {
                   <p className="text-sm text-[#78716C] font-medium">
                     {p.done ? "Approved & logged in audit ledger" : "Requires GM approval before execution"}
                   </p>
+                  {p.done && <div className="text-xs text-[#15803D] font-semibold mt-1">✓ Approved · {time}</div>}
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
-                  <Pill tone={p.done ? "teal" : "amber"}>{p.done ? "Cleared" : "Action Needed"}</Pill>
+                  <Pill tone={p.done ? "neutral" : "amber"}>{p.done ? "Cleared" : "Action Needed"}</Pill>
                   {!p.done ? (
                     p.id === "ap-staff" ? (
                       <button
@@ -125,7 +147,7 @@ export default function GmApprovalsPage() {
             ))}
 
             {openApprovals.length === 0 ? (
-              <div className="rounded-xl bg-[#15803D]/10 p-5 text-center text-sm font-bold text-[#15803D] flex items-center justify-center gap-2">
+              <div className="rounded-xl bg-[#15803D]/10 p-5 text-center text-sm font-bold text-[#15803D] flex items-center justify-center gap-2 mt-4">
                 <CheckCircle2 className="size-5" /> All operational approvals are cleared! Store readiness is optimal.
               </div>
             ) : null}

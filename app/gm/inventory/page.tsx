@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AlertTriangle, CheckCircle, Truck } from "lucide-react";
-import { Card, Pill, SectionTitle, PageTabs, PriveIntelBanner, Pagination } from "@/components/prive/ui";
+import { Card, Pill, SectionTitle, PageTabs, PriveIntelBanner, Pagination, KpiRow, DataTable, THead, Th, Tr, Td, StatusDot } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 
 type Tab = "all" | "atRisk" | "healthy";
@@ -50,7 +50,7 @@ export default function GmInventoryPage() {
    />
 
    {/* Interactive Reorder Threshold Drag Slider */}
-   <div className="mb-6 rounded-2xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] p-5">
+   <div className="mb-6 rounded-xl bg-white border border-[#E7E5E0] shadow-sm p-5">
     <div className="flex items-center justify-between border-b border-[#E7E5E0] pb-3 mb-4">
      <div>
       <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#881337]">Inventory Par Engine</div>
@@ -82,27 +82,106 @@ export default function GmInventoryPage() {
     </div>
    </div>
 
-   <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-    <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
-     <div className="text-xs font-bold uppercase tracking-wider text-[#78716C] mb-1">Shortage Amount</div>
-     <div className={`text-3xl font-black tabular-nums ${d.potato.shortage > 0 ? "text-[#B91C1C]" : "text-[#15803D]"}`}>
-      {d.potato.shortage > 0 ? `${d.potato.shortage} lbs` : "0 lbs"}
-     </div>
-     <div className="text-sm font-medium text-[#78716C] mt-1">Across all tracked SKUs</div>
-    </div>
-    <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
-     <div className="text-xs font-bold uppercase tracking-wider text-[#78716C] mb-1">Order Status</div>
-     <div className={`text-3xl font-black tabular-nums ${d.potato.shortage > 0 ? "text-[#B45309]" : "text-[#15803D]"}`}>
-      {d.potato.shortage > 0 ? "Pending" : "Fulfilled"}
-     </div>
-     <div className="text-sm font-medium text-[#78716C] mt-1">Supplier: Carolina Produce</div>
-    </div>
-    <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
-     <div className="text-xs font-bold uppercase tracking-wider text-[#78716C] mb-1">Supplier Cutoff</div>
-     <div className="text-3xl font-black tabular-nums text-[#1C1917]">2h 14m</div>
-     <div className="text-sm font-medium text-[#78716C] mt-1">5:00 PM for 6:00 AM delivery</div>
-    </div>
+   <div className="mb-8">
+    <KpiRow items={[
+     { label: "Shortage Amount", value: d.potato.shortage > 0 ? `${d.potato.shortage} lbs` : "0 lbs", subtext: "Across all tracked SKUs", tone: d.potato.shortage > 0 ? "critical" : "neutral" },
+     { label: "Order Status", value: d.potato.shortage > 0 ? "Pending" : "Fulfilled", subtext: "Supplier: Carolina Produce", tone: d.potato.shortage > 0 ? "warning" : "positive" },
+     { label: "Supplier Cutoff", value: "2h 14m", subtext: "5:00 PM for 6:00 AM delivery" },
+    ]} />
    </div>
+
+   {/* Potato Depletion Forecast Chart */}
+   {d.potato.shortage > 0 && (
+    <div className="mb-6 rounded-xl bg-white border border-[#E7E5E0] shadow-sm p-5">
+     <div className="flex items-center justify-between border-b border-[#E7E5E0] pb-3 mb-5">
+      <div>
+       <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#881337]">Depletion Forecast</div>
+       <div className="text-base font-black text-[#1C1917]">Russet Potatoes — Projected Inventory Through Close</div>
+      </div>
+      <Pill tone="red">Shortage Projected</Pill>
+     </div>
+
+     {(() => {
+      // Build depletion curve: 8 AM open → 10 PM close, 15 hours
+      const onHand = d.potato.onHand ?? 40;
+      const projected = d.potato.projectedUsage ?? (onHand + d.potato.shortage);
+      const depletionHour = projected > 0 ? Math.round((onHand / projected) * 15) : 15;
+      const hours = Array.from({ length: 16 }, (_, i) => {
+       const remaining = Math.max(0, onHand - (projected / 15) * i);
+       return { h: i, remaining };
+      });
+      const maxStock = onHand * 1.05;
+      const W = 520, H = 120, PAD_L = 36, PAD_B = 24;
+      const px = (i: number) => PAD_L + (i / 15) * (W - PAD_L);
+      const py = (v: number) => H - PAD_B - (v / maxStock) * (H - PAD_B - 8);
+      const pathD = hours.map((p, i) => `${i === 0 ? "M" : "L"} ${px(i).toFixed(1)},${py(p.remaining).toFixed(1)}`).join(" ");
+      const areaD = `${pathD} L ${px(15).toFixed(1)},${(H - PAD_B).toFixed(1)} L ${px(0).toFixed(1)},${(H - PAD_B).toFixed(1)} Z`;
+      const depX = px(depletionHour);
+      const labelHour = 8 + depletionHour;
+      const depLabel = `${labelHour > 12 ? labelHour - 12 : labelHour}:00 ${labelHour >= 12 ? "PM" : "AM"}`;
+      const timeLabels = ["8 AM","10 AM","12 PM","2 PM","4 PM","6 PM","8 PM","10 PM"];
+
+      return (
+       <div className="w-full overflow-x-auto">
+        <svg viewBox={`0 0 ${W + 10} ${H + 10}`} className="w-full" style={{ minWidth: 300 }}>
+         {/* Y gridlines */}
+         {[0, 25, 50, 75, 100].map(pct => {
+          const v = (pct / 100) * maxStock;
+          const y = py(v);
+          return (
+           <g key={pct}>
+            <line x1={PAD_L} y1={y} x2={W} y2={y} stroke="#F3F2F0" strokeWidth="1" />
+            <text x={PAD_L - 4} y={y + 3.5} textAnchor="end" fontSize="8" fill="#A8A29E">{Math.round(v)}lb</text>
+           </g>
+          );
+         })}
+
+         {/* Reorder threshold line */}
+         {(() => {
+          const parLevel = onHand * 0.25;
+          const y = py(parLevel);
+          return (
+           <>
+            <line x1={PAD_L} y1={y} x2={W} y2={y} stroke="#B45309" strokeWidth="1" strokeDasharray="4 3" />
+            <text x={W + 4} y={y + 3} fontSize="8" fill="#B45309" fontWeight="700">Par</text>
+           </>
+          );
+         })()}
+
+         {/* Area fill */}
+         <path d={areaD} fill="#881337" opacity="0.08" />
+         {/* Line */}
+         <path d={pathD} fill="none" stroke="#881337" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+
+         {/* Depletion marker */}
+         {depletionHour < 15 && (
+          <g>
+           <line x1={depX} y1={8} x2={depX} y2={H - PAD_B} stroke="#B91C1C" strokeWidth="1.5" strokeDasharray="3 2" />
+           <rect x={depX - 22} y="8" width="44" height="14" rx="3" fill="#B91C1C" />
+           <text x={depX} y="18.5" textAnchor="middle" fontSize="8" fontWeight="800" fill="white">Runs Out</text>
+           <text x={depX} y="30" textAnchor="middle" fontSize="8" fontWeight="700" fill="#B91C1C">{depLabel}</text>
+          </g>
+         )}
+
+         {/* X-axis baseline */}
+         <line x1={PAD_L} y1={H - PAD_B} x2={W} y2={H - PAD_B} stroke="#E7E5E0" strokeWidth="1.5" />
+
+         {/* Time labels */}
+         {timeLabels.map((label, i) => (
+          <text key={i} x={px(i * (15 / 7))} y={H - PAD_B + 12} textAnchor="middle" fontSize="8" fill="#A8A29E" fontWeight="600">{label}</text>
+         ))}
+        </svg>
+       </div>
+      );
+     })()}
+
+     <div className="mt-3 flex items-center gap-4 text-[11px] font-bold text-[#78716C]">
+      <span className="flex items-center gap-1.5"><span className="inline-block size-2.5 rounded-sm bg-[#881337]/80" />Current Stock</span>
+      <span className="flex items-center gap-1.5"><span className="inline-block w-5 h-0.5 bg-[#B45309]" style={{borderTop: "1.5px dashed #B45309", background: "none"}} />Par Level</span>
+      <span className="flex items-center gap-1.5"><span className="inline-block size-2.5 rounded-sm bg-[#B91C1C]" />Depletion Point</span>
+     </div>
+    </div>
+   )}
 
    <PageTabs
     tabs={[
@@ -129,50 +208,34 @@ export default function GmInventoryPage() {
           <CheckCircle className="size-5" /> Every tracked SKU covers forecast demand for tomorrow.
          </div>
         ) : (
-         <div className="space-y-4">
-          {paginatedRisk.map((i) => (
-           <div key={i.itemId} className={`rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 shadow-sm ${i.shortage > 0 ? "" : ""}`}>
-            <div className="flex items-center justify-between gap-2">
-             <span className="text-lg font-bold text-[#1C1917]">{i.name}</span>
-             <Pill tone={i.risk === "Critical" ? "red" : i.risk === "At Risk" ? "amber" : "neutral"}>
-              {i.risk}
-             </Pill>
-            </div>
-            <div className="mt-3 grid grid-cols-3 gap-2 text-sm text-[#78716C] font-medium">
-             <span className="flex flex-col">
-              <span className="text-xs uppercase tracking-wider mb-1">On hand</span>
-              <span className="text-xl font-black text-[#1C1917] tabular-nums">{i.onHand} {i.unit}</span>
-             </span>
-             <span className="flex flex-col">
-              <span className="text-xs uppercase tracking-wider mb-1">Projected use</span>
-              <span className="text-xl font-black text-[#1C1917] tabular-nums">{i.projectedUsage} {i.unit}</span>
-             </span>
-             <span className="flex flex-col">
-              <span className="text-xs uppercase tracking-wider mb-1">Status</span>
-              {i.shortage > 0 ? (
-               <span className="text-[#B91C1C] font-black text-xl tabular-nums">Short {i.shortage} {i.unit}</span>
-              ) : (
-               <span className="text-[#15803D] font-bold">Covers demand</span>
-              )}
-             </span>
-            </div>
-            {i.depletionTime ? (
-             <p className="mt-3 text-sm font-bold text-[#B91C1C] flex items-center gap-2">
-              <AlertTriangle className="size-4 shrink-0" /> Projected to deplete at {i.depletionTime} — {i.hoursToDepletion?.toFixed(1)}h into service
-             </p>
-            ) : null}
-           </div>
-          ))}
+         <div className="mt-4">
+          <DataTable>
+           <THead><tr><Th>SKU</Th><Th>On Hand</Th><Th>Projected Use</Th><Th>Shortage</Th><Th>Status</Th><Th>Action</Th></tr></THead>
+           <tbody>
+            {paginatedRisk.map(i => (
+             <Tr key={i.itemId}>
+              <Td><span className="font-semibold">{i.name}</span></Td>
+              <Td className="tabular-nums">{i.onHand} {i.unit}</Td>
+              <Td className="tabular-nums">{i.projectedUsage} {i.unit}</Td>
+              <Td className="tabular-nums">{i.shortage > 0 ? <span className="text-[#B91C1C] font-bold">-{i.shortage} {i.unit}</span> : <span className="text-[#15803D]">Covered</span>}</Td>
+              <Td><StatusDot tone={i.risk === 'Critical' ? 'red' : i.risk === 'At Risk' ? 'amber' : 'green'} /> <span className="ml-1.5 text-xs">{i.risk}</span></Td>
+              <Td>{i.shortage > 0 ? <button onClick={() => dispatch({type:'increasePotatoOrder', lbs: Math.ceil(i.shortage)})} className="text-xs font-bold text-[#881337] hover:underline">Order Now</button> : null}</Td>
+             </Tr>
+            ))}
+           </tbody>
+          </DataTable>
          </div>
         )}
 
-        <Pagination
-         currentPage={currentPageRisk}
-         totalPages={totalPagesRisk}
-         onPageChange={setCurrentPageRisk}
-         totalItems={riskItems.length}
-         pageSize={pageSize}
-        />
+        <div className="mt-4">
+         <Pagination
+          currentPage={currentPageRisk}
+          totalPages={totalPagesRisk}
+          onPageChange={setCurrentPageRisk}
+          totalItems={riskItems.length}
+          pageSize={pageSize}
+         />
+        </div>
 
         <div className="mt-6 flex flex-col sm:flex-row gap-3">
          <button
@@ -187,7 +250,7 @@ export default function GmInventoryPage() {
          <button
           onClick={() => dispatch({ type: "transferInventory", lbs: 40 })}
           disabled={state.transferRequested}
-          className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-white/60 backdrop-blur-md px-4 py-3 text-sm font-bold text-[#1C1917] shadow-sm hover:bg-white/80 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-white border border-[#E7E5E0] px-4 py-3 text-sm font-bold text-[#1C1917] shadow-sm hover:bg-[#F9F8F6] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
          >
           <Truck className="size-4" />
           {state.transferRequested ? "Transfer Requested" : "Transfer 40 lbs from Charlotte #01"}
@@ -201,11 +264,11 @@ export default function GmInventoryPage() {
       {(activeTab === "all" || activeTab === "healthy") && healthyItems.length > 0 && (
        <Card>
         <SectionTitle hint={`${healthyItems.length} SKUs`}>Healthy Inventory</SectionTitle>
-        <div className="space-y-3">
+        <div className="space-y-0 mt-2">
          {paginatedHealthy.map((i) => (
           <div
            key={i.itemId}
-           className="flex items-center justify-between rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-4 text-sm shadow-sm"
+           className="flex items-center justify-between border-b border-[#F3F2F0] py-2.5 text-sm"
           >
            <span className="text-[#1C1917] font-bold">{i.name}</span>
            <Pill tone="teal">{i.onHand} {i.unit}</Pill>
@@ -213,13 +276,15 @@ export default function GmInventoryPage() {
          ))}
         </div>
 
-        <Pagination
-         currentPage={currentPageHealthy}
-         totalPages={totalPagesHealthy}
-         onPageChange={setCurrentPageHealthy}
-         totalItems={healthyItems.length}
-         pageSize={pageSize}
-        />
+        <div className="mt-4">
+         <Pagination
+          currentPage={currentPageHealthy}
+          totalPages={totalPagesHealthy}
+          onPageChange={setCurrentPageHealthy}
+          totalItems={healthyItems.length}
+          pageSize={pageSize}
+         />
+        </div>
        </Card>
       )}
      </div>

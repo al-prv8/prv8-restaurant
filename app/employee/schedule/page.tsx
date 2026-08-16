@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, SectionTitle, Button, Pill, Metric, PriveIntelBanner, Pagination } from "@/components/prive/ui";
+import { Card, SectionTitle, Button, Pill, KpiRow, PriveIntelBanner, Pagination } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 
 export default function EmployeeSchedulePage() {
@@ -38,7 +38,7 @@ export default function EmployeeSchedulePage() {
     <p className="text-sm font-medium text-[#78716C]">Your upcoming shifts and open pickup opportunities at Ballantyne #02.</p>
    </div>
 
-   <div className="mb-8 rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-6 text-center">
+   <div className="mb-6 rounded-xl bg-white border border-[#E7E5E0] p-5 text-center shadow-sm">
      <h2 className="text-sm font-bold text-[#78716C] uppercase tracking-wider mb-2">Current Shift · Today</h2>
      <div className="text-4xl sm:text-5xl font-black tracking-tight text-[#1C1917] tabular-nums">
       10:00 AM – 4:00 PM
@@ -47,19 +47,31 @@ export default function EmployeeSchedulePage() {
    </div>
 
    <div className="space-y-6">
-    <div className="grid gap-4 sm:grid-cols-3">
-     <Metric label="Weekly Scheduled" value="28.5 hrs" sub="Target: 32 hrs" />
-     <Metric label="Estimated Pay" value="$441.75" sub="Base wage $15.50/hr" tone="good" />
-     <Metric label="Shift Openings" value="1 Available" sub="Saturday 4–8 PM peak" tone="warn" />
+    <div className="mb-6">
+      <KpiRow items={[
+        { label: "Weekly Scheduled", value: state.shiftAccepted ? "32.5 hrs" : "28.5 hrs", sub: state.shiftAccepted ? "+4.0 hrs Saturday" : "Target: 32 hrs" },
+        { label: "Estimated Pay", value: state.shiftAccepted ? "$503.75" : "$441.75", sub: state.shiftAccepted ? "+$62.00 earnings boost!" : "Base wage $15.50/hr", tone: "good" },
+        { label: "Shift Openings", value: state.shiftAccepted ? "0 Available" : "1 Available", sub: state.shiftAccepted ? "Shift claimed" : "Saturday 4–8 PM peak", tone: state.shiftAccepted ? "good" : "warn" }
+      ]} />
     </div>
 
     <div className="grid gap-6 lg:grid-cols-12">
      <div className="lg:col-span-6 space-y-6">
-      <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 h-full">
+      <div className="rounded-xl bg-white border border-[#E7E5E0] p-5 h-full shadow-sm">
        <SectionTitle hint="Ballantyne #02 · Peak Demand">Open Shift Pickup Opportunity</SectionTitle>
-       <div className="mt-4 mb-4 text-3xl font-black text-[#1C1917] tracking-tight tabular-nums">
+       <div className="mt-4 mb-2 text-3xl font-black text-[#1C1917] tracking-tight tabular-nums">
          Saturday, 4:00 – 8:00 PM
        </div>
+
+       {/* Live Paycheck Estimator Banner */}
+       <div className="my-3 rounded-lg bg-[#F0FDF4] border border-[#15803D]/20 p-3 flex items-center justify-between">
+         <div>
+           <div className="text-[10px] font-bold uppercase tracking-wider text-[#15803D]">Live Paycheck Estimator</div>
+           <div className="text-xs font-bold text-[#1C1917] mt-0.5">4.0 hrs @ $15.50/hr</div>
+         </div>
+         <div className="text-base font-black text-[#15803D]">+$62.00 Pay Boost</div>
+       </div>
+
        <p className="text-sm text-[#78716C] leading-relaxed font-medium">
         Peak block. Privé forecasts <strong>{d.tomorrow.transactions.toLocaleString()} transactions</strong>{" "}
         tomorrow ({d.tomorrow.vsTypicalPct > 0 ? "+" : ""}
@@ -81,11 +93,11 @@ export default function EmployeeSchedulePage() {
      </div>
 
      <div className="lg:col-span-6 space-y-6">
-      <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 h-full">
+      <div className="rounded-xl bg-white border border-[#E7E5E0] p-5 h-full shadow-sm">
        <SectionTitle hint={`${SHIFTS.length} Shifts`}>Scheduled Shifts</SectionTitle>
-       <div className="mt-4 space-y-3">
+       <div className="mt-4">
         {paginatedShifts.map((s) => (
-         <div key={s.day} className="flex items-center justify-between rounded-2xl bg-white/40 backdrop-blur-sm shadow-sm ring-1 ring-black/[0.04] p-4 text-sm shadow-sm transition-colors">
+         <div key={s.day} className="flex items-center justify-between border-b border-[#F3F2F0] py-3 last:border-0">
           <div>
            <div className="font-black text-base text-[#1C1917]">{s.day} · {s.time}</div>
            <div className="text-xs font-bold text-[#A8A29E] mt-1">{s.role} · {s.hours}</div>

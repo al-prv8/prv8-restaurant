@@ -5,7 +5,15 @@ import { Card, Meter, Pill, RadialGauge, SectionTitle } from "./ui";
 
 import { usePrive, type OpAlert } from "@/lib/prive/store";
 
-// Alert type → pill tone mapping
+// Alert type → severity color mapping
+const alertBorderColor: Record<string, string> = {
+  Critical: "border-l-[#B91C1C]",
+  "Action Required": "border-l-[#B45309]",
+  Predictive: "border-l-[#4F46E5]",
+  Opportunity: "border-l-[#15803D]",
+  Informational: "border-l-[#A8A29E]",
+};
+
 const alertTone: Record<string, "red" | "amber" | "indigo" | "teal" | "neutral"> = {
   Critical: "red",
   "Action Required": "amber",
@@ -17,7 +25,7 @@ const alertTone: Record<string, "red" | "amber" | "indigo" | "teal" | "neutral">
 // ─── Row ─────────────────────────────────────────────────────────────────────
 export function Row({ children, right }: { children: ReactNode; right?: ReactNode }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-xl bg-white/60 backdrop-blur-sm px-3 py-2.5 transition-colors hover:bg-white/80 shadow-sm">
+    <div className="flex items-center justify-between gap-3 rounded-lg bg-[#F7F5F2] border border-[#F3F2F0] px-3 py-2.5 transition-colors hover:bg-[#F3F1EE]">
       <div className="min-w-0">{children}</div>
       {right ? <div className="flex shrink-0 items-center gap-2">{right}</div> : null}
     </div>
@@ -27,14 +35,15 @@ export function Row({ children, right }: { children: ReactNode; right?: ReactNod
 // ─── AlertCard ───────────────────────────────────────────────────────────────
 export function AlertCard({ a, onDismiss }: { a: OpAlert; onDismiss: () => void }) {
   const tone = alertTone[a.type] ?? "neutral";
+  const borderColor = alertBorderColor[a.type] ?? "border-l-[#A8A29E]";
 
   return (
-    <div className={`rounded-xl bg-white/60 backdrop-blur-md shadow-md ring-1 ring-black/[0.04] px-4 py-3`}>
+    <div className={`rounded-lg bg-white border border-[#E7E5E0] border-l-4 ${borderColor} px-4 py-3 shadow-sm`}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
             <Pill tone={tone}>{a.type}</Pill>
-            <span className="text-[11px] font-medium text-[#A8A29E]" >Priority {a.priority}</span>
+            <span className="text-[11px] font-medium text-[#A8A29E]">Priority {a.priority}</span>
           </div>
           <div className="mt-1.5 text-[13px] font-semibold text-[#1C1917]">{a.title}</div>
           <p className="mt-0.5 text-xs font-medium text-[#78716C] leading-snug">{a.detail}</p>
@@ -43,7 +52,7 @@ export function AlertCard({ a, onDismiss }: { a: OpAlert; onDismiss: () => void 
         <button
           type="button"
           onClick={onDismiss}
-          className="shrink-0 rounded-md px-2 py-1 text-[11px] font-semibold text-[#A8A29E] hover:bg-white/10 hover:text-[#1C1917] transition-colors"
+          className="shrink-0 rounded-md px-2 py-1 text-[11px] font-semibold text-[#A8A29E] hover:bg-[#F7F5F2] hover:text-[#1C1917] transition-colors"
         >
           Dismiss
         </button>
@@ -57,7 +66,7 @@ export function MorningBrief() {
   const { derived: d } = usePrive();
   return (
     <Card tone="intel">
-      <SectionTitle hint="Generated 6:04 AM">Morning Operations Brief</SectionTitle>
+      <SectionTitle hint="Generated 6:04 AM">Operations Summary</SectionTitle>
       <p className="mb-3 text-[13px] font-semibold text-[#1C1917]">
         Good morning, Jordan.{" "}
         <span className="font-medium text-[#78716C]">
@@ -90,9 +99,9 @@ export function ReadinessCard() {
     <Card tone={ready ? "default" : "alert"}>
       <SectionTitle hint="Tomorrow">Readiness Score</SectionTitle>
       
-      <div className="flex items-center justify-between gap-4 my-2 p-3 rounded-2xl bg-white/40 backdrop-blur-sm ring-1 ring-black/[0.03]">
+      <div className="flex items-center justify-between gap-4 my-2 p-3 rounded-lg bg-[#F7F5F2] border border-[#F3F2F0]">
         <div>
-          <div className="text-[11px] font-bold uppercase tracking-wider text-[#78716C] mb-1">
+          <div className="text-[11px] font-bold uppercase tracking-wider text-[#A8A29E] mb-1">
             Store Status
           </div>
           <Pill tone={ready ? "teal" : "amber"}>
@@ -107,7 +116,7 @@ export function ReadinessCard() {
 
       <ul className="mt-4 space-y-2">
         {d.readiness.risks.map((r) => (
-          <li key={r.label} className="rounded-xl bg-white/40 backdrop-blur-sm px-3 py-2.5">
+          <li key={r.label} className="rounded-lg border border-[#F3F2F0] bg-[#F7F5F2] px-3 py-2.5">
             <div className="flex items-center justify-between gap-2">
               <span className="text-[13px] font-semibold text-[#1C1917]">{r.label}</span>
               <Pill tone={r.probability > 50 ? "red" : "amber"}>{r.probability}% risk</Pill>

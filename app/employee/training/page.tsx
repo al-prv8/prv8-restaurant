@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
-import { Card, SectionTitle, Pill, Button } from "@/components/prive/ui";
+import { Card, SectionTitle, Pill, Button, KpiRow } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 
 export default function EmployeeTrainingPage() {
@@ -25,24 +25,44 @@ export default function EmployeeTrainingPage() {
     <p className="text-sm font-medium text-[#78716C]">Required safety modules, allergen protocols, and food handler certification watch.</p>
    </div>
 
-   <div className="grid gap-4 sm:grid-cols-3 mb-8">
-     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
-      <span className="text-sm font-bold text-[#78716C]">Modules Due</span>
-      <span className="block text-2xl sm:text-3xl font-black tabular-nums text-[#1C1917] mt-1">{state.certificationCompleted ? "0" : "1"}</span>
+   {/* Learning Progress Bar & Quiz Streak Badge */}
+   <div className="mb-6 rounded-xl bg-white border border-[#E7E5E0] p-5 shadow-sm">
+    <div className="flex items-center justify-between border-b border-[#E7E5E0] pb-3 mb-4">
+     <div>
+      <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#881337]">Maya's Learning Path</div>
+      <div className="text-base font-black text-[#1C1917]">Compliance & Safety Training Progress</div>
      </div>
-     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
-      <span className="text-sm font-bold text-[#78716C]">Expiring Certs</span>
-      <span className="block text-2xl sm:text-3xl font-black tabular-nums text-[#B45309] mt-1">1</span>
+     <Pill tone={state.certificationCompleted ? "teal" : "amber"}>
+      {state.certificationCompleted ? "100% Certified" : "85% Progress"}
+     </Pill>
+    </div>
+
+    <div className="space-y-3">
+     <div className="flex items-center justify-between text-xs font-bold text-[#1C1917]">
+      <span>Course Completion: {state.certificationCompleted ? "6 of 6 Modules" : "5 of 6 Modules"}</span>
+      <span className="text-[#15803D]">🔥 12-Day Quiz Streak</span>
      </div>
-     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
-      <span className="text-sm font-bold text-[#78716C]">Completion</span>
-      <span className="block text-2xl sm:text-3xl font-black tabular-nums text-[#15803D] mt-1">{state.certificationCompleted ? "100%" : "85%"}</span>
+
+     <div className="w-full bg-[#E7E5E0] h-2.5 rounded-full overflow-hidden">
+      <div
+       className="bg-[#15803D] h-full transition-all duration-500 rounded-full"
+       style={{ width: state.certificationCompleted ? "100%" : "85%" }}
+      />
      </div>
+    </div>
+   </div>
+
+   <div className="mb-8">
+     <KpiRow items={[
+       { label: "Modules Due", value: state.certificationCompleted ? "0" : "1" },
+       { label: "Expiring Certs", value: "1", tone: "warn" },
+       { label: "Completion", value: state.certificationCompleted ? "100%" : "85%", tone: "good" }
+     ]} />
    </div>
 
    <div className="grid gap-6 lg:grid-cols-12">
     <div className="space-y-6 lg:col-span-7">
-     <div className={`rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 `}>
+     <div className="rounded-xl bg-white border border-[#E7E5E0] p-5 shadow-sm">
       <SectionTitle hint="5 min module">Allergen Safety & Cross-Contamination Protocol</SectionTitle>
       
       {state.certificationCompleted || submitted ? (
@@ -67,10 +87,10 @@ export default function EmployeeTrainingPage() {
            key={opt}
            type="button"
            onClick={() => setSelectedAnswer(i)}
-           className={`w-full text-left p-3 rounded-xl text-sm font-semibold transition-all ${
+           className={`w-full text-left p-3 rounded-lg border text-sm font-semibold transition-all ${
             selectedAnswer === i
-             ? "bg-[#881337]/10 text-[#881337] ring-1 ring-[#881337]/20"
-             : "bg-white/60 backdrop-blur-sm text-[#44403C] hover:bg-white/80"
+             ? "bg-[#FFF8F6] border-[#881337]/30 text-[#881337]"
+             : "bg-white border-[#E7E5E0] text-[#44403C] hover:bg-[#F7F5F2]"
            }`}
           >
            {i + 1}. {opt}
@@ -93,7 +113,7 @@ export default function EmployeeTrainingPage() {
       )}
      </div>
 
-     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5">
+     <div className="rounded-xl bg-white border border-[#E7E5E0] p-5 shadow-sm">
       <SectionTitle hint="ServSafe Watch">Certification Status</SectionTitle>
       <div className="mt-4 space-y-3">
        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -105,17 +125,31 @@ export default function EmployeeTrainingPage() {
        <p className="text-sm text-[#78716C] font-medium leading-relaxed">
         North Carolina Department of Health requires active certification for all front-of-house staff.
        </p>
+       <div className="mt-4 border-t border-[#E7E5E0] pt-4 flex gap-4">
+         <div className="flex-1">
+           <div className="text-[10px] font-bold text-[#A8A29E] uppercase tracking-wider mb-1">30 Days</div>
+           <div className="h-1.5 w-full bg-[#15803D] rounded-full"></div>
+         </div>
+         <div className="flex-1">
+           <div className="text-[10px] font-bold text-[#A8A29E] uppercase tracking-wider mb-1">60 Days</div>
+           <div className="h-1.5 w-full bg-[#E7E5E0] rounded-full"></div>
+         </div>
+         <div className="flex-1">
+           <div className="text-[10px] font-bold text-[#A8A29E] uppercase tracking-wider mb-1">90 Days</div>
+           <div className="h-1.5 w-full bg-[#E7E5E0] rounded-full"></div>
+         </div>
+       </div>
       </div>
      </div>
     </div>
 
     <div className="space-y-6 lg:col-span-5">
-     <div className="rounded-2xl bg-white/40 backdrop-blur-md shadow-md ring-1 ring-black/[0.04] p-5">
+     <div className="rounded-xl bg-white border border-[#E7E5E0] p-5 shadow-sm">
       <SectionTitle>Privé Training Assistant</SectionTitle>
       <p className="mt-3 text-sm font-medium leading-relaxed text-[#44403C]">
        Privé automatically tracks your certification expiry dates and alerts your manager 30 days before renewal.
       </p>
-      <div className="mt-4 rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-3 text-xs text-[#78716C] font-medium">
+      <div className="mt-4 rounded-lg bg-[#F7F5F2] border border-[#E7E5E0] p-3 text-xs text-[#78716C] font-medium">
        Sources: NC Dept of Health · ServSafe Online · Privé LMS
       </div>
      </div>

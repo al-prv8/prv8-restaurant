@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, Pill, SectionTitle, PageTabs, Pagination } from "@/components/prive/ui";
+import { Card, Pill, SectionTitle, PageTabs, Pagination, KpiRow, DataTable, THead, Th, Tr, Td, StatusDot } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 import type { Restaurant } from "@/lib/prive/data";
 
@@ -58,20 +58,11 @@ export default function RegionalPortfolioPage() {
      </p>
     </div>
     
-    <div className="flex gap-3">
-     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] py-3 flex flex-col justify-center min-w-[120px]">
-      <div className="text-3xl font-black text-[#15803D] leading-none mb-1">{healthyCount}</div>
-      <div className="text-[10px] font-bold uppercase tracking-widest text-[#78716C] leading-tight">Healthy</div>
-     </div>
-     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] py-3 flex flex-col justify-center min-w-[120px]">
-      <div className="text-3xl font-black text-[#B45309] leading-none mb-1">{watchCount}</div>
-      <div className="text-[10px] font-bold uppercase tracking-widest text-[#78716C] leading-tight">Watch List</div>
-     </div>
-     <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] py-3 flex flex-col justify-center min-w-[120px]">
-      <div className="text-3xl font-black text-[#B91C1C] leading-none mb-1">{actionCount}</div>
-      <div className="text-[10px] font-bold uppercase tracking-widest text-[#78716C] leading-tight">Action Reqd</div>
-     </div>
-    </div>
+    <KpiRow items={[
+     { label: 'Healthy', value: String(healthyCount), tone: 'good' },
+     { label: 'Watch List', value: String(watchCount), tone: 'warn' },
+     { label: 'Action Reqd', value: String(actionCount), tone: 'bad' }
+    ]} />
    </div>
 
    <PageTabs
@@ -88,52 +79,100 @@ export default function RegionalPortfolioPage() {
    />
 
    <div className="grid gap-6 lg:grid-cols-12">
+
+    {/* Cross-Location Readiness Bar Chart */}
+    <div className="lg:col-span-12">
+     <div className="rounded-xl bg-white border border-[#E7E5E0] shadow-sm p-5">
+      <div className="flex items-center justify-between border-b border-[#E7E5E0] pb-3 mb-5">
+       <div>
+        <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#881337]">Cross-Location Comparison</div>
+        <div className="text-base font-black text-[#1C1917]">All 12 Locations — Composite Readiness Score</div>
+       </div>
+       <div className="flex items-center gap-4 text-[11px] font-bold text-[#78716C]">
+        <span className="flex items-center gap-1.5"><span className="inline-block size-2 rounded-full bg-[#15803D]" />≥85 Healthy</span>
+        <span className="flex items-center gap-1.5"><span className="inline-block size-2 rounded-full bg-[#B45309]" />70–84 Watch</span>
+        <span className="flex items-center gap-1.5"><span className="inline-block size-2 rounded-full bg-[#B91C1C]" />&lt;70 Action</span>
+       </div>
+      </div>
+      <div className="space-y-2">
+       {[...d.health]
+        .sort((a, b) => b.score - a.score)
+        .map(({ restaurant: r, score, state: s }) => {
+         const isSelected = r.id === (selectedHealth?.restaurant.id ?? "");
+         const color = score >= 85 ? "#15803D" : score >= 70 ? "#B45309" : "#B91C1C";
+         const pct = Math.round((score / 100) * 100);
+         return (
+          <div
+           key={r.id}
+           onClick={() => dispatch({ type: "regionalRestaurant", id: r.id })}
+           className={`flex items-center gap-3 rounded-lg px-3 py-2 cursor-pointer transition-colors ${isSelected ? "bg-[#F7F5F2] ring-1 ring-[#881337]/30" : "hover:bg-[#F7F5F2]"}`}
+          >
+           <div className="w-36 shrink-0 text-[11px] font-bold text-[#1C1917] truncate">{r.name}</div>
+           <div className="flex-1 h-4 bg-[#F3F2F0] rounded-full overflow-hidden">
+            <div
+             className="h-full rounded-full transition-all"
+             style={{ width: `${pct}%`, backgroundColor: color }}
+            />
+           </div>
+           <div className="w-10 shrink-0 text-right text-[11px] font-black tabular-nums" style={{ color }}>{score}</div>
+           <div className="w-20 shrink-0">
+            <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${
+             s === "Healthy" ? "bg-[#15803D]/10 text-[#15803D]" :
+             s === "Watch" ? "bg-[#B45309]/10 text-[#B45309]" :
+             "bg-[#B91C1C]/10 text-[#B91C1C]"
+            }`}>{s}</span>
+           </div>
+          </div>
+         );
+        })}
+      </div>
+     </div>
+    </div>
+
     <div className="space-y-6 lg:col-span-7">
      <Card>
       <SectionTitle hint={`${filteredHealth.length} Stores`}>Location Health Matrix</SectionTitle>
-      <div className="space-y-3">
-       {paginatedHealth.map(({ restaurant: r, score, state: s }) => {
-        const isSelected = r.id === (selectedHealth?.restaurant.id ?? "");
-        const reasons = getStoreReasons(r, s);
-        const scoreColor = score >= 85 ? "bg-[#15803D]" : score >= 70 ? "bg-[#B45309]" : "bg-[#B91C1C]";
-        const textColor = score >= 85 ? "text-[#15803D]" : score >= 70 ? "text-[#B45309]" : "text-[#B91C1C]";
-        
-        return (
-         <button
-          key={r.id}
-          type="button"
-          onClick={() => dispatch({ type: "regionalRestaurant", id: r.id })}
-          className={`w-full flex items-center justify-between gap-3 rounded-2xl p-4 text-left transition-all ${
-           isSelected
-            ? `bg-white/50 backdrop-blur-md shadow-lg ring-1 ring-[#1C1917]/10`
-            : `bg-white/40 backdrop-blur-sm shadow-sm ring-1 ring-black/[0.04] hover:bg-white/15`
-          }`}
-         >
-          <div className="min-w-0 flex-1">
-           <div className="flex items-center gap-2">
-            <span className="text-base font-black text-[#1C1917] truncate">{r.name}</span>
-            <span className="text-xs font-semibold text-[#A8A29E] uppercase tracking-wide">({r.city})</span>
-           </div>
-           <p className="text-xs font-medium text-[#78716C] truncate mt-1">{reasons[0]}</p>
-          </div>
-
-          <div className="flex items-center gap-4 shrink-0">
-           <div className="flex flex-col items-end gap-1">
+      <DataTable>
+       <THead>
+        <Tr>
+         <Th>#</Th>
+         <Th>Location</Th>
+         <Th>City</Th>
+         <Th>Health Score</Th>
+         <Th>Status</Th>
+         <Th>Labor Δ</Th>
+         <Th>Turnover Δ</Th>
+        </Tr>
+       </THead>
+       <tbody>
+        {paginatedHealth.map(({ restaurant: r, score, state: s }, i) => {
+         const isSelected = r.id === (selectedHealth?.restaurant.id ?? "");
+         return (
+          <Tr
+           key={r.id}
+           onClick={() => dispatch({ type: "regionalRestaurant", id: r.id })}
+           selected={isSelected}
+           className="cursor-pointer hover:bg-[#F7F5F2]"
+          >
+           <Td className="text-[#A8A29E]">{(currentPage - 1) * pageSize + i + 1}</Td>
+           <Td className="font-bold text-[#1C1917]">{r.name}</Td>
+           <Td>{r.city}</Td>
+           <Td>
             <div className="flex items-center gap-2">
-             <div className={`text-xl font-black tabular-nums ${textColor}`}>{score}</div>
-             <div className="w-16 h-1.5 bg-[#E7E5E0] rounded-full overflow-hidden">
-              <div className={`h-full ${scoreColor} transition-all duration-500`} style={{ width: `${score}%` }} />
-             </div>
+             <span className={`font-black tabular-nums ${score >= 85 ? "text-[#15803D]" : score >= 70 ? "text-[#B45309]" : "text-[#B91C1C]"}`}>{score}</span>
             </div>
-           </div>
-           <div className="w-24 text-right">
-             <Pill tone={s === "Healthy" ? "teal" : s === "Watch" ? "amber" : "red"}>{s}</Pill>
-           </div>
-          </div>
-         </button>
-        );
-       })}
-      </div>
+           </Td>
+           <Td>
+            <StatusDot tone={s === "Healthy" ? "good" : s === "Watch" ? "warn" : "bad"} />
+            <span className="ml-1">{s}</span>
+           </Td>
+           <Td>{r.laborDelta > 0 ? `+${r.laborDelta}` : r.laborDelta}%</Td>
+           <Td>{r.turnoverDelta > 0 ? `+${r.turnoverDelta}` : r.turnoverDelta}%</Td>
+          </Tr>
+         );
+        })}
+       </tbody>
+      </DataTable>
 
       <Pagination
        currentPage={currentPage}
@@ -147,7 +186,7 @@ export default function RegionalPortfolioPage() {
 
     <div className="space-y-6 lg:col-span-5">
      {/* Dual Store Comparison Glass HUD Trigger / Panel */}
-     <div className="rounded-2xl bg-white/60 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.05)] ring-1 ring-black/[0.03] p-5 space-y-4">
+     <div className="rounded-xl bg-white border border-[#E7E5E0] p-4 shadow-sm space-y-4">
       <div className="flex items-center justify-between border-b border-[#E7E5E0] pb-3">
        <div>
         <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#881337]">Regional Intelligence</div>
@@ -220,19 +259,19 @@ export default function RegionalPortfolioPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-3 text-xs">
-         <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-4 flex flex-col justify-center items-center text-center">
+          <div className="rounded-xl bg-white border border-[#E7E5E0] p-4 shadow-sm flex flex-col justify-center items-center text-center">
           <div className="text-[10px] font-black tracking-widest text-[#A8A29E] uppercase mb-1">Health Score</div>
           <div className={`text-5xl font-black tabular-nums tracking-tighter ${selectedHealth.score >= 85 ? "text-[#15803D]" : selectedHealth.score >= 70 ? "text-[#B45309]" : "text-[#B91C1C]"}`}>
            {selectedHealth.score}
           </div>
          </div>
-         <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-4 flex flex-col justify-center">
+          <div className="rounded-xl bg-white border border-[#E7E5E0] p-4 shadow-sm flex flex-col justify-center">
           <div className="text-[10px] font-black tracking-widest text-[#A8A29E] uppercase mb-1">Ownership Model</div>
           <div className="text-lg font-bold text-[#1C1917] truncate">{selectedHealth.restaurant.ownership}</div>
          </div>
         </div>
 
-        <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-lg ring-1 ring-black/[0.04] p-5 space-y-3">
+         <div className="rounded-xl bg-white border border-[#E7E5E0] p-4 shadow-sm space-y-3">
          <div className="text-[10px] font-bold uppercase tracking-wider text-[#A8A29E] mb-2">Root Cause Insights</div>
          <ul className="space-y-3 font-medium text-[#44403C] text-sm">
           {selectedReasons.map((r, i) => (

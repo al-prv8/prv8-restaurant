@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Activity,
+  MessageSquare,
   Bell,
   Brain,
   Building2,
@@ -337,10 +338,12 @@ function MobileDrawer({
 export function TopNav({
   persona,
   onOpenSearch,
+  onOpenAskPrive,
   onResetDemo,
 }: {
   persona: Persona;
   onOpenSearch: () => void;
+  onOpenAskPrive: () => void;
   onResetDemo: () => void;
 }) {
   const { derived: d } = usePrive();
@@ -502,6 +505,19 @@ export function TopNav({
                 ⌘K
               </kbd>
             </button>
+
+            {/* Ask Privé — nav-integrated intelligence trigger */}
+            {persona !== "guest" && (
+              <button
+                type="button"
+                onClick={onOpenAskPrive}
+                title="Ask Privé"
+                className="flex items-center gap-1.5 rounded-lg border border-[#881337]/50 bg-[#881337]/15 px-3 py-1.5 text-[12px] font-bold text-[#FF8FA3] hover:bg-[#881337]/25 hover:border-[#881337]/70 transition-all"
+              >
+                <MessageSquare className="size-3.5 shrink-0" />
+                <span className="hidden sm:inline">Ask Privé</span>
+              </button>
+            )}
 
             {/* Mobile hamburger */}
             <button
