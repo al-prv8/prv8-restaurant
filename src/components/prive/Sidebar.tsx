@@ -22,6 +22,12 @@ import {
   User,
   Bell,
   LogOut,
+  BrainCircuit,
+  Award,
+  Sparkles,
+  Truck,
+  Sliders,
+  LifeBuoy,
 } from "lucide-react";
 import {
   Sidebar as SidebarPrimitive,
@@ -40,7 +46,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { usePrive } from "@/lib/prive/store";
+import { usePrive, type Persona } from "@/lib/prive/store";
 
 export interface MenuItem {
   label: string;
@@ -58,17 +64,21 @@ export interface MenuGroup {
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { derived: d } = usePrive();
   const router = useRouter();
-  const { state, dispatch } = usePrive();
+  const { state, derived: d, dispatch } = usePrive();
   const { state: sidebarState, setOpenMobile } = useSidebar();
   const isCollapsed = sidebarState === "collapsed";
+
+  const persona: Persona = state.persona || "gm";
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
     OPERATIONS: true,
     TEAM: true,
     GUEST: true,
     ADMIN: true,
+    MY_PORTAL: true,
+    PORTFOLIO: true,
+    ENTERPRISE: true,
   });
 
   const [openSubMenus, setOpenSubMenus] = useState<Record<string, boolean>>({});
@@ -85,66 +95,125 @@ export function Sidebar() {
     (c) => c.status === "Awaiting Approval"
   ).length;
 
-  const menuGroups: MenuGroup[] = [
-    {
-      title: "OPERATIONS",
-      items: [
-        { label: "Sales", href: "/gm/sales", icon: TrendingUp },
-        { label: "Labor", href: "/gm/staffing", icon: Users },
-        { label: "Inventory", href: "/gm/inventory", icon: Package },
-        {
-          label: "Scheduling",
-          href: "/gm/schedule",
-          icon: Calendar,
-          subItems: [
-            { label: "Master Roster", href: "/gm/schedule" },
-            { label: "Employee Pickup", href: "/employee/schedule" },
-          ],
-        },
-        { label: "Compliance", href: "/gm/compliance", icon: ShieldCheck },
-        { label: "Store Performance", href: "/gm/performance", icon: BarChart3 },
-      ],
-    },
-    {
-      title: "TEAM",
-      items: [
-        { label: "Team Members", href: "/gm/workforce", icon: Users },
-        { label: "Hiring & Onboarding", href: "/gm/hiring", icon: UserPlus },
-        { label: "Payroll", href: "/gm/payroll", icon: CreditCard },
-      ],
-    },
-    {
-      title: "GUEST",
-      items: [
-        {
-          label: "Guest Issues",
-          href: "/gm/guests",
-          icon: MessageSquare,
-          badge: openComplaintsCount > 0 ? openComplaintsCount : 4,
-          subItems: [
-            { label: "Pending Approvals", href: "/gm/guests" },
-            { label: "Recovery Credits", href: "/guest/credits" },
-          ],
-        },
-        { label: "Guest Feedback", href: "/gm/feedback", icon: MessageSquareHeart },
-      ],
-    },
-    {
-      title: "ADMIN",
-      items: [
-        { label: "Communications", href: "/gm/communications", icon: Bell },
-        { label: "Reports & Audit", href: "/gm/reports", icon: FileText },
-        { label: "Documents", href: "/gm/documents", icon: Folder },
-        { label: "Settings", href: "/gm/settings", icon: Settings },
-      ],
-    },
-  ];
+  // Overview top link per persona
+  const overviewHrefs: Record<Persona, { href: string; label: string }> = {
+    gm: { href: "/gm/home", label: "Overview" },
+    employee: { href: "/employee/home", label: "Employee Home" },
+    regional: { href: "/regional/portfolio", label: "Carolinas Portfolio" },
+    executive: { href: "/executive/pulse", label: "Enterprise Pulse" },
+    guest: { href: "/guest/service", label: "Guest Service" },
+  };
+
+  const currentOverview = overviewHrefs[persona] || overviewHrefs.gm;
+
+  // Per-persona dynamic menu groups
+  let menuGroups: MenuGroup[] = [];
+
+  if (persona === "gm") {
+    menuGroups = [
+      {
+        title: "OPERATIONS",
+        items: [
+          { label: "Sales", href: "/gm/sales", icon: TrendingUp },
+          { label: "Labor", href: "/gm/staffing", icon: Users },
+          { label: "Inventory", href: "/gm/inventory", icon: Package },
+          {
+            label: "Scheduling",
+            href: "/gm/schedule",
+            icon: Calendar,
+            subItems: [
+              { label: "Master Roster", href: "/gm/schedule" },
+              { label: "Employee Pickup", href: "/employee/schedule" },
+            ],
+          },
+          { label: "Compliance", href: "/gm/compliance", icon: ShieldCheck },
+          { label: "Store Performance", href: "/gm/performance", icon: BarChart3 },
+        ],
+      },
+      {
+        title: "TEAM",
+        items: [
+          { label: "Team Members", href: "/gm/workforce", icon: Users },
+          { label: "Hiring & Onboarding", href: "/gm/hiring", icon: UserPlus },
+          { label: "Payroll", href: "/gm/payroll", icon: CreditCard },
+        ],
+      },
+      {
+        title: "GUEST",
+        items: [
+          {
+            label: "Guest Issues",
+            href: "/gm/guests",
+            icon: MessageSquare,
+            badge: openComplaintsCount > 0 ? openComplaintsCount : 4,
+            subItems: [
+              { label: "Pending Approvals", href: "/gm/guests" },
+              { label: "Recovery Credits", href: "/guest/credits" },
+            ],
+          },
+          { label: "Guest Feedback", href: "/gm/feedback", icon: MessageSquareHeart },
+        ],
+      },
+      {
+        title: "ADMIN",
+        items: [
+          { label: "Communications", href: "/gm/communications", icon: Bell },
+          { label: "Reports & Audit", href: "/gm/reports", icon: FileText },
+          { label: "Documents", href: "/gm/documents", icon: Folder },
+          { label: "Settings", href: "/gm/settings", icon: Settings },
+        ],
+      },
+    ];
+  } else if (persona === "employee") {
+    menuGroups = [
+      {
+        title: "MY PORTAL",
+        items: [
+          { label: "My Shift & Roster", href: "/employee/schedule", icon: Calendar },
+          { label: "Training & ServSafe", href: "/employee/training", icon: Award },
+          { label: "Announcements & SOP", href: "/employee/announcements", icon: FileText },
+        ],
+      },
+    ];
+  } else if (persona === "regional") {
+    menuGroups = [
+      {
+        title: "PORTFOLIO",
+        items: [
+          { label: "12-Store Portfolio", href: "/regional/portfolio", icon: Building2Icon },
+          { label: "Intelligence Console", href: "/regional/intelligence", icon: BrainCircuit },
+          { label: "Regional Supply Chain", href: "/regional/supply-chain", icon: Truck },
+        ],
+      },
+    ];
+  } else if (persona === "executive") {
+    menuGroups = [
+      {
+        title: "ENTERPRISE",
+        items: [
+          { label: "Enterprise Pulse", href: "/executive/pulse", icon: TrendingUp },
+          { label: "What-If Scenario Engine", href: "/executive/scenario", icon: Sliders },
+          { label: "Portfolio Health", href: "/executive/portfolio", icon: BarChart3 },
+        ],
+      },
+    ];
+  } else if (persona === "guest") {
+    menuGroups = [
+      {
+        title: "GUEST SERVICES",
+        items: [
+          { label: "AI Service Intake", href: "/guest/service", icon: MessageSquare },
+          { label: "Recovery Credits", href: "/guest/credits", icon: CreditCard },
+        ],
+      },
+    ];
+  }
 
   return (
     <SidebarPrimitive collapsible="icon">
-      {/* ── SidebarHeader: Logo & Trigger (Trigger visible ONLY when expanded) ── */}
+      {/* ── SidebarHeader: Logo & Trigger ───────────────────────────── */}
       <SidebarHeader>
-        <Link href="/gm/home" className="flex items-center gap-3 overflow-hidden">
+        <Link href={currentOverview.href} className="flex items-center gap-3 overflow-hidden">
           <div className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#881337] font-black text-white text-base shadow-xs border border-white/20">
             P
           </div>
@@ -172,18 +241,18 @@ export function Sidebar() {
         <SidebarMenu className="mb-3">
           <SidebarMenuItem>
             <SidebarMenuButton
-              href="/gm/home"
-              isActive={pathname === "/gm/home"}
-              tooltip="Overview"
+              href={currentOverview.href}
+              isActive={pathname === currentOverview.href}
+              tooltip={currentOverview.label}
               onClick={() => setOpenMobile(false)}
             >
               <Home
                 className={`size-4 shrink-0 ${
-                  pathname === "/gm/home" ? "text-white" : "text-white/50"
+                  pathname === currentOverview.href ? "text-white" : "text-white/50"
                 }`}
               />
               {!isCollapsed && (
-                <span className="flex-1 truncate text-left">Overview</span>
+                <span className="flex-1 truncate text-left">{currentOverview.label}</span>
               )}
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -225,15 +294,14 @@ export function Sidebar() {
                     return (
                       <SidebarMenuItem key={item.label + item.href}>
                         <SidebarMenuButton
-                          href={hasSubItems ? undefined : item.href}
+                          href={item.href}
                           isActive={isActive}
                           tooltip={item.label}
                           onClick={() => {
                             if (hasSubItems) {
                               toggleSubMenu(item.label);
-                            } else {
-                              setOpenMobile(false);
                             }
+                            setOpenMobile(false);
                           }}
                         >
                           <Icon
@@ -265,6 +333,7 @@ export function Sidebar() {
                                 <SidebarMenuSubButton
                                   href={sub.href}
                                   isActive={pathname === sub.href}
+                                  onClick={() => setOpenMobile(false)}
                                 >
                                   {sub.label}
                                 </SidebarMenuSubButton>
@@ -282,31 +351,24 @@ export function Sidebar() {
         })}
       </SidebarContent>
 
-      {/* ── SidebarFooter: Profile Card & Logout Button ────────────────── */}
+      {/* ── SidebarFooter: Profile Card & Logout Button ───────────────── */}
       <SidebarFooter>
-        <div className="flex items-center justify-between gap-2">
-          <Link
-            href="/gm/workforce"
-            onClick={() => setOpenMobile(false)}
-            className={`flex flex-1 items-center gap-3 group transition-colors min-w-0 ${
-              isCollapsed ? "justify-center" : ""
-            }`}
-          >
-            <div className="relative grid size-9 shrink-0 place-items-center rounded-full bg-[#6B142B] text-[#FFFFFF] overflow-hidden border border-white/20">
-              <User className="size-5" />
-              <span className="absolute bottom-0 right-0 size-2 rounded-full bg-[#4ADE80] ring-1 ring-[#3B0A1A]" />
-            </div>
-            {!isCollapsed && (
-              <div className="min-w-0 flex-1">
-                <div className="truncate text-xs font-bold text-white group-hover:text-white/80">
-                  Jordan Ellis
-                </div>
-                <div className="truncate text-[10px] font-medium text-white/50">
-                  General Manager
-                </div>
+        <div className="flex items-center gap-3">
+          <div className="relative grid size-8 shrink-0 place-items-center rounded-full bg-[#881337] text-white font-black text-xs border border-white/20">
+            JE
+            <span className="absolute bottom-0 right-0 size-2 rounded-full bg-[#4ADE80] ring-1 ring-[#1C070D]" />
+          </div>
+
+          {!isCollapsed && (
+            <div className="flex-1 min-w-0">
+              <div className="text-xs font-bold text-white truncate">
+                Jordan Ellis
               </div>
-            )}
-          </Link>
+              <div className="text-[10px] text-white/50 truncate">
+                General Manager
+              </div>
+            </div>
+          )}
 
           {!isCollapsed && (
             <button
@@ -315,14 +377,39 @@ export function Sidebar() {
                 dispatch({ type: "logout" });
                 router.push("/login");
               }}
-              className="flex size-7 items-center justify-center rounded-lg text-white/50 hover:bg-white/10 hover:text-white transition-colors shrink-0 cursor-pointer"
+              className="rounded-lg p-1.5 text-white/50 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
               title="Log out"
             >
-              <LogOut className="size-3.5" />
+              <LogOut className="size-4 text-[#FB7185]" />
             </button>
           )}
         </div>
       </SidebarFooter>
     </SidebarPrimitive>
+  );
+}
+
+function Building2Icon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
+      <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+      <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
+      <path d="M10 6h4" />
+      <path d="M10 10h4" />
+      <path d="M10 14h4" />
+      <path d="M10 18h4" />
+    </svg>
   );
 }

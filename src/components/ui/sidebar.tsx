@@ -381,16 +381,19 @@ export function SidebarMenuSubButton({
   href,
   className = "",
   children,
+  onClick,
   ...props
 }: {
   isActive?: boolean;
   href: string;
   className?: string;
   children: ReactNode;
+  onClick?: () => void;
 }) {
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={`block rounded-md px-2 py-1 text-xs font-medium transition-colors ${
         isActive
           ? "font-bold text-white bg-white/10"
