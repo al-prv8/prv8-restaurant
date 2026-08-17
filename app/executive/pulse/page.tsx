@@ -220,7 +220,25 @@ export default function ExecutivePulsePage() {
         const minScore = 3.5, maxScore = 5.0;
         const px = (i: number) => PAD_L + (i / (weeks.length - 1)) * (W - PAD_L);
         const py = (v: number) => H - PAD_B - ((v - minScore) / (maxScore - minScore)) * (H - PAD_B - 8);
-        const pathD = weeks.map((w, i) => `${i === 0 ? "M" : "L"} ${px(i).toFixed(1)},${py(w.score).toFixed(1)}`).join(" ");
+        const pts = weeks.map((w, i) => ({ x: px(i), y: py(w.score) }));
+        function getSmoothBezier(p: { x: number; y: number }[]) {
+          if (p.length === 0) return "";
+          let path = `M ${p[0].x.toFixed(1)},${p[0].y.toFixed(1)}`;
+          for (let i = 0; i < p.length - 1; i++) {
+            const p0 = p[i === 0 ? i : i - 1];
+            const p1 = p[i];
+            const p2 = p[i + 1];
+            const p3 = p[i + 2 < p.length ? i + 2 : i + 1];
+            const cp1x = p1.x + (p2.x - p0.x) / 6;
+            const cp1y = p1.y + (p2.y - p0.y) / 6;
+            const cp2x = p2.x - (p3.x - p1.x) / 6;
+            const cp2y = p2.y - (p3.y - p1.y) / 6;
+            path += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+          }
+          return path;
+        }
+
+        const pathD = getSmoothBezier(pts);
         const areaD = `${pathD} L ${px(weeks.length - 1).toFixed(1)},${(H - PAD_B).toFixed(1)} L ${px(0).toFixed(1)},${(H - PAD_B).toFixed(1)} Z`;
         const trend = weeks[weeks.length - 1].score >= weeks[0].score;
         const lineColor = trend ? "#15803D" : "#B91C1C";

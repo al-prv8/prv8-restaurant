@@ -1,7 +1,7 @@
 "use client";
 
-import { GuestShell } from "@/components/prive/GuestShell";
+import { PriveShell } from "@/components/prive/Shell";
 
 export default function GuestLayout({ children }: { children: React.ReactNode }) {
-  return <GuestShell>{children}</GuestShell>;
+  return <PriveShell persona="guest">{children}</PriveShell>;
 }

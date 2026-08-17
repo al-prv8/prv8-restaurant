@@ -77,10 +77,13 @@ interface State {
   w2AddressVerified: boolean;
   pendingQuestion: string | null; // injected by quick-action buttons to pre-fill Ask Privé
   expandedSections: Record<string, boolean>; // global persistent sidebar dropdown state
+  isAuthenticated: boolean;
 }
 
 type Action =
   | { type: "persona"; persona: Persona }
+  | { type: "login" }
+  | { type: "logout" }
   | { type: "regionalRestaurant"; id: string }
   | { type: "sendShiftOffer" }
   | { type: "acceptShift" }
@@ -176,10 +179,15 @@ const initialState: State = {
   w2AddressVerified: false,
   pendingQuestion: null,
   expandedSections: { "/gm/home": true },
+  isAuthenticated: true,
 };
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
+    case "login":
+      return { ...state, isAuthenticated: true };
+    case "logout":
+      return { ...state, isAuthenticated: false };
     case "toggleSidebarSection": {
       const current = state.expandedSections[action.href] ?? true;
       const nextOpen = action.open !== undefined ? action.open : !current;
