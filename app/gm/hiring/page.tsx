@@ -10,6 +10,7 @@ import {
   FileText,
   Briefcase,
   ArrowRight,
+  Filter,
 } from "lucide-react";
 import { Card, SectionTitle, KpiRow, Button, Pill } from "@/components/prive/ui";
 
@@ -19,6 +20,13 @@ export default function GmHiringPage() {
     { name: "Samantha Cross", position: "Server", applied: "3 days ago", stage: "Background Check", status: "Passed" },
     { name: "Liam Patel", position: "Cashier", applied: "Yesterday", stage: "Offer Extended", status: "Pending Acceptance" },
     { name: "Elena Rostova", position: "Shift Supervisor", applied: "5 days ago", stage: "Onboarding (Day 2)", status: "In Progress" },
+  ];
+
+  const pipelineStages = [
+    { stage: "Applications Received", count: 12, pct: 100, tone: "neutral" },
+    { stage: "Interviews Scheduled", count: 4, pct: 33, tone: "warn" },
+    { stage: "Offers Extended", count: 2, pct: 16, tone: "good" },
+    { stage: "Onboarding In Progress", count: 1, pct: 8, tone: "good" },
   ];
 
   return (
@@ -55,10 +63,44 @@ export default function GmHiringPage() {
         ]}
       />
 
+      {/* Recruiting Funnel Visualizer */}
+      <Card>
+        <SectionTitle hint="4-Stage Funnel">
+          Recruiting Pipeline & Conversion Stages
+        </SectionTitle>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+          {pipelineStages.map((s) => (
+            <div
+              key={s.stage}
+              className="rounded-xl border border-[#E7E5E0] bg-[#FAFAF8] p-4 space-y-2"
+            >
+              <div className="flex items-center justify-between text-xs font-bold text-[#1C1917]">
+                <span>{s.stage}</span>
+                <span className="text-[#881337] font-black text-sm">{s.count}</span>
+              </div>
+
+              {/* Progress meter */}
+              <div className="h-2 w-full rounded-full bg-[#E7E5E0] overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-[#881337] transition-all duration-500"
+                  style={{ width: `${s.pct}%` }}
+                />
+              </div>
+
+              <div className="text-[10px] font-bold text-[#78716C] flex justify-between">
+                <span>Conversion rate</span>
+                <span>{s.pct}%</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
       {/* Applicant Tracking Table */}
       <Card>
-        <SectionTitle hint="Recruiting Pipeline">
-          Active Candidates & Onboarding Candidates
+        <SectionTitle hint="Active Recruiting Queue">
+          Candidates Under Manager Review
         </SectionTitle>
 
         <div className="overflow-x-auto rounded-xl border border-[#E7E5E0]">
