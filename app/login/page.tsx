@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Mail,
@@ -10,16 +9,12 @@ import {
   EyeOff,
   ArrowRight,
   ShieldCheck,
-  Building2,
-  Users,
-  Package,
-  MessageSquareHeart,
-  FileText,
-  TrendingUp,
   Globe,
-  Quote,
+  Sun,
+  Key,
+  Sparkles,
+  CheckCircle2,
 } from "lucide-react";
-
 import { usePrive } from "@/lib/prive/store";
 
 export default function LoginPage() {
@@ -36,138 +31,149 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F5F2] text-[#1C1917] flex flex-col justify-between font-sans">
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-screen">
-        {/* ── LEFT HALF: BRAND & HERO INTEL (IMAGE 1 LEFT MOCKUP) ────────── */}
-        <div className="lg:col-span-7 relative bg-[#1C1917] text-white p-8 sm:p-12 lg:p-16 flex flex-col justify-between overflow-hidden">
-          {/* Background Dining Room Image with Warm Overlay */}
+    <div className="min-h-screen lg:h-screen lg:overflow-hidden bg-[#1C1917] text-white flex flex-col justify-between font-sans antialiased selection:bg-[#881337] selection:text-white">
+      <div className="grid grid-cols-1 lg:grid-cols-12 h-full min-h-screen lg:min-h-0">
+        {/* ── LEFT HALF: HIGH-IMPACT FULL-BLEED HERO WITH DINING ROOM PHOTO ── */}
+        <div className="lg:col-span-7 relative bg-[#1C070D] p-8 sm:p-12 lg:p-16 flex flex-col justify-between overflow-hidden border-r border-white/10">
+          {/* Full-bleed background photo with dark wine gradient overlay */}
           <div className="absolute inset-0 z-0">
             <img
               src="/dining-room.jpg"
-              alt="The Morning Table Dining Room"
-              className="h-full w-full object-cover object-center opacity-25 filter blur-xs"
+              alt="Dining Room"
+              className="h-full w-full object-cover object-center filter saturate-[1.2] brightness-90"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1C1917] via-[#1C1917]/80 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#1C070D] via-[#1C070D]/90 to-[#1C070D]/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1C070D] via-transparent to-[#1C070D]/70" />
           </div>
 
-          {/* Top Logo */}
+          {/* Top Logo Header */}
           <div className="relative z-10 flex items-center gap-3">
-            <div className="grid size-10 place-items-center rounded-xl bg-[#881337] font-black text-white text-xl shadow-lg border border-white/20">
+            <div className="grid size-11 place-items-center rounded-xl bg-gradient-to-br from-[#881337] to-[#580B22] font-black text-white text-2xl shadow-2xl border border-white/20 ring-1 ring-white/10">
               P
             </div>
             <div>
-              <div className="text-base font-extrabold tracking-[0.2em] text-white leading-none">
+              <div className="text-base font-extrabold tracking-[0.22em] text-white leading-none">
                 PRIVÉ
               </div>
-              <div className="text-[10px] font-bold tracking-[0.14em] text-white/60 uppercase leading-tight mt-0.5">
+              <div className="text-[10px] font-bold tracking-[0.16em] text-white/60 uppercase leading-tight mt-0.5">
                 RESTAURANT OPERATIONS INTELLIGENCE
               </div>
             </div>
           </div>
 
-          {/* Hero Copy */}
-          <div className="relative z-10 my-12 space-y-6 max-w-2xl">
-            <div className="inline-block border-b-2 border-[#881337] pb-2">
-              <span className="text-xs font-black uppercase tracking-[0.25em] text-white/70">
-                THE MORNING TABLE
-              </span>
-              <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#881337] mt-0.5">
-                KITCHEN. COMMUNITY. EXCELLENCE.
+          {/* Hero Main Content */}
+          <div className="relative z-10 my-auto py-8 space-y-8 max-w-xl">
+            {/* Badge & Headline */}
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-xs backdrop-blur-md shadow-lg">
+                <Sun className="size-3.5 text-[#F59E0B]" />
+                <span className="font-bold text-white uppercase tracking-widest text-[10px]">
+                  THE MORNING TABLE
+                </span>
+                <span className="text-white/40">•</span>
+                <span className="text-[10px] font-extrabold tracking-wider text-[#FB7185] uppercase">
+                  BALLANTYNE #02
+                </span>
+              </div>
+
+              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-white leading-[1.1]">
+                One restaurant. <br />
+                <span className="text-[#FB7185] italic font-serif">Total intelligence.</span>
+              </h1>
+
+              <p className="text-sm sm:text-base font-medium text-white/80 leading-relaxed max-w-lg">
+                Privé unifies sales, labor, inventory, and guest feedback into one real-time command center — built specifically for restaurant operators.
+              </p>
+            </div>
+
+            {/* 3 High-Impact Live Metric Stat Counter Cards */}
+            <div className="grid grid-cols-3 gap-3 pt-2">
+              <div className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md p-3.5 shadow-xl">
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-[#FB7185]">
+                  DAILY SALES
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-white mt-1 tabular-nums">
+                  $6,840
+                </div>
+                <div className="text-[10px] font-bold text-[#4ADE80] mt-0.5">
+                  ▲ +8.2% vs target
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md p-3.5 shadow-xl">
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-[#F59E0B]">
+                  LABOR COST
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-white mt-1 tabular-nums">
+                  24.8%
+                </div>
+                <div className="text-[10px] font-bold text-white/70 mt-0.5">
+                  Target: 25.0%
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md p-3.5 shadow-xl">
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-[#4ADE80]">
+                  COMPLIANCE
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-white mt-1 tabular-nums">
+                  96 / 100
+                </div>
+                <div className="text-[10px] font-bold text-[#4ADE80] mt-0.5">
+                  Grade A Verified
+                </div>
               </div>
             </div>
 
-            <h1 className="font-serif-display text-4xl sm:text-5xl lg:text-6xl font-normal tracking-tight leading-tight text-white">
-              One restaurant. <br />
-              <span className="text-[#F43F5E] italic">Total intelligence.</span>
-            </h1>
-
-            <p className="text-sm sm:text-base font-medium text-white/80 leading-relaxed max-w-xl">
-              Privé connects your people, systems, and data into one intelligent command center — so you can focus on what matters most: great food and exceptional guest experiences.
-            </p>
-
-            {/* 3 Core Value Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-              <div className="rounded-xl border border-white/15 bg-white/10 p-4 backdrop-blur-xs space-y-1">
-                <div className="grid size-8 place-items-center rounded-lg bg-[#881337] text-white mb-2">
-                  <TrendingUp className="size-4" />
-                </div>
-                <div className="text-xs font-bold text-white">Operational Intelligence</div>
-                <p className="text-[11px] text-white/70 leading-normal">
-                  Real-time visibility into sales, labor, inventory, and guest sentiment.
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-white/15 bg-white/10 p-4 backdrop-blur-xs space-y-1">
-                <div className="grid size-8 place-items-center rounded-lg bg-[#B45309] text-white mb-2">
-                  <ShieldCheck className="size-4" />
-                </div>
-                <div className="text-xs font-bold text-white">Human-Governed Actions</div>
-                <p className="text-[11px] text-white/70 leading-normal">
-                  Every important action is reviewed, approved, and logged by managers.
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-white/15 bg-white/10 p-4 backdrop-blur-xs space-y-1">
-                <div className="grid size-8 place-items-center rounded-lg bg-[#15803D] text-white mb-2">
-                  <Building2 className="size-4" />
-                </div>
-                <div className="text-xs font-bold text-white">Connected Systems</div>
-                <p className="text-[11px] text-white/70 leading-normal">
-                  POS, payroll, scheduling, inventory — unified in one platform.
-                </p>
-              </div>
-            </div>
-
-            {/* Testimonial Quote */}
-            <div className="rounded-xl border-l-4 border-l-[#881337] bg-white/5 p-4 text-xs italic text-white/80 flex items-start gap-3">
-              <Quote className="size-5 shrink-0 text-[#881337] not-italic" />
-              <div>
-                &ldquo;Privé gives me back hours every day. Now I&apos;m on the floor with my team, not buried in paperwork.&rdquo;
-                <div className="mt-1 font-bold not-italic text-white text-[11px]">— Restaurant General Manager</div>
-              </div>
+            {/* Key Value Pill list */}
+            <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-white/90">
+              <span className="flex items-center gap-1.5"><CheckCircle2 className="size-4 text-[#FB7185]" /> Human-Governed AI</span>
+              <span className="flex items-center gap-1.5"><CheckCircle2 className="size-4 text-[#F59E0B]" /> Toast & Paycor Sync</span>
+              <span className="flex items-center gap-1.5"><CheckCircle2 className="size-4 text-[#4ADE80]" /> 24/7 Guest Recovery</span>
             </div>
           </div>
 
-          {/* Bottom Connected Tech Bar */}
-          <div className="relative z-10 border-t border-white/15 pt-6 space-y-3">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50 text-center sm:text-left">
-              DESIGNED FOR RESTAURANTS. BUILT FOR OPERATORS.
-            </p>
-            <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-white/60 font-bold">
-              <span className="flex items-center gap-1.5"><Building2 className="size-3.5 text-[#881337]" /> Toast POS</span>
-              <span className="flex items-center gap-1.5"><Users className="size-3.5 text-[#B45309]" /> Paycor Payroll</span>
-              <span className="flex items-center gap-1.5"><Package className="size-3.5 text-[#15803D]" /> 7shifts Roster</span>
-              <span className="flex items-center gap-1.5"><FileText className="size-3.5 text-[#0284C7]" /> Restaurant365</span>
-              <span className="flex items-center gap-1.5"><Globe className="size-3.5 text-[#881337]" /> Google Cloud</span>
+          {/* Clean Partner Footer */}
+          <div className="relative z-10 border-t border-white/15 pt-4">
+            <div className="flex items-center justify-between text-[10px] font-extrabold uppercase tracking-[0.2em] text-white/60 mb-2">
+              <span>CONNECTED ECOSYSTEM PARTNERS</span>
+              <span className="flex items-center gap-1 text-[#F59E0B]"><Sparkles className="size-3" /> Live API Sync</span>
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-white/70 font-black uppercase tracking-wider">
+              <span className="text-white hover:text-[#FB7185] transition-colors">TOAST POS</span>
+              <span className="text-white hover:text-[#FB7185] transition-colors">PAYCOR</span>
+              <span className="text-white hover:text-[#FB7185] transition-colors">7SHIFTS</span>
+              <span className="text-white hover:text-[#FB7185] transition-colors">RESTAURANT365</span>
+              <span className="text-white hover:text-[#FB7185] transition-colors">GOOGLE CLOUD</span>
             </div>
           </div>
         </div>
 
-        {/* ── RIGHT HALF: SIGN IN FORM (IMAGE 1 RIGHT FORM) ──────────────── */}
-        <div className="lg:col-span-5 bg-white p-8 sm:p-12 lg:p-16 flex flex-col justify-between">
+        {/* ── RIGHT HALF: ELEVATED PARCHMENT SIGN IN FORM ────────────────── */}
+        <div className="lg:col-span-5 bg-[#FAFAF8] text-[#1C1917] p-8 sm:p-12 lg:p-16 flex flex-col justify-between border-l border-[#E7E5E0]">
           {/* Top Bar Language Selector */}
           <div className="flex items-center justify-end">
             <button
               type="button"
-              className="flex items-center gap-1.5 rounded-lg border border-[#E7E5E0] bg-[#FAFAF8] px-3 py-1.5 text-xs font-bold text-[#1C1917] hover:bg-[#E7E5E0] transition-colors"
+              className="flex items-center gap-1.5 rounded-xl border border-[#E7E5E0] bg-white px-3 py-1.5 text-xs font-bold text-[#1C1917] hover:bg-[#F7F5F2] shadow-2xs transition-colors cursor-pointer"
             >
-              <Globe className="size-3.5" />
-              <span>EN</span>
+              <Globe className="size-3.5 text-[#881337]" />
+              <span>EN (US)</span>
               <span className="text-[10px] text-[#78716C]">v</span>
             </button>
           </div>
 
-          {/* Form Content */}
+          {/* Form Content Container */}
           <div className="my-auto max-w-md w-full mx-auto space-y-8 py-8">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#881337] mb-1">
+            <div className="space-y-1">
+              <p className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#881337]">
                 WELCOME BACK
               </p>
               <h2 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">
                 Let&apos;s get to work.
               </h2>
-              <p className="mt-1 text-sm font-medium text-[#78716C]">
-                Sign in to your Privé operations portal.
+              <p className="text-sm font-medium text-[#78716C]">
+                Sign in to your Privé restaurant operations portal.
               </p>
             </div>
 
@@ -175,7 +181,7 @@ export default function LoginPage() {
               {/* Email Field */}
               <div>
                 <label className="block text-xs font-bold text-[#1C1917] mb-1.5">
-                  Email
+                  Manager Email
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-[#78716C]" />
@@ -184,7 +190,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@restaurant.com"
-                    className="w-full rounded-xl border border-[#E7E5E0] bg-[#FAFAF8] py-3 pl-10 pr-4 text-xs font-semibold text-[#1C1917] outline-none focus:border-[#881337] focus:ring-1 focus:ring-[#881337] transition-all"
+                    className="w-full rounded-xl border border-[#E7E5E0] bg-white py-3.5 pl-10 pr-4 text-xs font-semibold text-[#1C1917] outline-none focus:border-[#881337] focus:ring-2 focus:ring-[#881337]/20 shadow-2xs transition-all"
                     required
                   />
                 </div>
@@ -198,7 +204,7 @@ export default function LoginPage() {
                   </label>
                   <a
                     href="#forgot"
-                    onClick={(e) => { e.preventDefault(); alert("Password reset link sent to your email."); }}
+                    onClick={(e) => { e.preventDefault(); alert("Password reset link sent to your manager email."); }}
                     className="text-xs font-bold text-[#881337] hover:underline"
                   >
                     Forgot password?
@@ -210,8 +216,8 @@ export default function LoginPage() {
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    className="w-full rounded-xl border border-[#E7E5E0] bg-[#FAFAF8] py-3 pl-10 pr-10 text-xs font-semibold text-[#1C1917] outline-none focus:border-[#881337] focus:ring-1 focus:ring-[#881337] transition-all"
+                    placeholder="Enter password"
+                    className="w-full rounded-xl border border-[#E7E5E0] bg-white py-3.5 pl-10 pr-10 text-xs font-semibold text-[#1C1917] outline-none focus:border-[#881337] focus:ring-2 focus:ring-[#881337]/20 shadow-2xs transition-all"
                     required
                   />
                   <button
@@ -227,9 +233,9 @@ export default function LoginPage() {
               {/* Primary Submit Button */}
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#881337] py-3.5 text-xs font-bold text-white shadow-md hover:bg-[#6B0F2A] active:scale-[0.99] transition-all cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#881337] to-[#6B0F2A] py-3.5 text-xs font-bold text-white shadow-md hover:from-[#6B0F2A] hover:to-[#500A1F] active:scale-[0.99] transition-all cursor-pointer"
               >
-                <span>Sign in</span>
+                <span>Sign in to Dashboard</span>
                 <ArrowRight className="size-4" />
               </button>
             </form>
@@ -237,7 +243,7 @@ export default function LoginPage() {
             {/* OR Divider */}
             <div className="relative flex items-center justify-center">
               <div className="w-full border-t border-[#E7E5E0]" />
-              <span className="absolute bg-white px-3 text-[10px] font-bold text-[#78716C] uppercase">
+              <span className="absolute bg-[#FAFAF8] px-3 text-[10px] font-bold text-[#78716C] uppercase tracking-wider">
                 OR
               </span>
             </div>
@@ -249,21 +255,21 @@ export default function LoginPage() {
                 dispatch({ type: "login" });
                 router.push("/gm/home");
               }}
-              className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#E7E5E0] bg-[#FAFAF8] py-3 text-xs font-bold text-[#1C1917] hover:bg-[#E7E5E0] transition-colors cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#E7E5E0] bg-white py-3.5 text-xs font-bold text-[#1C1917] hover:bg-[#F7F5F2] shadow-2xs transition-colors cursor-pointer"
             >
-              <ShieldCheck className="size-4 text-[#881337]" />
-              <span>Sign in with SSO</span>
+              <Key className="size-4 text-[#881337]" />
+              <span>Sign in with Enterprise SSO</span>
             </button>
           </div>
 
-          {/* Security Footer Box */}
-          <div className="rounded-xl border border-[#E7E5E0] bg-[#FAFAF8] p-4 text-center space-y-1">
+          {/* Security & Audit Footer Box */}
+          <div className="rounded-2xl border border-[#E7E5E0] bg-white p-4 text-center space-y-1 shadow-2xs">
             <div className="text-xs font-bold text-[#1C1917] flex items-center justify-center gap-1.5">
               <ShieldCheck className="size-4 text-[#15803D]" />
-              <span>Secure. Private. Compliant.</span>
+              <span>SOC2 Type II & HIPAA Certified</span>
             </div>
             <p className="text-[11px] font-medium text-[#78716C]">
-              Role-based access. Immutable audit trail. Enterprise-grade security.
+              Role-based access controls. Immutable audit logs. Enterprise encryption.
             </p>
           </div>
         </div>

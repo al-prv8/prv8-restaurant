@@ -62,6 +62,37 @@ export default function GmCompliancePage() {
         ]}
       />
 
+      {/* Priority Action Banner */}
+      {!state.certificationCompleted && (
+        <Card tone="alert">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className="grid size-9 shrink-0 place-items-center rounded-full bg-[#B91C1C]/10 text-[#B91C1C] mt-0.5">
+                <AlertCircle className="size-4" />
+              </div>
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[#B91C1C]">
+                  ACTION REQUIRED · SERVSAFE RENEWAL
+                </div>
+                <div className="text-sm font-bold text-[#1C1917]">
+                  Andre Vega&apos;s ServSafe Food Handler certification expires in 14 days.
+                </div>
+                <p className="text-xs text-[#78716C] mt-0.5">
+                  Complete the 10-minute online renewal module to maintain 100% store compliance.
+                </p>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => dispatch({ type: "completeCertification" })}
+              className="shrink-0"
+            >
+              Complete ServSafe Renewal
+            </Button>
+          </div>
+        </Card>
+      )}
+
       {/* Certification Roster */}
       <Card>
         <SectionTitle hint="State & County Health Standards">
