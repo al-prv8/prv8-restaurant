@@ -66,6 +66,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { state, derived: d, dispatch } = usePrive();
+  const cfg = state.demoConfig;
   const { state: sidebarState, setOpenMobile } = useSidebar();
   const isCollapsed = sidebarState === "collapsed";
 
@@ -355,17 +356,17 @@ export function Sidebar() {
       <SidebarFooter>
         <div className="flex items-center gap-3">
           <div className="relative grid size-8 shrink-0 place-items-center rounded-full bg-[#881337] text-white font-black text-xs border border-white/20">
-            JE
+            {cfg.firstName.slice(0, 2).toUpperCase()}
             <span className="absolute bottom-0 right-0 size-2 rounded-full bg-[#4ADE80] ring-1 ring-[#1C070D]" />
           </div>
 
           {!isCollapsed && (
             <div className="flex-1 min-w-0">
               <div className="text-xs font-bold text-white truncate">
-                Jordan Ellis
+                {cfg.firstName}
               </div>
               <div className="text-[10px] text-white/50 truncate">
-                General Manager
+                General Manager · {cfg.companyName}
               </div>
             </div>
           )}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Search, Tag, CheckCircle2 } from "lucide-react";
-import { Card, SectionTitle, Pagination } from "@/components/prive/ui";
+import { Card, SectionTitle, Pagination, PriveIntelBanner } from "@/components/prive/ui";
 import { AskPriveConsole } from "@/components/prive/AskPrive";
 import { knowledge } from "@/lib/prive/data";
 
@@ -28,8 +28,17 @@ export default function EmployeeAnnouncementsPage() {
    <div className="mb-8 space-y-1">
     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337]">Ballantyne #02 · Policy & Knowledge Base</p>
     <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">Announcements & Policies</h1>
-    <p className="text-sm font-medium text-[#78716C]">Answers to common operational questions — no manager needed.</p>
+    <p className="text-sm font-medium text-[#78716C]">Answers to common operational questions, no manager needed.</p>
    </div>
+
+   <PriveIntelBanner
+    summary="2 policy updates require your acknowledgment before your next shift: updated allergen handling and uniform guidelines."
+    details={[
+     "Allergen Awareness: new tree nut cross-contamination protocol effective immediately.",
+     "Shift swap policy updated — all requests now require 48 hours advance notice.",
+     "Ask Privé below for instant answers to any policy question at any time.",
+    ]}
+   />
 
    {/* Interactive Knowledge Base Q&A Search Engine */}
    <div className="mb-6 rounded-xl bg-white border border-[#E7E5E0] p-5 shadow-sm">

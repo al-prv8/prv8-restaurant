@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
-import { Card, SectionTitle, Pill, Button, KpiRow } from "@/components/prive/ui";
+import { Card, SectionTitle, Pill, Button, KpiRow, PriveIntelBanner } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 
 export default function EmployeeTrainingPage() {
@@ -59,6 +59,17 @@ export default function EmployeeTrainingPage() {
        { label: "Completion", value: state.certificationCompleted ? "100%" : "85%", tone: "good" }
      ]} />
    </div>
+
+   <PriveIntelBanner
+    summary={state.certificationCompleted
+     ? "All training modules complete. Your certification is current and your profile is fully compliant."
+     : "Allergen Awareness training is due before your next shift. It takes 5 minutes and keeps your certification active."
+    }
+    details={[
+     "ServSafe Food Handler certification expires within 14 days. Complete the renewal before your next shift.",
+     "Your overall training completion rate is 85%. Completing one module brings you to 100%.",
+    ]}
+   />
 
    <div className="grid gap-6 lg:grid-cols-12">
     <div className="space-y-6 lg:col-span-7">

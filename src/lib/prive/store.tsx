@@ -29,6 +29,35 @@ import { round } from "./rng";
 
 export type Persona = "employee" | "gm" | "regional" | "guest" | "executive";
 
+export interface DemoConfig {
+  firstName: string;
+  email: string;
+  companyName: string;
+  location: string;
+  logo?: string;
+}
+
+export const DEMO_PRESETS: Record<string, DemoConfig> = {
+  morningTable: {
+    firstName: "Larry",
+    email: "larry@themorningtable.com",
+    companyName: "The Morning Table",
+    location: "Ballantyne #02",
+  },
+  fiveGuys: {
+    firstName: "Larry",
+    email: "larry@fiveguys.com",
+    companyName: "Five Guys",
+    location: "Store #104",
+  },
+  anotherBrokenEgg: {
+    firstName: "Adam",
+    email: "adam@anotherbrokenegg.com",
+    companyName: "Another Broken Egg",
+    location: "South End Location",
+  },
+};
+
 export interface AuditEvent {
   id: string;
   at: string;
@@ -55,6 +84,7 @@ export interface GiftCredit {
 interface State {
   persona: Persona;
   regionalRestaurantId: string;
+  demoConfig: DemoConfig;
   // Cross-persona mutable state
   shiftAccepted: boolean;
   extraStaffApproved: number;
@@ -84,6 +114,7 @@ type Action =
   | { type: "persona"; persona: Persona }
   | { type: "login" }
   | { type: "logout" }
+  | { type: "updateDemoConfig"; config: Partial<DemoConfig> }
   | { type: "regionalRestaurant"; id: string }
   | { type: "sendShiftOffer" }
   | { type: "acceptShift" }
@@ -139,6 +170,7 @@ function code(): string {
 const initialState: State = {
   persona: "gm",
   regionalRestaurantId: GM_RESTAURANT_ID,
+  demoConfig: DEMO_PRESETS.morningTable,
   shiftAccepted: false,
   extraStaffApproved: 0,
   potatoOrderIncrease: 0,
@@ -188,6 +220,14 @@ function reducer(state: State, action: Action): State {
       return { ...state, isAuthenticated: true };
     case "logout":
       return { ...state, isAuthenticated: false };
+    case "updateDemoConfig":
+      return {
+        ...state,
+        demoConfig: {
+          ...state.demoConfig,
+          ...action.config,
+        },
+      };
     case "toggleSidebarSection": {
       const current = state.expandedSections[action.href] ?? true;
       const nextOpen = action.open !== undefined ? action.open : !current;

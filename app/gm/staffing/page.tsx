@@ -23,9 +23,9 @@ export default function GmStaffingPage() {
   <>
    <div className="mb-8">
     <p className="text-[10px] font-bold uppercase tracking-widest text-[#881337] mb-1.5">Labor Operations</p>
-    <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">Staffing & Labor Coverage</h1>
+    <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">Staffing & Labor Coverage</h1>
     <p className="mt-2 max-w-3xl text-sm font-medium text-[#78716C]">
-     Labor forecast against peak transaction volume — recommended vs scheduled staffing levels.
+     Labor forecast against peak transaction volume, recommended vs scheduled staffing levels.
     </p>
    </div>
 
@@ -49,7 +49,7 @@ export default function GmStaffingPage() {
     <div className="flex items-center justify-between border-b border-[#E7E5E0] pb-3 mb-5">
      <div>
       <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#881337]">Hourly Coverage Chart</div>
-      <div className="text-base font-black text-[#1C1917]">Scheduled vs. Required — Saturday Shift</div>
+      <div className="text-base font-black text-[#1C1917]">Scheduled vs. Required, Saturday Shift</div>
      </div>
      <Pill tone={s.gap > 0 ? "amber" : "teal"}>
       {s.gap > 0 ? `${s.gap} role gap` : "Fully Staffed"}
@@ -108,13 +108,13 @@ export default function GmStaffingPage() {
     {s.gap > 0 && (
      <div className="mt-3 flex items-center gap-2 rounded-lg bg-[#B45309]/10 border border-[#B45309]/20 px-3 py-2 text-xs font-bold text-[#92400E]">
       <span className="shrink-0">⚠</span>
-      <span>4 PM – 6 PM: {s.gap} role{s.gap > 1 ? "s" : ""} short of recommended coverage — dinner peak risk</span>
+      <span>4 PM, 6 PM: {s.gap} role{s.gap > 1 ? "s" : ""} short of recommended coverage, dinner peak risk</span>
      </div>
     )}
    </div>
 
    <KpiRow items={[
-    { label: "Staff Gap Count", value: s.gap > 0 ? `${s.gap} roles` : "0 roles", sub: "Peak block Saturday 4–8 PM", tone: s.gap > 0 ? "warn" : "good" },
+    { label: "Staff Gap Count", value: s.gap > 0 ? `${s.gap} roles` : "0 roles", sub: "Peak block Saturday 4, 8 PM", tone: s.gap > 0 ? "warn" : "good" },
     { label: "Projected Labor %", value: `${s.projectedLaborPct}%`, sub: `${money(s.projectedLaborCost)} total cost`, tone: s.projectedLaborPct > s.targetLaborPct ? "bad" : "neutral" },
     { label: "Target Labor %", value: `${s.targetLaborPct}%`, sub: "Based on projected sales", tone: "neutral" }
    ]} />

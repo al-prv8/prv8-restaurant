@@ -10,10 +10,10 @@ export default function EmployeeSchedulePage() {
  const pageSize = 4;
 
  const SHIFTS = [
-  { day: "Today", time: "10:00 AM – 4:00 PM", role: "Section 3 · Server", hours: "6.0 hrs", status: "Confirmed", tone: "teal" as const },
-  { day: "Friday", time: "11:00 AM – 5:00 PM", role: "Section 1 · Server", hours: "6.0 hrs", status: "Scheduled", tone: "indigo" as const },
-  { day: "Sunday", time: "10:00 AM – 4:00 PM", role: "Section 2 · Server", hours: "6.0 hrs", status: "Scheduled", tone: "indigo" as const },
-  { day: "Next Tuesday", time: "11:00 AM – 5:00 PM", role: "Section 4 · Server", hours: "6.0 hrs", status: "Scheduled", tone: "indigo" as const },
+  { day: "Today", time: "10:00 AM, 4:00 PM", role: "Section 3 · Server", hours: "6.0 hrs", status: "Confirmed", tone: "teal" as const },
+  { day: "Friday", time: "11:00 AM, 5:00 PM", role: "Section 1 · Server", hours: "6.0 hrs", status: "Scheduled", tone: "indigo" as const },
+  { day: "Sunday", time: "10:00 AM, 4:00 PM", role: "Section 2 · Server", hours: "6.0 hrs", status: "Scheduled", tone: "indigo" as const },
+  { day: "Next Tuesday", time: "11:00 AM, 5:00 PM", role: "Section 4 · Server", hours: "6.0 hrs", status: "Scheduled", tone: "indigo" as const },
  ];
 
  if (state.shiftAccepted && state.extraStaffApproved > 0) {
@@ -38,13 +38,26 @@ export default function EmployeeSchedulePage() {
     <p className="text-sm font-medium text-[#78716C]">Your upcoming shifts and open pickup opportunities at Ballantyne #02.</p>
    </div>
 
-   <div className="mb-6 rounded-xl bg-white border border-[#E7E5E0] p-5 text-center shadow-sm">
+   <div className="mb-6 rounded-xl bg-white border border-[#E7E5E0] p-5 text-center shadow-xs">
      <h2 className="text-sm font-bold text-[#78716C] uppercase tracking-wider mb-2">Current Shift · Today</h2>
      <div className="text-4xl sm:text-5xl font-black tracking-tight text-[#1C1917] tabular-nums">
-      10:00 AM – 4:00 PM
+      10:00 AM, 4:00 PM
      </div>
      <p className="mt-2 text-sm font-bold text-[#15803D]">Confirmed · Section 3 · Server</p>
    </div>
+
+   <PriveIntelBanner
+    summary={state.shiftAccepted
+     ? "You picked up the Saturday 4, 8 PM peak block. Your estimated weekly earnings are $503.75."
+     : "There is 1 open shift this week: Saturday 4, 8 PM peak block. Picking it up adds $62.00 to your paycheck."
+    }
+    details={[
+     "Your current confirmed hours this week: 28.5 hrs (target: 32 hrs).",
+     "Allergen Awareness training module is due before your next shift.",
+    ]}
+    action={!state.shiftAccepted ? () => {} : undefined}
+    actionLabel={!state.shiftAccepted ? "View Open Shift" : undefined}
+   />
 
    <div className="space-y-6">
     <div className="mb-6">

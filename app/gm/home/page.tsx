@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -26,6 +26,7 @@ import {
   UserCheck,
   Send,
   Zap,
+  Volume2,
 } from "lucide-react";
 import { usePrive } from "@/lib/prive/store";
 import type { Complaint } from "@/lib/prive/data";
@@ -56,9 +57,54 @@ function getSmoothCurvePath(points: { x: number; y: number }[]): string {
 export default function GmHomePage() {
   const router = useRouter();
   const { derived: d, state, dispatch } = usePrive();
+  const cfg = state.demoConfig;
   const [salesTimeframe, setSalesTimeframe] = useState("Today");
   const [laborTimeframe, setLaborTimeframe] = useState("Today");
   const [salesHoverIdx, setSalesHoverIdx] = useState<number | null>(4); // Default 6 PM peak
+
+  // Time of day greeting
+  const [greetingPrefix, setGreetingPrefix] = useState("Good afternoon");
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 12) {
+      setGreetingPrefix("Good morning");
+    } else if (hour >= 12 && hour < 17) {
+      setGreetingPrefix("Good afternoon");
+    } else {
+      setGreetingPrefix("Good evening");
+    }
+  }, []);
+
+  const greetingText = `${greetingPrefix}, ${cfg.firstName}.`;
+
+  const speakGreeting = React.useCallback(() => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(greetingText);
+      utterance.rate = 0.95;
+      utterance.pitch = 1.0;
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice =
+        voices.find(
+          (v) =>
+            v.lang.startsWith("en") &&
+            (v.name.includes("Natural") ||
+              v.name.includes("Google") ||
+              v.name.includes("Samantha") ||
+              v.name.includes("Daniel"))
+        ) || voices.find((v) => v.lang.startsWith("en"));
+      if (preferredVoice) utterance.voice = preferredVoice;
+      window.speechSynthesis.speak(utterance);
+    }
+  }, [greetingText]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      speakGreeting();
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [speakGreeting]);
 
   const openComplaintsCount = d.gmComplaints.filter(
     (c: Complaint) => c.status === "Awaiting Approval"
@@ -99,13 +145,23 @@ export default function GmHomePage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#78716C] mb-1">
-            SATURDAY, AUGUST 17
+            SATURDAY, AUGUST 17 · {cfg.location.toUpperCase()}
           </p>
-          <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">
-            Good afternoon, Jordan.
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">
+              {greetingText}
+            </h1>
+            <button
+              type="button"
+              onClick={speakGreeting}
+              className="rounded-full border border-[#881337]/20 bg-[#881337]/5 p-2 text-[#881337] hover:bg-[#881337]/15 transition-all shadow-2xs cursor-pointer"
+              title="Replay Audible Voice Greeting"
+            >
+              <Volume2 className="size-5 animate-pulse" />
+            </button>
+          </div>
           <p className="mt-1 text-sm font-medium text-[#78716C]">
-            Here&apos;s what&apos;s happening at Ballantyne #02 today.
+            Here&apos;s what&apos;s happening at {cfg.companyName} today.
           </p>
         </div>
       </div>
@@ -126,7 +182,7 @@ export default function GmHomePage() {
         <div className="relative z-10 flex h-full flex-col justify-between p-6 sm:p-7 text-white max-w-xl">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50 mb-1">
-              BALLANTYNE #02
+              {cfg.companyName.toUpperCase()} · {cfg.location.toUpperCase()}
             </p>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-2.5">
               <span>Dining Room Open</span>

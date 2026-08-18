@@ -11,6 +11,7 @@ import { SidebarProvider, SidebarInset, useSidebar } from "@/components/ui/sideb
 import { NotificationsDrawer } from "./NotificationsDrawer";
 import { HelpModal } from "./HelpModal";
 import { ProfileDrawer } from "./ProfileDrawer";
+import { DemoConfigModal } from "./DemoConfigModal";
 
 function ShellInner({
   persona,
@@ -26,6 +27,7 @@ function ShellInner({
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [demoConfigOpen, setDemoConfigOpen] = useState(false);
 
   const isCollapsed = sidebarState === "collapsed";
 
@@ -46,6 +48,7 @@ function ShellInner({
         onOpenNotifications={() => setNotificationsOpen(true)}
         onOpenHelp={() => setHelpOpen(true)}
         onOpenProfile={() => setProfileOpen(true)}
+        onOpenDemoConfig={() => setDemoConfigOpen(true)}
         onResetDemo={() => dispatch({ type: "resetDemo" })}
       />
 
@@ -79,6 +82,10 @@ function ShellInner({
       <ProfileDrawer
         open={profileOpen}
         onClose={() => setProfileOpen(false)}
+      />
+      <DemoConfigModal
+        open={demoConfigOpen}
+        onClose={() => setDemoConfigOpen(false)}
       />
     </div>
   );

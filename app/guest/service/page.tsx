@@ -87,7 +87,7 @@ export default function GuestServicePage() {
     setIsPlaying(true);
 
     const script = [
-      { speaker: "ai" as const, text: "Thank you for calling The Morning Table — Ballantyne location. How can I help you today?", pitch: 1.1, rate: 0.95 },
+      { speaker: "ai" as const, text: "Thank you for calling The Morning Table, Ballantyne location. How can I help you today?", pitch: 1.1, rate: 0.95 },
       { speaker: "guest" as const, text: "Hi, I ordered curbside pickup earlier and two sides of bacon were missing.", pitch: 0.9, rate: 1.0 },
       { speaker: "ai" as const, text: "I'm sorry about that, Priya. I found your order ORD-51993 from 9:42 AM. I'm creating a service case now and routing it to your location's general manager for review. You'll hear back within the hour.", pitch: 1.1, rate: 0.95 },
     ];
@@ -150,7 +150,7 @@ export default function GuestServicePage() {
         orderRef: "ORD-51993",
         recommendedCredit: 15,
         draftResponse:
-          "Hi Priya, I'm sorry your order was incomplete — that's on us. I've flagged it with the expo team on duty. I'd like to make it right with a $AMOUNT dining credit and personally welcome you back on your next visit.\n\n— General Manager, The Morning Table",
+          "Hi Priya, I'm sorry your order was incomplete, that's on us. I've flagged it with the expo team on duty. I'd like to make it right with a $AMOUNT dining credit and personally welcome you back on your next visit.\n\nGeneral Manager, The Morning Table",
       },
     });
 
@@ -160,7 +160,7 @@ export default function GuestServicePage() {
       <div className="mb-6">
         <h1 className="text-2xl font-black tracking-tight text-[#1C1917]">How can we help you?</h1>
         <p className="mt-1 text-sm text-[#78716C]">
-          Our AI handles your request instantly — a manager reviews every resolution before it&apos;s sent.
+          Our AI handles your request instantly, a manager reviews every resolution before it&apos;s sent.
         </p>
       </div>
 
@@ -192,7 +192,7 @@ export default function GuestServicePage() {
           <div className="rounded-xl bg-black/40 border border-white/8 p-4 font-mono text-xs leading-relaxed space-y-3 mt-4">
             <div className={`rounded-lg p-3 transition-all ${activeSpeaker === "ai" ? "bg-[#881337]/40 ring-1 ring-[#881337]" : "opacity-60"}`}>
               <span className="font-bold text-[#4ADE80] text-[10px] block mb-1 uppercase tracking-wider">✦ Privé Voice AI</span>
-              &ldquo;Thank you for calling The Morning Table — Ballantyne location. How can I help you today?&rdquo;
+              &ldquo;Thank you for calling The Morning Table, Ballantyne location. How can I help you today?&rdquo;
             </div>
             <div className={`rounded-lg p-3 transition-all ${activeSpeaker === "guest" ? "bg-white/10 ring-1 ring-white/20" : "opacity-60"}`}>
               <span className="font-bold text-[#F87171] text-[10px] block mb-1 uppercase tracking-wider">👤 Guest (Priya)</span>

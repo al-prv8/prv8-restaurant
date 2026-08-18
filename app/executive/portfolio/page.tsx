@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, SectionTitle, Pill, stateTone, Pagination, KpiRow, DataTable, THead, Th, Tr, Td } from "@/components/prive/ui";
+import { Card, SectionTitle, Pill, stateTone, Pagination, KpiRow, DataTable, THead, Th, Tr, Td, PriveIntelBanner } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 
 export default function ExecutivePortfolioPage() {
@@ -27,21 +27,26 @@ export default function ExecutivePortfolioPage() {
 
  return (
   <>
-   <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
-    <div>
-     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-2">Enterprise · Portfolio Health</p>
-     <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">Portfolio Health</h1>
-     <p className="mt-2 max-w-3xl text-sm font-medium text-[#78716C]">All 12 locations ranked by composite health score.</p>
-    </div>
-
-    <div className="w-full md:w-[450px]">
-     <KpiRow items={[
-      { label: "Healthy", value: healthyCount.toString(), tone: "good" },
-      { label: "Watch List", value: watchCount.toString(), tone: "warn" },
-      { label: "Action Reqd", value: actionCount.toString(), tone: "bad" }
-     ]} />
-    </div>
+   <div className="mb-8">
+    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-2">Enterprise · Portfolio Health</p>
+    <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">Portfolio Health</h1>
+    <p className="mt-2 max-w-3xl text-sm font-medium text-[#78716C]">All 12 locations ranked by composite health score.</p>
    </div>
+
+   <KpiRow items={[
+    { label: "Healthy", value: healthyCount.toString(), tone: "good" },
+    { label: "Watch List", value: watchCount.toString(), tone: "warn" },
+    { label: "Action Reqd", value: actionCount.toString(), tone: "bad" }
+   ]} />
+
+   <PriveIntelBanner
+    summary={`${actionCount} location${actionCount !== 1 ? "s" : ""} require immediate executive attention. Combined recovery opportunity estimated at $42,000 in EBITDA over 90 days.`}
+    details={[
+     "Charlotte #03 (58% health): 6-week decline driven by turnover. Priority: retention bonus + GM review.",
+     `${healthyCount} of 12 locations are healthy, outperforming the national franchise benchmark of 65%.`,
+     "Ballantyne #02 leads the portfolio at 96% health, +8.2% sales vs plan.",
+    ]}
+   />
    
    <div className="grid gap-5">
     <Card>

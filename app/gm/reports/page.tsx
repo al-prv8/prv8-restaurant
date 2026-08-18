@@ -13,7 +13,7 @@ import {
   ShieldCheck,
   TrendingUp,
 } from "lucide-react";
-import { Card, SectionTitle, KpiRow, Button, Pill } from "@/components/prive/ui";
+import { Card, SectionTitle, KpiRow, Button, Pill, PriveIntelBanner } from "@/components/prive/ui";
 
 export default function GmReportsPage() {
   const reports = [
@@ -38,7 +38,7 @@ export default function GmReportsPage() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-1">
             BALLANTYNE #02 · FINANCIAL & AUDIT REPORTS
           </p>
-          <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">
+          <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">
             Reports & Audit Library
           </h1>
           <p className="mt-1 max-w-3xl text-sm font-medium text-[#78716C]">
@@ -61,6 +61,15 @@ export default function GmReportsPage() {
           { label: "Audit Log Status", value: "100% Compliant", tone: "good", sub: "No discrepancies found" },
           { label: "P&L Margin (MTD)", value: "21.4%", tone: "good", sub: "+1.2% vs budget" },
           { label: "Last Export", value: "Today 12:00 PM", tone: "neutral", sub: "Jordan Ellis" },
+        ]}
+      />
+
+      <PriveIntelBanner
+        summary="3 reports are ready for export. This week's performance summary shows $31,842 in sales, +8.2% above forecast and +1.2% margin improvement."
+        details={[
+          "Automated night audit ran at 2:00 AM with zero discrepancies detected across 24 line items.",
+          "P&L margin for the month-to-date is 21.4%, exceeding the 20.2% budget target.",
+          "Audit log is 100% compliant. All GM actions logged with timestamp and approval chain.",
         ]}
       />
 

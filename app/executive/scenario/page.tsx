@@ -1,7 +1,7 @@
 "use client";
 
 import { Sliders, Zap } from "lucide-react";
-import { Card, SectionTitle, ConfidenceTag, KpiRow } from "@/components/prive/ui";
+import { Card, SectionTitle, ConfidenceTag, KpiRow, PriveIntelBanner } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 import { money, moneyShort } from "@/lib/prive/forecast";
 
@@ -25,6 +25,20 @@ export default function ExecutiveScenarioPage() {
      Model portfolio-wide traffic shifts in real time. Privé recalculates revenue, labor hours, inventory exposure, and service risk dynamically.
     </p>
    </div>
+
+   <PriveIntelBanner
+    summary={state.scenarioUplift === 0
+     ? "Baseline operations active. Adjust the scenario slider to model traffic surges, slowdowns, or promotional events across all 12 locations."
+     : state.scenarioUplift > 0
+     ? `A ${state.scenarioUplift}% traffic increase requires ${d.scenario.extraStaffNeeded} additional team members and ${d.scenario.laborHoursDelta} extra labor hours across 12 locations.`
+     : `A ${Math.abs(state.scenarioUplift)}% traffic contraction frees ${Math.abs(d.scenario.laborHoursDelta)} labor hours and reduces service risk to ${d.scenario.serviceRiskPct}%.`
+    }
+    details={[
+     "All projections are recalculated in real time from the trailing 90-day operational data series.",
+     "Human approval is required before any scenario triggers a staffing change or inventory pre-order.",
+     `Current confidence level: ${d.scenario.confidence}. Revenue model uncertainty window: ± 3.2%.`,
+    ]}
+   />
 
    <div className="grid gap-6 lg:grid-cols-12">
     <div className="space-y-6 lg:col-span-12">

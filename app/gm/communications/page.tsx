@@ -32,7 +32,7 @@ export default function GmCommunicationsPage() {
     <>
       <div className="mb-8">
         <p className="text-[10px] font-bold uppercase tracking-widest text-[#881337] mb-1.5">Corporate Policy</p>
-        <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">Corporate Communications</h1>
+        <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">Corporate Communications</h1>
         <p className="mt-2 max-w-3xl text-sm font-medium text-[#78716C]">
           Corporate broadcasts, seasonal LTO launches, and policy updates requiring store manager sign-off.
         </p>

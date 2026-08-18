@@ -11,7 +11,7 @@ import {
   FileCheck,
   RefreshCw,
 } from "lucide-react";
-import { Card, SectionTitle, KpiRow, Button, Pill } from "@/components/prive/ui";
+import { Card, SectionTitle, KpiRow, Button, Pill, PriveIntelBanner } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 
 export default function GmCompliancePage() {
@@ -33,7 +33,7 @@ export default function GmCompliancePage() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-1">
             BALLANTYNE #02 · COMPLIANCE & SAFETY
           </p>
-          <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">
+          <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">
             Compliance & Certification Center
           </h1>
           <p className="mt-1 max-w-3xl text-sm font-medium text-[#78716C]">
@@ -60,6 +60,20 @@ export default function GmCompliancePage() {
           { label: "Certifications Due", value: state.certificationCompleted ? "0" : "1", tone: state.certificationCompleted ? "good" : "warn", sub: "ServSafe Renewal" },
           { label: "Food Temp Audits", value: "Passed", tone: "good", sub: "Last logged 2 hrs ago" },
         ]}
+      />
+
+      <PriveIntelBanner
+        summary={state.certificationCompleted
+          ? "All certifications are current. Compliance score: 96/100. Next health department inspection probability: low risk."
+          : "Andre Vega's ServSafe certification expires in 14 days. Renewing today prevents a compliance flag on your next inspection."
+        }
+        details={[
+          "ServSafe Food Manager (Jordan Ellis) valid through Nov 2027.",
+          "Health Department Operating Permit active through Dec 2026.",
+          "Allergen Awareness module overdue for Maya Robinson, 5-minute completion required.",
+        ]}
+        action={!state.certificationCompleted ? () => dispatch({ type: "completeCertification" }) : undefined}
+        actionLabel={!state.certificationCompleted ? "Renew Andre Vega Cert" : undefined}
       />
 
       {/* Priority Action Banner */}

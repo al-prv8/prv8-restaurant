@@ -23,7 +23,7 @@ export default function GuestCreditsPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-black tracking-tight text-[#1C1917]">Your Recovery Credits</h1>
         <p className="mt-1 text-sm text-[#78716C]">
-          Single-use dining credits issued after your complaint was resolved — no expiry, no catch.
+          Single-use dining credits issued after your complaint was resolved, no expiry, no catch.
         </p>
       </div>
 

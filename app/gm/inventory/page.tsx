@@ -28,9 +28,9 @@ export default function GmInventoryPage() {
   <>
    <div className="mb-8">
     <p className="text-[10px] font-bold uppercase tracking-widest text-[#881337] mb-1.5">Supply Chain</p>
-    <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">Inventory & Depletion</h1>
+    <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">Inventory & Depletion</h1>
     <p className="mt-2 max-w-3xl text-sm font-medium text-[#78716C]">
-     Depletion forecast against tomorrow's projected demand — every number recalculates live from the forecast engine.
+     Depletion forecast against tomorrow's projected demand, every number recalculates live from the forecast engine.
     </p>
    </div>
 

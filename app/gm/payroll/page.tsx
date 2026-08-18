@@ -26,7 +26,7 @@ export default function GmPayrollPage() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-1">
             BALLANTYNE #02 · PAYROLL & COMPENSATION
           </p>
-          <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">
+          <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">
             Payroll Queue & Wage Audits
           </h1>
           <p className="mt-1 max-w-3xl text-sm font-medium text-[#78716C]">
@@ -58,7 +58,7 @@ export default function GmPayrollPage() {
       {/* Payroll Approval Card */}
       <Card tone={approved ? "intel" : "alert"}>
         <SectionTitle hint="Paycor POS Sync">
-          Bi-Weekly Payroll Summary (Aug 1 - Aug 15)
+          Bi-Weekly Payroll Summary (Aug 1, Aug 15)
         </SectionTitle>
 
         <div className="space-y-4">

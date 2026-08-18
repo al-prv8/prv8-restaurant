@@ -22,12 +22,12 @@ export default function GmSchedulePage() {
   const [selectedRole, setSelectedRole] = useState("All");
 
   const roster = [
-    { name: "Maya Robinson", role: "Server", sat: "10 AM - 4 PM", sun: "10 AM - 4 PM", mon: "OFF", tue: "4 PM - 10 PM", wed: "10 AM - 4 PM", thu: "OFF", fri: "4 PM - 10 PM", hours: 30 },
-    { name: "Jordan Smith", role: "Server", sat: "4 PM - 10 PM", sun: "OFF", mon: "10 AM - 4 PM", tue: "OFF", wed: "4 PM - 10 PM", thu: "10 AM - 4 PM", fri: "OFF", hours: 24 },
-    { name: "Taylor Morgan", role: "Server", sat: "10 AM - 4 PM", sun: "10 AM - 4 PM", mon: "4 PM - 10 PM", tue: "10 AM - 4 PM", wed: "OFF", thu: "4 PM - 10 PM", fri: "10 AM - 4 PM", hours: 36 },
-    { name: "Chris Bennett", role: "Cashier", sat: "8 AM - 3 PM", sun: "8 AM - 3 PM", mon: "8 AM - 3 PM", tue: "OFF", wed: "8 AM - 3 PM", thu: "8 AM - 3 PM", fri: "OFF", hours: 35 },
-    { name: "Marcus Vance", role: "Line Cook", sat: "3 PM - 11 PM", sun: "3 PM - 11 PM", mon: "OFF", tue: "3 PM - 11 PM", wed: "3 PM - 11 PM", thu: "OFF", fri: "3 PM - 11 PM", hours: 40 },
-    { name: "Andre Vega", role: "Line Cook", sat: "7 AM - 3 PM", sun: "7 AM - 3 PM", mon: "7 AM - 3 PM", tue: "7 AM - 3 PM", wed: "7 AM - 3 PM", thu: "OFF", fri: "OFF", hours: 40 },
+    { name: "Maya Robinson", role: "Server", sat: "10 AM, 4 PM", sun: "10 AM, 4 PM", mon: "OFF", tue: "4 PM, 10 PM", wed: "10 AM, 4 PM", thu: "OFF", fri: "4 PM, 10 PM", hours: 30 },
+    { name: "Jordan Smith", role: "Server", sat: "4 PM, 10 PM", sun: "OFF", mon: "10 AM, 4 PM", tue: "OFF", wed: "4 PM, 10 PM", thu: "10 AM, 4 PM", fri: "OFF", hours: 24 },
+    { name: "Taylor Morgan", role: "Server", sat: "10 AM, 4 PM", sun: "10 AM, 4 PM", mon: "4 PM, 10 PM", tue: "10 AM, 4 PM", wed: "OFF", thu: "4 PM, 10 PM", fri: "10 AM, 4 PM", hours: 36 },
+    { name: "Chris Bennett", role: "Cashier", sat: "8 AM, 3 PM", sun: "8 AM, 3 PM", mon: "8 AM, 3 PM", tue: "OFF", wed: "8 AM, 3 PM", thu: "8 AM, 3 PM", fri: "OFF", hours: 35 },
+    { name: "Marcus Vance", role: "Line Cook", sat: "3 PM, 11 PM", sun: "3 PM, 11 PM", mon: "OFF", tue: "3 PM, 11 PM", wed: "3 PM, 11 PM", thu: "OFF", fri: "3 PM, 11 PM", hours: 40 },
+    { name: "Andre Vega", role: "Line Cook", sat: "7 AM, 3 PM", sun: "7 AM, 3 PM", mon: "7 AM, 3 PM", tue: "7 AM, 3 PM", wed: "7 AM, 3 PM", thu: "OFF", fri: "OFF", hours: 40 },
   ];
 
   const filteredRoster = selectedRole === "All" ? roster : roster.filter((r) => r.role === selectedRole);
@@ -40,7 +40,7 @@ export default function GmSchedulePage() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-1">
             BALLANTYNE #02 · LABOR MANAGEMENT
           </p>
-          <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">
+          <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">
             Master Shift Schedule & Roster
           </h1>
           <p className="mt-1 max-w-3xl text-sm font-medium text-[#78716C]">

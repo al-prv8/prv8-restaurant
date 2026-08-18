@@ -12,7 +12,7 @@ import {
   ArrowRight,
   Filter,
 } from "lucide-react";
-import { Card, SectionTitle, KpiRow, Button, Pill } from "@/components/prive/ui";
+import { Card, SectionTitle, KpiRow, Button, Pill, PriveIntelBanner } from "@/components/prive/ui";
 
 export default function GmHiringPage() {
   const applicants = [
@@ -37,7 +37,7 @@ export default function GmHiringPage() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-1">
             BALLANTYNE #02 · TALENT ACQUISITION
           </p>
-          <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">
+          <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">
             Hiring & Onboarding Pipeline
           </h1>
           <p className="mt-1 max-w-3xl text-sm font-medium text-[#78716C]">
@@ -60,6 +60,15 @@ export default function GmHiringPage() {
           { label: "Open Positions", value: "2 roles", tone: "warn", sub: "Line Cook, Server" },
           { label: "Avg Time to Hire", value: "9 days", tone: "good", sub: "-3 days vs regional benchmark" },
           { label: "Onboarding Progress", value: "100%", tone: "good", sub: "Elena Rostova Day 2" },
+        ]}
+      />
+
+      <PriveIntelBanner
+        summary="Devon Vance (Line Cook) is a 94% AI fit match. Interview is scheduled. Hiring him closes the Saturday dinner peak gap within 2 weeks."
+        details={[
+          "Samantha Cross (Server) passed background check and is ready for an offer.",
+          "Elena Rostova is on Day 2 of onboarding, 100% completion rate so far.",
+          "Average time-to-hire at 9 days is 3 days faster than the regional benchmark.",
         ]}
       />
 

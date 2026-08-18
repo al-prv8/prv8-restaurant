@@ -11,7 +11,7 @@ export default function GmWorkforcePage() {
   <>
    <div className="mb-8">
     <p className="text-[10px] font-bold uppercase tracking-widest text-[#881337] mb-1.5">Human Resources</p>
-    <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">Workforce & Compliance</h1>
+    <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">Workforce & Compliance</h1>
     <p className="mt-2 max-w-3xl text-sm font-medium text-[#78716C]">
      Roster health, onboarding status, ServSafe certifications, and separation reviews for Ballantyne #02.
     </p>
@@ -20,7 +20,7 @@ export default function GmWorkforcePage() {
    <PriveIntelBanner
     summary={`Workforce roster operating at ${wf.active} active staff (${wf.trainingCompletionPct}% training completion). ${wf.trainingOverdue} overdue module(s).`}
     details={[
-     `Separation Review: Jordan Smith (Turnover risk high — retention conversation recommended).`,
+     `Separation Review: Jordan Smith (Turnover risk high, retention conversation recommended).`,
      `Certification Watch: 1 ServSafe certification expires within 14 days.`,
      `Average Tenure: ${wf.avgTenureMonths} months across all roles.`,
     ]}
@@ -37,7 +37,7 @@ export default function GmWorkforcePage() {
    <div className="grid gap-6 lg:grid-cols-12">
     <div className="lg:col-span-6 space-y-6">
      <Card>
-      <SectionTitle hint="45 Days Inactive">Employee Lifecycle — Inactivity Detection</SectionTitle>
+      <SectionTitle hint="45 Days Inactive">Employee Lifecycle, Inactivity Detection</SectionTitle>
       <div className="rounded-lg bg-[#FEF2F2] border border-[#B91C1C]/20 border-l-4 border-l-[#B91C1C] p-4 mb-4">
        <div className="text-xs font-bold uppercase tracking-wider text-[#B91C1C] mb-1">Inactivity Detected</div>
        <div className="text-sm font-semibold text-[#1C1917]">Jordan Smith has not worked a shift in 45 days.</div>
@@ -55,7 +55,7 @@ export default function GmWorkforcePage() {
        </div>
       ) : (
        <div className="text-xs font-semibold text-[#15803D] mt-2">
-        Reviewed by Jordan Ellis · {new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} — {state.separationDecision}
+        Reviewed by Jordan Ellis · {new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} · {state.separationDecision}
        </div>
       )}
      </Card>

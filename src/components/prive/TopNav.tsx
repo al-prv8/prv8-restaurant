@@ -15,6 +15,7 @@ import {
   MessageSquareHeart,
   LogOut,
   Search,
+  SlidersHorizontal,
 } from "lucide-react";
 import { usePrive, type Persona } from "@/lib/prive/store";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -28,6 +29,7 @@ export function TopNav({
   onOpenNotifications,
   onOpenHelp,
   onOpenProfile,
+  onOpenDemoConfig,
   onResetDemo,
 }: {
   persona: Persona;
@@ -38,21 +40,23 @@ export function TopNav({
   onOpenNotifications?: () => void;
   onOpenHelp?: () => void;
   onOpenProfile?: () => void;
+  onOpenDemoConfig?: () => void;
   onResetDemo?: () => void;
 }) {
   const router = useRouter();
-  const { derived: d, state, dispatch } = usePrive();
+  const { state, derived: d, dispatch } = usePrive();
+  const cfg = state.demoConfig;
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [storeDropdownOpen, setStoreDropdownOpen] = useState(false);
   const roleDropdownRef = useRef<HTMLDivElement>(null);
   const storeDropdownRef = useRef<HTMLDivElement>(null);
 
   const roles = [
-    { id: "gm", label: "General Manager", who: "Jordan Ellis · Ballantyne #02", href: "/gm/home", icon: Store },
-    { id: "employee", label: "Employee", who: "Maya Robinson · Server", href: "/employee/home", icon: UserRound },
-    { id: "regional", label: "Regional Director", who: "Dana Whitmore · Carolinas", href: "/regional/portfolio", icon: Building2 },
-    { id: "executive", label: "C-Suite Executive", who: "Ellis Rourke · COO", href: "/executive/pulse", icon: TrendingUp },
-    { id: "guest", label: "Guest Service", who: "Voice & Digital Contact", href: "/guest/service", icon: MessageSquareHeart },
+    { id: "gm", label: "General Manager", who: "Operations, Labor & Inventory", href: "/gm/home", icon: User },
+    { id: "employee", label: "Employee", who: "Shift Roster & Training", href: "/employee/home", icon: UserRound },
+    { id: "regional", label: "Regional Director", who: "Carolinas 12-Store Portfolio", href: "/regional/portfolio", icon: Building2 },
+    { id: "executive", label: "C-Suite Executive", who: "Enterprise Pulse & Scenarios", href: "/executive/pulse", icon: TrendingUp },
+    { id: "guest", label: "Guest Services", who: "AI Service Intake & Recovery", href: "/guest/service", icon: MessageSquareHeart },
   ];
 
   const currentRole = roles.find((r) => r.id === persona) ?? roles[0];
@@ -112,7 +116,7 @@ export function TopNav({
             >
               <div>
                 <div className="flex items-center gap-1.5 text-xs font-black text-[#1C1917]">
-                  <span>BALLANTYNE #02</span>
+                  <span className="uppercase">{cfg.companyName} · {cfg.location}</span>
                   <ChevronDown className="size-3.5 text-[#78716C]" />
                 </div>
               </div>
@@ -180,7 +184,7 @@ export function TopNav({
           </button>
         )}
 
-        {/* Right Section: Persona Role Switcher + Notification Bell + Help + Profile Avatar */}
+        {/* Right Section: Persona Role Switcher + Notification Bell + Help + Demo Config + Profile Avatar */}
         <div className="flex items-center gap-2.5">
           {/* Ask Privé Button */}
           {onOpenAskPrive && persona !== "guest" && (
@@ -191,6 +195,19 @@ export function TopNav({
             >
               <span className="text-xs">✦</span>
               <span>Ask Privé</span>
+            </button>
+          )}
+
+          {/* Demo Config Preset Button */}
+          {onOpenDemoConfig && (
+            <button
+              type="button"
+              onClick={onOpenDemoConfig}
+              className="hidden sm:flex h-9 items-center gap-1.5 rounded-lg border border-[#E7E5E0] bg-[#FAFAF8] px-3 text-xs font-semibold text-[#1C1917] hover:bg-[#E7E5E0] hover:text-[#881337] transition-colors cursor-pointer"
+              title="Configure Prospect & Restaurant"
+            >
+              <SlidersHorizontal className="size-4 text-[#881337]" />
+              <span>Config</span>
             </button>
           )}
 
@@ -291,9 +308,9 @@ export function TopNav({
             type="button"
             onClick={onOpenProfile}
             className="relative grid size-9 place-items-center rounded-full bg-[#881337] text-white font-black text-xs border border-white/20 shadow-xs hover:scale-105 transition-all cursor-pointer"
-            title="Jordan Ellis (Manager Profile)"
+            title={`${cfg.firstName} (Manager Profile)`}
           >
-            JE
+            {cfg.firstName.slice(0, 2).toUpperCase()}
             <span className="absolute bottom-0 right-0 size-2 rounded-full bg-[#4ADE80] ring-1 ring-white" />
           </button>
         </div>

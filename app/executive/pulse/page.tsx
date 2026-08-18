@@ -1,7 +1,7 @@
 "use client";
 
 import { Download, TrendingUp, TrendingDown, AlertTriangle, Sparkles } from "lucide-react";
-import { Card, SectionTitle, Button } from "@/components/prive/ui";
+import { Card, SectionTitle, Button, PriveIntelBanner } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 import { money, moneyShort } from "@/lib/prive/forecast";
 
@@ -23,15 +23,27 @@ export default function ExecutivePulsePage() {
   <>
    <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
     <div>
+     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-1">
+      CAROLINAS REGION · C-SUITE INTELLIGENCE
+     </p>
      <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">Enterprise Pulse</h1>
      <p className="mt-2 max-w-3xl text-sm font-medium text-[#78716C]">
-      12 restaurants · month-to-date financial performance vs plan.
+      12 restaurants, month-to-date financial performance vs plan.
      </p>
     </div>
     <Button variant="ghost" onClick={handleExportBrief} className="shrink-0 shadow-sm font-bold">
      <Download className="size-4 mr-2" /> Export Executive Brief
     </Button>
    </div>
+
+   <PriveIntelBanner
+    summary={`EBITDA margin is tracking +${e.marginDelta} pts above Q3 plan. Labor efficiency is the primary driver across 9 of 12 Carolinas stores.`}
+    details={[
+     `Month-to-date revenue: ${moneyShort(e.monthRevenue)} — same-store sales ${e.sameStoreSalesPct > 0 ? "+" : ""}${e.sameStoreSalesPct}% vs prior period.`,
+     `Recovery spend of ${money(e.recoverySpend)} represents ${(e.recoverySpend / (e.monthRevenue || 1) * 100).toFixed(1)}% of revenue, within acceptable range.`,
+     "2 stores flagged for operational review: Charlotte #03 (58%) and Uptown #07 (64%).",
+    ]}
+   />
 
    <div className="grid gap-6 lg:grid-cols-12">
     <div className="space-y-8 lg:col-span-12">

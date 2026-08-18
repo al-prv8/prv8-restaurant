@@ -11,7 +11,7 @@ import {
   CheckCircle2,
   Save,
 } from "lucide-react";
-import { Card, SectionTitle, KpiRow, Button, Pill } from "@/components/prive/ui";
+import { Card, SectionTitle, KpiRow, Button, Pill, PriveIntelBanner } from "@/components/prive/ui";
 
 export default function GmSettingsPage() {
   const [saved, setSaved] = useState(false);
@@ -29,7 +29,7 @@ export default function GmSettingsPage() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-1">
             BALLANTYNE #02 · SYSTEM CONFIGURATION
           </p>
-          <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">
+          <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">
             Location Settings & Alert Controls
           </h1>
           <p className="mt-1 max-w-3xl text-sm font-medium text-[#78716C]">
@@ -52,6 +52,15 @@ export default function GmSettingsPage() {
           { label: "POS Status", value: "Toast POS Syncing", tone: "good", sub: "Live (5 sec latency)" },
           { label: "Labor Target", value: "23.0%", tone: "good", sub: "Configured by Regional" },
           { label: "AI Auto-Approve", value: "HITL Mode", tone: "good", sub: "Manager Review Required" },
+        ]}
+      />
+
+      <PriveIntelBanner
+        summary="Ballantyne #02 is running in Human-in-the-Loop mode. All AI-generated actions require GM approval before execution."
+        details={[
+          "Toast POS is live-syncing at a 5-second latency. Labor target is set at 23.0% by Regional Director.",
+          "HITL governance mode is active. Privé cannot auto-approve orders, credits, or schedule changes.",
+          "Configuration changes are logged to the immutable audit trail with your name and timestamp.",
         ]}
       />
 

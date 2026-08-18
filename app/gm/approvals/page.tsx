@@ -27,7 +27,7 @@ export default function GmApprovalsPage() {
     <>
       <div className="mb-8">
         <p className="text-[10px] font-bold uppercase tracking-widest text-[#881337] mb-1.5">Administration</p>
-        <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">Pending Approvals Queue</h1>
+        <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">Pending Approvals Queue</h1>
         <p className="mt-2 max-w-3xl text-sm font-medium text-[#78716C]">
           Centralized human-in-the-loop queue for all operational actions requiring GM sign-off.
         </p>
@@ -37,7 +37,7 @@ export default function GmApprovalsPage() {
         summary={
           openApprovals.length > 0
             ? `${openApprovals.length} pending action(s) require GM sign-off. Approving boosts store readiness to ~88%.`
-            : "All operational approvals are cleared — store readiness is at optimal state."
+            : "All operational approvals are cleared, store readiness is at optimal state."
         }
         details={[
           "Human-in-the-loop governance: Privé does not order inventory or issue gift credits without explicit sign-off.",

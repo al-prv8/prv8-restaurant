@@ -10,7 +10,7 @@ import {
   MessageSquare,
   Sparkles,
 } from "lucide-react";
-import { Card, SectionTitle, KpiRow, Button, Pill } from "@/components/prive/ui";
+import { Card, SectionTitle, KpiRow, Button, Pill, PriveIntelBanner } from "@/components/prive/ui";
 
 export default function GmFeedbackPage() {
   const reviews = [
@@ -27,7 +27,7 @@ export default function GmFeedbackPage() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-1">
             BALLANTYNE #02 · GUEST SATISFACTION
           </p>
-          <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">
+          <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">
             Guest Feedback & NPS Analytics
           </h1>
           <p className="mt-1 max-w-3xl text-sm font-medium text-[#78716C]">
@@ -49,6 +49,15 @@ export default function GmFeedbackPage() {
           { label: "NPS Score", value: "+72", tone: "good", sub: "Top 5% of Carolinas" },
           { label: "Positive Sentiment", value: "94.2%", tone: "good", sub: "+2.1% vs last month" },
           { label: "Resolved Complaints", value: "100%", tone: "good", sub: "Avg response < 45m" },
+        ]}
+      />
+
+      <PriveIntelBanner
+        summary="Guest NPS of +72 is in the top 5% of the Carolinas region. Top driver: server attentiveness. Watch area: table wait times during the 6, 8 PM dinner peak."
+        details={[
+          "94.2% positive sentiment across 342 reviews this month, up +2.1% vs last month.",
+          "All complaints resolved within 45 minutes on average, the fastest response time in the district.",
+          "Recommendation: Address dinner peak wait times to push NPS above +78 next month.",
         ]}
       />
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Clock, Calendar, CheckCircle2, Award, Flame, Utensils, ChevronRight } from "lucide-react";
-import { Card, SectionTitle, Pill, Button } from "@/components/prive/ui";
+import { Card, SectionTitle, Pill, Button, PriveIntelBanner } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 import Link from "next/link";
 
@@ -49,6 +49,14 @@ export default function EmployeeHomePage() {
      </div>
     </div>
    </div>
+
+   <PriveIntelBanner
+    summary="Your shift today is 10:00 AM, 4:00 PM in Section 3. Allergen Awareness training is due before your next shift."
+    details={[
+     "You have a 12-day perfect attendance streak. Keep it up to qualify for the monthly performance bonus.",
+     "Open shift opportunity: Saturday 4, 8 PM peak block. Claiming it adds $62.00 to this week's paycheck.",
+    ]}
+   />
 
    <div className="grid gap-6 lg:grid-cols-12">
     {/* Main Left Column */}

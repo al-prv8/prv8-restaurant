@@ -27,6 +27,7 @@ export function ProfileDrawer({
 }) {
   const router = useRouter();
   const { state, dispatch } = usePrive();
+  const cfg = state.demoConfig;
 
   if (!open) return null;
 
@@ -50,15 +51,15 @@ export function ProfileDrawer({
           <div className="flex items-center justify-between border-b border-[#E7E5E0] bg-[#1C1917] text-white px-6 py-5">
             <div className="flex items-center gap-3">
               <div className="relative grid size-12 shrink-0 place-items-center rounded-full bg-[#881337] text-white font-black text-lg border-2 border-white/20">
-                JE
+                {cfg.firstName.slice(0, 2).toUpperCase()}
                 <span className="absolute bottom-0 right-0 size-3 rounded-full bg-[#4ADE80] ring-2 ring-[#1C1917]" />
               </div>
               <div>
                 <h2 className="text-lg font-extrabold text-white">
-                  Jordan Ellis
+                  {cfg.firstName}
                 </h2>
                 <p className="text-xs text-white/60">
-                  General Manager · Ballantyne #02
+                  General Manager · {cfg.companyName} ({cfg.location})
                 </p>
               </div>
             </div>
@@ -87,11 +88,11 @@ export function ProfileDrawer({
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[#78716C] font-semibold">Email:</span>
-                  <span className="font-bold text-[#1C1917]">jordan.ellis@themorningtable.com</span>
+                  <span className="font-bold text-[#1C1917]">{cfg.email}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[#78716C] font-semibold">Store:</span>
-                  <span className="font-bold text-[#1C1917]">Ballantyne #02 (Charlotte, NC)</span>
+                  <span className="text-[#78716C] font-semibold">Restaurant:</span>
+                  <span className="font-bold text-[#1C1917]">{cfg.companyName} ({cfg.location})</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[#78716C] font-semibold">Tenure:</span>

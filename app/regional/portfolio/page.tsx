@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, Pill, SectionTitle, PageTabs, Pagination, KpiRow, DataTable, THead, Th, Tr, Td, StatusDot } from "@/components/prive/ui";
+import { Card, Pill, SectionTitle, PageTabs, Pagination, KpiRow, DataTable, THead, Th, Tr, Td, StatusDot, PriveIntelBanner } from "@/components/prive/ui";
 import { usePrive } from "@/lib/prive/store";
 import type { Restaurant } from "@/lib/prive/data";
 
@@ -57,13 +57,22 @@ export default function RegionalPortfolioPage() {
       Composite health scores updated continuously across Charlotte, Raleigh & Greensboro.
      </p>
     </div>
-    
-    <KpiRow items={[
-     { label: 'Healthy', value: String(healthyCount), tone: 'good' },
-     { label: 'Watch List', value: String(watchCount), tone: 'warn' },
-     { label: 'Action Reqd', value: String(actionCount), tone: 'bad' }
-    ]} />
    </div>
+
+   <KpiRow items={[
+    { label: 'Healthy', value: String(healthyCount), tone: 'good' },
+    { label: 'Watch List', value: String(watchCount), tone: 'warn' },
+    { label: 'Action Reqd', value: String(actionCount), tone: 'bad' }
+   ]} />
+
+   <PriveIntelBanner
+    summary={`Charlotte #03 health score has declined for 6 consecutive weeks (now ${actionCount > 0 ? "58%" : "improving"}). Staffing turnover is the primary leading indicator.`}
+    details={[
+     "Pattern detected: turnover spike precedes complaint increase by 14 days across 3 of 4 affected stores historically.",
+     "Recommended: GM performance review and targeted retention bonus before summer LTO launch.",
+     `Portfolio summary: ${healthyCount} healthy, ${watchCount} on watch, ${actionCount} requiring immediate action.`,
+    ]}
+   />
 
    <PageTabs
     tabs={[

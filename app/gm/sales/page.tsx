@@ -60,7 +60,7 @@ export default function GmSalesPage() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-1">
             BALLANTYNE #02 · REVENUE INTELLIGENCE
           </p>
-          <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">
+          <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">
             Sales & Revenue Analytics
           </h1>
           <p className="mt-1 max-w-3xl text-sm font-medium text-[#78716C]">

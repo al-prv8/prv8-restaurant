@@ -100,7 +100,7 @@ export default function IntegrationsPage() {
           </h1>
           <p className="mt-1.5 text-sm font-medium text-[#78716C] max-w-2xl">
             Privé reads from connected systems in real time and records a complete audit trail
-            for every human approval — nothing executes without a traceable actor.
+            for every human approval, nothing executes without a traceable actor.
           </p>
         </div>
         <div className="flex items-center gap-2 rounded-lg bg-[#15803D]/8 px-4 py-2.5 shrink-0">

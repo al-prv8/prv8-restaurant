@@ -10,7 +10,7 @@ import {
   CheckCircle2,
   ArrowUpRight,
 } from "lucide-react";
-import { Card, SectionTitle, KpiRow, Button, Pill } from "@/components/prive/ui";
+import { Card, SectionTitle, KpiRow, Button, Pill, PriveIntelBanner } from "@/components/prive/ui";
 
 export default function GmPerformancePage() {
   const benchmarks = [
@@ -29,7 +29,7 @@ export default function GmPerformancePage() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-1">
             BALLANTYNE #02 · REGIONAL BENCHMARKING
           </p>
-          <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">
+          <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">
             Store Performance & Leaderboard
           </h1>
           <p className="mt-1 max-w-3xl text-sm font-medium text-[#78716C]">
@@ -51,6 +51,15 @@ export default function GmPerformancePage() {
           { label: "Health Score", value: "96 / 100", tone: "good", sub: "Grade A Grade" },
           { label: "Sales vs Budget", value: "+8.2%", tone: "good", sub: "$31,842 today" },
           { label: "Guest Rating", value: "4.9 ★", tone: "good", sub: "342 reviews" },
+        ]}
+      />
+
+      <PriveIntelBanner
+        summary="Ballantyne #02 ranks #1 of 12 in the Carolinas region. Labor efficiency at 24.8% is your strongest competitive differentiator."
+        details={[
+          "Sales growth of +8.2% vs plan is double the regional average of +4.1%.",
+          "Guest NPS of +72 leads the district. Primary driver: server attentiveness scores.",
+          "Staff turnover at 12% is the lowest in the region, 10 pts below the 22% district average.",
         ]}
       />
 

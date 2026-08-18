@@ -10,7 +10,7 @@ import {
   CheckCircle2,
   FileCheck,
 } from "lucide-react";
-import { Card, SectionTitle, KpiRow, Button, Pill } from "@/components/prive/ui";
+import { Card, SectionTitle, KpiRow, Button, Pill, PriveIntelBanner } from "@/components/prive/ui";
 
 export default function GmDocumentsPage() {
   const documents = [
@@ -28,7 +28,7 @@ export default function GmDocumentsPage() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#881337] mb-1">
             BALLANTYNE #02 · DOCUMENTATION & POLICY
           </p>
-          <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">
+          <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">
             Documents & SOP Library
           </h1>
           <p className="mt-1 max-w-3xl text-sm font-medium text-[#78716C]">
@@ -51,6 +51,15 @@ export default function GmDocumentsPage() {
           { label: "Staff Sign-Offs", value: "98.4%", tone: "good", sub: "34 / 35 acknowledged" },
           { label: "SOP Revisions", value: "Up to date", tone: "good", sub: "Last revised Aug 5" },
           { label: "Storage Used", value: "48 MB / 5 GB", tone: "good", sub: "Cloud synced" },
+        ]}
+      />
+
+      <PriveIntelBanner
+        summary="18 operational documents are current and cloud-synced. 34 of 35 staff have acknowledged the latest policy updates."
+        details={[
+          "All SOPs are up to date as of Aug 5. No pending revision cycles.",
+          "1 team member (Jordan Smith) has not signed the updated allergen handling policy.",
+          "Storage: 48 MB used of 5 GB allocated. Automatic backup runs nightly at 2:00 AM.",
         ]}
       />
 

@@ -30,7 +30,7 @@ export default function GmGuestsPage() {
   <>
    <div className="mb-8">
     <p className="text-[10px] font-bold uppercase tracking-widest text-[#881337] mb-1.5">Customer Relations</p>
-    <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">Guest Complaint Center</h1>
+    <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">Guest Complaint Center</h1>
     <p className="mt-2 max-w-3xl text-sm font-medium text-[#78716C]">
      Privé drafts guest responses and calculates recovery gift credits. No funds are issued without explicit GM approval.
     </p>

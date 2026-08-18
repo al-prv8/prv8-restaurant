@@ -21,7 +21,7 @@ export default function RegionalIntelligencePage() {
 
    <div className="mb-6">
      <PriveIntelBanner
-     summary={`Charlotte #03 score flagged at ${troubled?.score ?? 58}% — 6 consecutive weeks of margin erosion.`}
+     summary={`Charlotte #03 score flagged at ${troubled?.score ?? 58}%, 6 consecutive weeks of margin erosion.`}
      details={[
       "Primary Root Cause: Staffing turnover rose first (+14.2%), complaints followed 2 weeks later.",
       "Recommended Action: GM performance review + targeted retention bonus before summer LTO launch.",
@@ -63,7 +63,7 @@ export default function RegionalIntelligencePage() {
    <div className="space-y-6">
     {troubled ? (
      <Card tone="alert" >
-      <SectionTitle hint={`Health ${troubled.score}`}>Priority Store Breakdown — {troubled.restaurant.name}</SectionTitle>
+      <SectionTitle hint={`Health ${troubled.score}`}>Priority Store Breakdown, {troubled.restaurant.name}</SectionTitle>
       <Meter value={troubled.score} tone={troubled.score >= 85 ? "teal" : troubled.score >= 74 ? "amber" : "red"} />
       <div className="mt-6 grid gap-3 sm:grid-cols-4">
        <Metric label="Turnover Delta" value={`${troubled.restaurant.turnoverDelta > 0 ? "+" : ""}${troubled.restaurant.turnoverDelta}%`} sub="vs region avg" tone={troubled.restaurant.turnoverDelta > 5 ? "bad" : "neutral"} />

@@ -14,7 +14,7 @@ export default function GmFacilityPage() {
     <>
       <div className="mb-8">
         <p className="text-[10px] font-bold uppercase tracking-widest text-[#881337] mb-1.5">Operations & Maintenance</p>
-        <h1 className="text-3xl font-black tracking-tight text-[#1C1917] sm:text-4xl">Facility Readiness</h1>
+        <h1 className="text-3xl font-black tracking-tight text-[#1C1917]">Facility Readiness</h1>
         <p className="mt-2 max-w-3xl text-sm font-medium text-[#78716C]">
           Readiness scores and outstanding cleaning or maintenance tasks for Ballantyne #02.
         </p>

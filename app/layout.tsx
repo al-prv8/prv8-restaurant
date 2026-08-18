@@ -3,7 +3,7 @@ import "@/styles.css";
 import { PriveProvider } from "@/lib/prive/store";
 
 export const metadata: Metadata = {
-  title: "Privé — Restaurant Intelligence Platform",
+  title: "Privé, Restaurant Intelligence Platform",
   description: "A cognitive layer over POS, payroll, inventory and guest systems for The Morning Table Restaurant Group.",
   icons: {
     icon: [
